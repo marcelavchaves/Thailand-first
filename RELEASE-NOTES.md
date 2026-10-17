@@ -1,3 +1,7 @@
+## Banner typography
+
+- Slightly reduce WONDERCASE and enlarge Vietnam, Cambodia & Thailand, with wrapping on small screens.
+
 ## Discreet admin entry
 
 - Display WONDERCASE in capitals and use the unstyled title to open master-admin sign-in. Remove the visible admin link from More. Existing authentication remains required.
