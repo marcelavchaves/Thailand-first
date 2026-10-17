@@ -1,0 +1,72 @@
+[
+  {
+    "step": 1,
+    "title": "Start with Chervil’s email",
+    "caption": "Open Chervil’s email on your Android phone. Find the Kingdoms & Dragons app link. Keep Wi-Fi or mobile data on."
+  },
+  {
+    "step": 2,
+    "title": "Tap the app link",
+    "caption": "Tap the app link once. Use Google Chrome for these steps. Otherwise, choose Open in Chrome if offered, or copy and paste using the next steps."
+  },
+  {
+    "step": 3,
+    "title": "If needed: copy the link",
+    "caption": "Return to the email. Touch and hold the app link, then choose Copy link address or Copy link."
+  },
+  {
+    "step": 4,
+    "title": "Open Google Chrome",
+    "caption": "Find the round red, yellow, green and blue Chrome icon. Tap it to open the browser."
+  },
+  {
+    "step": 5,
+    "title": "Paste and open the link",
+    "caption": "Tap Chrome’s address bar. Touch and hold, then choose Paste. Tap Go or the arrow on the keyboard to open the app."
+  },
+  {
+    "step": 6,
+    "title": "Check the journey page",
+    "caption": "Wait for Kingdoms & Dragons to load. If the link was already open in Chrome, you can start here."
+  },
+  {
+    "step": 7,
+    "title": "Open Chrome’s menu",
+    "caption": "Tap the three vertical dots next to the address bar. The address bar may be at the top or bottom, depending on your settings."
+  },
+  {
+    "step": 8,
+    "title": "Choose the install option",
+    "caption": "Look for Install and create shortcut, then Install. Other Chrome versions may say Install app or Add to Home screen."
+  },
+  {
+    "step": 9,
+    "title": "Confirm installation",
+    "caption": "Tap Install in the confirmation box. If your phone offers a shortcut instead, tap Add and follow the placement instructions."
+  },
+  {
+    "step": 10,
+    "title": "Give it a moment",
+    "caption": "Allow the phone a moment to finish. Then go to your Home Screen using the Home button or your usual swipe-up gesture."
+  },
+  {
+    "step": 11,
+    "title": "Find the new app",
+    "caption": "Look for the K&D102 icon. Swipe between Home Screen pages. If you do not see it, open your app list and search for it."
+  },
+  {
+    "step": 12,
+    "title": "If needed: place the icon",
+    "caption": "If the app is only in your app list, touch and hold its icon. Choose Add to Home, or drag it onto the Home Screen."
+  },
+  {
+    "step": 13,
+    "title": "Tap to open your journey",
+    "caption": "Tap the new icon. You can now open the journey without returning to the email. Travelers do not need Chervil’s TD Login. Keep internet on for current updates."
+  },
+  {
+    "step": 14,
+    "title": "If Install is missing",
+    "caption": "Make sure the page is open in Chrome, not an email preview. Try a normal tab and reload. Check the app list first: Chrome may show Open app if it is already installed."
+  }
+]

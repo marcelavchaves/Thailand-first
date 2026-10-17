@@ -1,0 +1,79 @@
+{
+  "KD01": {
+    "description": "Garuda statue",
+    "file": "/images/kd01.jpg"
+  },
+  "KD02": {
+    "description": "Balinese kite",
+    "file": "/images/kd02.jpg"
+  },
+  "KD03": {
+    "description": "Komodo dragon",
+    "file": "/images/kd03.jpg"
+  },
+  "KD04": {
+    "description": "Wooden boat",
+    "file": "/images/kd04.jpg"
+  },
+  "KD05": {
+    "description": "Balinese gateway",
+    "file": "/images/kd05.jpg"
+  },
+  "KD06": {
+    "description": "Bali market",
+    "file": "/images/kd06.jpg"
+  },
+  "KD07": {
+    "description": "Monkeys",
+    "file": "/images/kd07.jpg"
+  },
+  "KD08": {
+    "description": "Prambanan temples",
+    "file": "/images/kd08.jpg"
+  },
+  "KD09": {
+    "description": "Borobudur",
+    "file": "/images/kd09.jpg"
+  },
+  "KD10": {
+    "description": "Volcano and rice terraces",
+    "file": "/images/kd10.jpg"
+  },
+  "KD11": {
+    "description": "Singapore to Bali watercolor collage",
+    "file": "/images/kd11-home.jpg",
+    "use": "Home title background and PDF cover"
+  },
+  "KD12": {
+    "description": "Singapore shophouses",
+    "file": "/images/kd12-shophouses.jpg"
+  },
+  "KD13": {
+    "description": "Gardens by the Bay Supertrees",
+    "file": "/images/kd13-gardens.jpg"
+  },
+  "KD14": {
+    "description": "Raffles Hotel watercolor",
+    "file": "/images/kd14-raffles.png"
+  },
+  "dayAssignments": {
+    "1": "kd14-raffles.png",
+    "2": "kd12-shophouses",
+    "3": "kd13-gardens",
+    "4": "kd10",
+    "5": "kd09",
+    "6": "kd08",
+    "7": "kd07",
+    "8": "kd05",
+    "9": "kd06",
+    "10": "kd04",
+    "11": "kd03",
+    "12": "kd02",
+    "13": "kd01",
+    "14": "kd15-jimbaran.png"
+  },
+  "KD15": {
+    "description": "Jimbaran Bay oceanfront garden watercolor",
+    "file": "/images/kd15-jimbaran.png"
+  }
+}

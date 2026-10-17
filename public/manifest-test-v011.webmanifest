@@ -1,0 +1,30 @@
+{
+  "name": "Wondercase \u00b7 KD103 Test",
+  "short_name": "KD103 Test",
+  "description": "Public Singapore-to-Bali travel companion for the October 17\u201330, 2026 Tauck journey.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F9F6EC",
+  "theme_color": "#315C4F",
+  "icons": [
+    {
+      "src": "/icons/kd102-test-v011-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/kd102-test-v011-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/kd102-test-v011-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "/"
+}

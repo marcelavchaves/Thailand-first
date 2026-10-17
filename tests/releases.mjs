@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {TOUR_IMPORT_VERSION} from '../shared/tour-import.mjs';
+import {applyReleases,released} from '../shared/release-policy.mjs';
+const make=()=>({data:{days:[{date:5,events:[['8 AM','Secret schedule']],note:'Secret reminder'},{date:6,events:[['9 AM','Second schedule']]}],localGuides:[{name:'Guide'}],hotelResources:[{id:'spa'}],storytelling:[{id:'stay'}]},sections:[{title:'Java Guide',blocks:[{text:'Hidden reading'}]},{title:'Useful Contacts',blocks:[{text:'Keep contact'}]}],documents:[{src:'/documents/xavier-java/page.jpg'}]});
+const imported=applyReleases(make(),{});assert.equal(imported.data.days[0].events[0][0],'8 AM');assert.equal(imported.data.days[1].events[0][0],'9 AM');
+const hidden=applyReleases(make(),{'schedule-5':{visible:false,importVersion:TOUR_IMPORT_VERSION}});assert.equal(hidden.data.days[0].events[0][0],'COMING SOON');assert.equal(hidden.data.days[0].note,'');assert.equal(hidden.documents.length,0);assert.equal(hidden.data.localGuides.length,0);assert.equal(hidden.data.hotelResources.length,0);assert.equal(hidden.sections[1].blocks[0].text,'Keep contact');
+const visible=applyReleases(make(),{'schedule-5':{visible:true,importVersion:TOUR_IMPORT_VERSION},'schedule-6':{visible:false,importVersion:TOUR_IMPORT_VERSION},'guide-java':{visible:true},'menu-spa':{visible:true},'story-stay':{visible:true},'local-0':{visible:true}});assert.equal(visible.data.days[0].events[0][0],'8 AM');assert.equal(visible.data.days[1].events[0][0],'COMING SOON');assert.equal(visible.documents.length,1);assert.equal(visible.data.localGuides.length,1);assert.equal(visible.data.hotelResources.length,1);
+assert.equal(released({'x':{visible:true,deleted:true}},'x'),false);
+const replacement=applyReleases(make(),{'guide-java':{visible:true,blob:'new-file'}});assert.equal(replacement.documents.length,0);assert.match(replacement.sections[0].blocks[0].href,/tour-resources/);
+console.log('Release policy: imported schedules published, subsequent per-day hide/reveal, document privacy, replacement and deletion passed.');

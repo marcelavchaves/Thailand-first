@@ -1,0 +1,22 @@
+import {build} from 'esbuild';
+import assert from 'node:assert/strict';
+const sdk=`export function getIdentityConfig(){return {token:'test'}};export async function getUser(){return globalThis.timelineTest.user}`;
+const blobs=`export function getStore(){return {get:async()=>({visible:true}),getWithMetadata:async k=>globalThis.timelineTest.data.get(k)||null,setJSON:async(k,data,options)=>{const old=globalThis.timelineTest.data.get(k);if(options.onlyIfNew&&old||options.onlyIfMatch&&old?.etag!==options.onlyIfMatch)return {modified:false};const etag=String(++globalThis.timelineTest.seq);globalThis.timelineTest.data.set(k,{data,etag});return {modified:true,etag}}}}`;
+await build({entryPoints:['netlify/functions/journey-timeline.mts'],outfile:'.pdf-build/timeline-test.mjs',bundle:true,platform:'node',format:'esm',plugins:[{name:'controlled-test',setup(b){b.onResolve({filter:/^@netlify\/(identity|blobs)$/},a=>({path:a.path,namespace:'mock'}));b.onResolve({filter:/lib\/updates$/},()=>({path:'updates',namespace:'mock'}));b.onResolve({filter:/lib\/current-itinerary$/},()=>({path:'pdf',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path==='updates'?`export async function announce(){}`:a.path==='pdf'?`export async function currentItinerary(){globalThis.timelineTest.pdfs++;return {}}`:a.path.endsWith('identity')?sdk:blobs,loader:'js'}));}}]});
+globalThis.Netlify={env:{get:key=>key==='TOUR_DIRECTOR_EMAIL'?'xbrunelle@tauck.com':''}};
+const {default:handler}=await import('../.pdf-build/timeline-test.mjs');
+globalThis.timelineTest={user:null,data:new Map(),seq:0,pdfs:0};
+const body={day:8,revision:null,events:[['9:00 AM','Updated activity']],note:'Updated reminder'};
+const call=(method='PUT',value=body,origin='https://test.example',day=8)=>handler(new Request('https://test.example/api/journey-timeline?day='+day,{method,headers:{Origin:origin},body:method==='GET'?undefined:JSON.stringify(value)}));
+for(const user of [null,{email:'guest@example.com',roles:['tour-director']},{email:'xbrunelle@tauck.com',roles:[]},{email:'xbrunelle@tauck.com',userMetadata:{roles:['tour-director']}}]){globalThis.timelineTest.user=user;assert.equal((await call()).status,401);}
+assert.equal(globalThis.timelineTest.data.size,0);
+globalThis.timelineTest.user={email:'xbrunelle@tauck.com',roles:['tour-director']};
+assert.equal((await call('PUT',body,'https://evil.example')).status,403);
+for(const invalid of [{...body,day:19},{...body,events:[]},{...body,events:[['','Activity']]},{...body,events:[['9 AM',null]]},{...body,note:'a'.repeat(1201)},{...body,events:Array(25).fill(['a','b'])}])assert.equal((await call('PUT',invalid)).status,400);
+const saved=await (await call()).json();assert.equal(saved.pdfReady,true);assert.equal(globalThis.timelineTest.pdfs,1);
+assert.equal((await call()).status,409);
+const second=await call('PUT',{...body,revision:saved.revision,events:[['10:00 AM','Revised activity']]});assert.equal(second.status,200);
+globalThis.timelineTest.user=null;
+assert.equal((await (await call('GET')).json()).schedule.events[0][0],'10:00 AM');
+assert.equal((await (await call('GET',undefined,undefined,9)).json()).schedule,null);
+console.log('PASS: TD-only updates, forged role denial, CSRF, input validation, conflict prevention, date isolation, persistence and PDF regeneration trigger.');

@@ -1,0 +1,16 @@
+import {writeFile,copyFile,rename,mkdir} from 'node:fs/promises';
+import {readAppContent,root,baseUrl} from './pdf-content.mjs';
+import {renderItinerary} from './render-itinerary.mjs';
+const content=await readAppContent();
+content.baseUrl=baseUrl;
+content.testEdition=process.env.NEXT_PUBLIC_APP_ENV==='test';
+content.dates=Object.fromEntries(Array.from({length:32},(_,day)=>[day,{iso:content.data.tripDate(day).toISOString(),short:content.data.shortTripDate(day),long:content.data.longTripDate(day),tauck:content.data.tauck(day)}]));
+await mkdir('netlify/data',{recursive:true});
+await writeFile('netlify/data/itinerary-content.json',JSON.stringify(content));
+const {bytes,manifest}=await renderItinerary(content,{root,baseUrl,testEdition:content.testEdition});
+const stagingPath='.pdf-build/itinerary-staging.pdf';
+await writeFile(stagingPath,bytes);
+await rename(stagingPath,'public/kingdoms-and-dragons-itinerary.pdf');
+await copyFile('public/kingdoms-and-dragons-itinerary.pdf','public/kingdoms-and-dragons-itinerary-repaired.pdf');
+await writeFile('public/itinerary-manifest.json',JSON.stringify(manifest,null,2)+'\n');
+console.log(`Generated ${manifest.pages}-page interactive PDF from app revision ${content.sourceHash.slice(0,12)} (${content.data.days.length} days, ${content.guests.length} guests).`);

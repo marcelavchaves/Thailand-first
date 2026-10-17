@@ -1,0 +1,136 @@
+/* KD102 test v0.010 — Xavier's guest experience review. */
+html,body,.app-shell{background:#fff}
+.app-shell{box-shadow:none}
+.topbar{background:var(--brand-ivory);width:100%;padding:12px 16px}
+.wondercase-lockup{justify-content:flex-start;display:flex;align-items:center;gap:13px}
+.wondercase-mark{width:58px;height:58px}
+.wondercase-titles strong{font-weight:400;font-size:clamp(16px,4.3vw,24px);line-height:1.25;letter-spacing:.04em;text-wrap:balance}
+.wondercase-titles small{font-size:clamp(8px,2.2vw,11px);font-weight:400;letter-spacing:.09em}
+.wondercase-titles>span{font-weight:400;letter-spacing:.15em}
+.brand-icon{width:26px;height:26px;flex-shrink:0;color:var(--brand-green);vertical-align:middle}
+.bottom-nav{background:#fff;grid-template-columns:repeat(6,minmax(0,1fr));height:calc(72px + env(safe-area-inset-bottom));padding-bottom:max(8px,env(safe-area-inset-bottom))}
+.bottom-nav button{min-width:0;min-height:44px}
+.bottom-nav button span{font-size:9px;letter-spacing:0}
+.bottom-nav button.active .brand-icon{color:var(--brand-gold-text)}
+.home-panels .current-day-card,.home-panels .xavier-daily-note,.journey-today-card,.trip-calendar,.release-card,.info-accordion,.day-disclosure,.flight-card,.hotel-body,.note,.timeline,.guests,.journal-card,.trivia-card{background:#fff;color:var(--brand-green);box-shadow:none}
+.home-panels{padding-top:14px}
+.home-panels .current-day-card,.home-panels .xavier-daily-note{border:0;border-bottom:1px solid var(--line);border-radius:0;margin:0 16px 14px;padding:18px 0}
+.xavier-note-heading{display:block;text-align:center;border:0}
+.xavier-note-heading h2{font-size:19px;font-weight:400;margin:0 0 16px}
+.xavier-note-copy{font-size:15px;line-height:1.7}
+.journey-day-heading{align-items:center}
+.journey-day-heading h2{display:none}
+.journey-date-time{display:flex;justify-content:space-between;gap:12px;width:100%}
+.current-day-top>div{width:100%}
+.journey-day-number{font-weight:500;font-size:19px;text-transform:uppercase}
+.home-schedule ol,.timeline{border:0!important;margin-left:0!important;padding-left:0!important;list-style:none}
+.home-schedule ol li,.timeline article{display:grid!important;grid-template-columns:78px minmax(0,1fr);gap:12px;border:0!important;padding:10px 0!important;margin:0!important;align-items:start}
+.home-schedule ol li::before,.home-schedule ol li::after,.timeline article::before{display:none!important}
+.home-schedule ol li strong,.timeline article>span{font-size:13px;line-height:1.65;margin:0;color:var(--brand-green)}
+.home-schedule ol li span,.timeline article>p{font-size:14px;line-height:1.65;margin:0!important}
+.timeline-time{font-size:inherit;white-space:normal;text-align:left;padding:0;min-height:30px}
+.trip-calendar{border-radius:0;box-shadow:none;margin-top:0}
+.calendar-top h2{font-weight:400;font-size:26px}
+.combined-calendar-day.singapore,.calendar-trip.singapore{background:#e3efeb!important;color:#164d3e!important}
+.combined-calendar-day.java,.calendar-trip.java{background:#f5e5dd!important;color:#783a25!important}
+.combined-calendar-day.bali,.calendar-trip.bali{background:#e9eddf!important;color:#46532a!important}
+.combined-calendar-day.komodo,.calendar-trip.komodo{background:#f6ecd3!important;color:#6e5115!important}
+.combined-calendar-day span,.combined-calendar-day small,.combined-calendar-day strong,.calendar-trip span,.calendar-trip small{color:inherit!important}
+.combined-calendar-day.is-today,.calendar-trip.is-today{outline:2px solid var(--brand-green);outline-offset:2px}
+.director-simple{background:#eef3ed;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px;margin-bottom:25px}
+.director-toggle{display:flex;align-items:center;gap:16px;width:100%;padding:0;border:0;background:transparent;color:var(--brand-green);text-align:left;cursor:pointer}
+.director-toggle>img,.director-placeholder{width:66px;height:66px;object-fit:cover;border-radius:6px;display:grid;place-items:center;background:#fff}
+.director-toggle small,.director-toggle strong{display:block}.director-toggle small{font-size:11px;margin-bottom:5px}.director-toggle strong{font-size:20px;font-weight:500}.director-expand{margin-left:auto;font-size:24px}
+.director-contact-details{padding-top:16px;font-size:13px}.director-contact-links{display:flex;gap:12px;flex-wrap:wrap}.director-about summary{list-style:none;cursor:pointer;min-height:44px;padding:10px 0;text-decoration:underline;text-underline-offset:4px}.director-about summary::-webkit-details-marker{display:none}
+.director-signin{display:block;border:0;background:transparent;text-decoration:underline;color:var(--brand-green);font-size:11px;min-height:44px;margin-top:4px;padding:8px 0}
+.guests h2{font-size:25px;font-weight:400}.travelers-page .guests{padding:0;border:0}
+.essentials-nav{display:flex;gap:8px;position:relative;margin-bottom:26px}.essentials-nav a{flex:1;text-align:center;padding:12px 5px;border:1px solid var(--line);text-decoration:none;color:var(--brand-green);font-size:13px;border-radius:4px}
+.essentials-handouts{margin-bottom:32px}.essentials-handouts>h2,#stays{font-size:24px;font-weight:400}.essentials-handouts,#stays,#internal-flights-title{scroll-margin-top:105px}.essentials-handouts .kd-letter-link{font-size:13px;line-height:1.7}.release-card{border:1px solid var(--line);border-radius:6px}.release-heading .brand-icon{width:25px;height:25px}.release-heading h3{font-size:15px;font-weight:500}
+.more-page{padding-top:26px}.more-tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.more-tile{background:#fff;border:1px solid var(--line);padding:0 0 17px;display:flex;flex-direction:column;text-align:left;color:var(--brand-green);border-radius:5px;overflow:hidden;cursor:pointer}.more-tile>img{display:block;width:100%;aspect-ratio:1.65;object-fit:cover}.more-tile>strong,.more-tile>small{margin:12px 12px 0;line-height:1.4}.more-tile>strong{font-size:15px;font-weight:500}.more-tile>small{font-size:11px;margin-top:5px}.more-tile[aria-expanded=true]{outline:2px solid var(--brand-green);outline-offset:1px}
+[hidden]{display:none!important}.more-open-panel{padding:18px 0}.more-open-panel select{display:block;width:100%;padding:12px;margin:10px 0 22px;background:#fff;color:var(--brand-green);border:1px solid var(--line)}
+.detail-body,.page{background:#fff}.home-bottom-journey{margin-bottom:14px}.journey-book-link{font-size:12px}.home-swap-button{background:#fff;font-weight:400;letter-spacing:0}.announcement-whatsapp small{line-height:1.5}
+@media(max-width:360px){.wondercase-mark{width:48px;height:48px}.wondercase-lockup{gap:9px}.topbar{padding-inline:12px}.bottom-nav button span{font-size:8px}.home-schedule ol li,.timeline article{grid-template-columns:68px minmax(0,1fr);gap:8px}}
+/* Override the older Home panel's !important decorative gradient. */
+.xavier-daily-note,.home-panels .home-special-notes{background:#fff!important;border:0!important;border-top:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important}
+.home-panels .home-special-notes{margin:10px 16px 20px!important;padding:20px 0!important}
+.day-card,.hotel-card,.trip-calendar{border-radius:4px!important;background:#fff!important;box-shadow:none!important}
+
+/* Tile panels must stay hidden regardless of component display rules. */
+#essentials-handouts[hidden],#essentials-hotels[hidden],#essentials-flights[hidden]{display:none}
+
+.home-day-switch .journey-day-number{font-family:var(--font-heading);font-weight:400;letter-spacing:0}
+
+/* v0.019: compact Home overview and contextual private-workspace access. */
+.home-panels .current-day-card{font-family:var(--font-heading);padding-top:0}
+.home-day-overview{position:relative;isolation:isolate;overflow:hidden;background:var(--brand-surface);padding:12px 16px 0;min-height:158px}
+.home-destination-outline{position:absolute;z-index:-1;right:-12px;bottom:26px;width:68%;height:110px;color:var(--brand-sage);opacity:.17;pointer-events:none}
+.home-overview-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.home-day-overview .home-day-switch{display:flex;gap:4px;align-items:center;margin:0}
+.home-day-overview .home-day-switch button{width:44px;min-height:44px;padding:0;border:0;border-radius:0;background:transparent;font:400 28px/1 var(--font-heading);color:var(--brand-green)}
+.home-day-overview .home-day-switch button:disabled{opacity:.3}
+.home-day-overview .journey-day-number{background:none;border:0;border-radius:0;padding:0;font:400 12px/1.4 var(--font-heading);letter-spacing:.1em;white-space:nowrap;color:var(--brand-gold-text)}
+.home-local-clock{display:grid;text-align:right;gap:3px;padding-top:7px;flex-shrink:0}
+.home-local-clock time{font:400 20px/1.2 var(--font-heading);font-variant-numeric:tabular-nums;color:var(--brand-green)}
+.home-local-clock small{font:400 10px/1.4 var(--font-heading);color:var(--muted);max-width:150px}
+.home-overview-date{padding:4px 0 16px}
+.home-overview-date h2{font:400 clamp(17px,4.6vw,23px)/1.35 var(--font-heading);letter-spacing:-.025em;margin:0;color:var(--brand-green)}
+.home-overview-date p{font:400 12px/1.5 var(--font-heading);color:var(--muted);margin:5px 0 0}
+.home-day-overview .home-journey-countdown{margin:0;padding:10px 0 12px;border-top:1px solid var(--brand-gold);font:400 11px/1.5 var(--font-heading);letter-spacing:.02em;color:var(--muted)}
+.current-day-card>.release-card{border:0;border-radius:0;padding:18px 4px;margin:0;background:#fff;font-family:var(--font-heading)}
+.current-day-card .release-heading{gap:12px;align-items:flex-start}.current-day-card .release-heading .brand-icon{margin-top:2px}
+.current-day-card .release-heading h3{font:400 17px/1.4 var(--font-heading)}
+.current-day-card .release-soon{font:400 10px/1.5 var(--font-heading);letter-spacing:.13em;text-transform:uppercase;margin-top:5px}
+.current-day-card .release-caption{font:400 12px/1.6 var(--font-heading);margin:8px 0 0 37px;border:0;padding:0}
+.current-day-card .home-schedule h3{display:none}
+.guest-safe-hint{font:400 12px/1.6 var(--font-heading);color:var(--muted);margin:0 0 18px}
+.guest-entry .guest-safe-link{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;margin:0 10px 10px;padding:9px 5px;border-top:1px solid var(--line);text-decoration:none;font:400 11px/1.4 var(--font-heading);color:var(--brand-green)}
+.guest-safe-link:hover,.guest-safe-link:focus-visible{background:var(--brand-soft)}
+.director-simple .director-signin{font:400 12px/1.5 var(--font-heading);text-decoration:none;border-top:1px solid var(--line);width:100%;margin-top:14px;padding-top:12px;text-align:left}
+@media(max-width:360px){.home-day-overview{padding-inline:10px}.home-day-overview .home-day-switch button{width:36px}.home-local-clock time{font-size:18px}.home-local-clock small{max-width:120px}.guest-entry .guest-safe-link{font-size:10px;gap:4px}}
+
+.journey-safe-button{width:100%;justify-content:center;background:var(--brand-green);color:var(--brand-ivory);font:600 16px/1.4 var(--font-heading);min-height:52px}
+/* Prototype v0.026: secondary Safe shortcut, primary Journey entrance. */
+.classic-safe-icon{width:44px;height:auto;flex:none;display:block}
+.journey-safe-button{justify-content:flex-start;background:var(--brand-ivory);color:var(--brand-green);gap:14px}
+.journey-safe-button .classic-safe-icon{width:46px}
+.journey-safe-button>span:first-of-type{flex:1}
+.guest-entry .guest-safe-link{width:44px;min-height:44px;margin:0 8px 8px auto;padding:8px;border:0;border-radius:6px}
+.guest-entry .guest-safe-link .classic-safe-icon{width:28px;height:auto}
+.safe-heading .classic-safe-icon{width:64px;height:auto}
+.guest-reveal-notice,.guest-visibility{background:color-mix(in srgb,var(--brand-green) 8%,var(--brand-ivory));border-color:color-mix(in srgb,var(--brand-green) 22%,var(--brand-ivory))}
+
+/* Keep Safe taps independent from guest profile controls. */
+.guest-entry .guest-safe-link{position:relative;z-index:2;isolation:isolate;touch-action:manipulation}
+
+/* Before departure, show today and emphasize the countdown. */
+.home-day-overview.before-trip .home-local-clock{margin-left:auto}
+.home-day-overview.before-trip .home-journey-countdown{font-size:clamp(20px,5vw,26px);line-height:1.35;color:var(--brand-green);padding-block:14px}
+
+/* Keep trivia readable on the shared light card in More and Journey. */
+.trivia-card>h3{color:var(--brand-green)}
+.trivia-card .trivia-score{color:var(--brand-gold-text);border-color:var(--brand-gold)}
+.trivia-card .trivia-progress{background:var(--line)}
+.trivia-card .trivia-progress i{background:var(--brand-gold-text)}
+.trivia-card .trivia-options button{background:var(--brand-ivory);border-color:var(--brand-gold);color:var(--brand-green);overflow-wrap:anywhere}
+.trivia-card .trivia-options button>span{background:#fff;color:var(--brand-gold-text)}
+.trivia-card .trivia-options button.correct{background:#315b4a;border-color:#315b4a;color:#fff}
+.trivia-card .trivia-options button.wrong{background:#70423b;border-color:#70423b;color:#fff}
+.trivia-card .trivia-options button.correct>span,.trivia-card .trivia-options button.wrong>span{background:rgba(255,255,255,.12);color:#fff}
+.trivia-card .trivia-options button:disabled{opacity:1}
+
+.more-tile:disabled{cursor:default;opacity:.65}
+.more-tile:disabled:hover{transform:none}
+
+/* A quiet, link-only invitation to the shared album. */
+.album-invite{max-width:520px;margin:20px auto;padding:clamp(24px,6vw,40px);background:var(--brand-ivory);border:1px solid var(--line);border-top:2px solid var(--brand-gold);border-radius:16px}
+.album-invite h2{font:400 clamp(24px,5vw,30px)/1.25 var(--font-heading);color:var(--brand-green);margin:14px 0 12px}
+.album-invite p{font-size:15px;line-height:1.65;color:var(--muted);margin:0 0 20px}
+.album-join-link{display:inline-flex;align-items:center;gap:16px;min-height:44px;padding:8px 0;border-bottom:1px solid var(--brand-gold);color:var(--brand-green);font-size:15px;font-weight:600;text-decoration:none}
+.album-join-link:hover{border-bottom-color:var(--brand-green)}
+.album-invite>small{display:block;margin-top:14px;font-size:11px;color:var(--muted)}
+
+/* Keep the welcome heading on one line, including on narrow phones. */
+.xavier-welcome-panel>summary{gap:8px;padding-inline:12px}
+.xavier-welcome-panel>summary>span:nth-child(2){min-width:0}
+.xavier-welcome-panel>summary strong{font-size:clamp(12px,3.7vw,16px);white-space:nowrap}
+.xavier-letter h2{font-size:clamp(10px,2.8vw,14px);white-space:nowrap;letter-spacing:-.2px}

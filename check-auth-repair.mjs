@@ -1,0 +1,14 @@
+import {build} from 'esbuild';
+import assert from 'node:assert/strict';
+globalThis.Netlify={env:{get:()=> 'owner@example.com'}};
+globalThis.authFixture={id:'owner-id',email:'owner@example.com',confirmedAt:'2026-10-03',roles:['master-admin']};
+const identity=`export class AuthError extends Error{};export const getIdentityConfig=()=>({token:'fixture'});export const getUser=async()=>null;export const login=async()=>globalThis.authFixture;export const logout=async()=>{};export const requestPasswordRecovery=async()=>{};export const admin={getUser:async()=>globalThis.authFixture,updateUser:async()=>{}};`;
+await build({entryPoints:['netlify/functions/master-admin.mts'],outfile:'/tmp/wondercase-auth-repair-check.mjs',bundle:true,platform:'node',format:'esm',plugins:[{name:'auth-fixtures',setup(b){b.onResolve({filter:/^@netlify\/identity$/},()=>({path:'identity',namespace:'fixture'}));b.onResolve({filter:/td-auth$/},()=>({path:'td',namespace:'fixture'}));b.onLoad({filter:/.*/,namespace:'fixture'},a=>({contents:a.path==='identity'?identity:`export const identityReady=()=>true;export const sameOrigin=()=>true;export const resetTDPassword=async()=>true;`,loader:'js'}));}}]});
+const {default:handler}=await import('/tmp/wondercase-auth-repair-check.mjs');
+const request=()=>new Request('https://example.com/api/master-admin',{method:'POST',body:JSON.stringify({action:'login',email:'owner@example.com',password:'fixture-password'})});
+assert.equal((await handler(request())).status,200,'fresh login succeeds with no incoming session');
+globalThis.authFixture={...globalThis.authFixture,confirmedAt:undefined};
+assert.equal((await handler(request())).status,403,'unconfirmed owner remains rejected');
+globalThis.authFixture={...globalThis.authFixture,email:'other@example.com',confirmedAt:'2026-10-03'};
+assert.equal((await handler(request())).status,403,'different account remains rejected');
+console.log('Fresh-session login and both authorization rejection checks passed.');

@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Hanoi hotel — to be confirmed",
+    "city": "Hanoi, Vietnam",
+    "image": "vct-hotel-watercolor-0.png",
+    "checkin": 5,
+    "checkout": 7,
+    "trip": "",
+    "tauck": "1–2",
+    "address": "",
+    "phone": "",
+    "website": "",
+    "note": "The supplied itinerary names Le Beaulieu, Spice Garden and Le Club Bar, but does not explicitly name the Hanoi hotel. Confirmation pending."
+  },
+  {
+    "name": "La Residence Hotel and Spa",
+    "city": "Hue, Vietnam",
+    "image": "vct-hotel-watercolor-1.png",
+    "checkin": 7,
+    "checkout": 8,
+    "trip": "",
+    "tauck": "3",
+    "address": "",
+    "phone": "",
+    "website": "",
+    "note": "Day 3: check-in and lunch at La Residence Hotel and Spa; dinner at Le Parfum. Depart on Day 4."
+  },
+  {
+    "name": "Furama Resort",
+    "city": "Da Nang, Vietnam",
+    "image": "vct-hotel-watercolor-2.png",
+    "checkin": 8,
+    "checkout": 10,
+    "trip": "",
+    "tauck": "4–5",
+    "address": "",
+    "phone": "",
+    "website": "",
+    "note": "Arrive on Day 4; dinners at your choice of resort restaurants. Depart for Saigon on Day 6."
+  },
+  {
+    "name": "Park Hyatt Saigon",
+    "city": "Saigon, Vietnam",
+    "image": "vct-hotel-watercolor-3.png",
+    "checkin": 10,
+    "checkout": 12,
+    "trip": "",
+    "tauck": "6–7",
+    "address": "",
+    "phone": "",
+    "website": "",
+    "note": "Arrive on Day 6; dinner at Square One. Depart for Siem Reap on Day 8."
+  },
+  {
+    "name": "Raffles Grand Hotel",
+    "city": "Siem Reap, Cambodia",
+    "image": "vct-hotel-watercolor-4.png",
+    "checkin": 12,
+    "checkout": 14,
+    "trip": "",
+    "tauck": "8–9",
+    "address": "",
+    "phone": "",
+    "website": "",
+    "note": "Arrive on Day 8; dinner and Cambodian dance performance at Apsara; breakfast and dinner at Café D’Angkor. Depart on Day 10."
+  },
+  {
+    "name": "Intercontinental Chiang Mai",
+    "city": "Chiang Mai, Thailand",
+    "image": "vct-hotel-watercolor-5.png",
+    "checkin": 14,
+    "checkout": 17,
+    "trip": "",
+    "tauck": "10–12",
+    "address": "",
+    "phone": "",
+    "website": "",
+    "note": "Arrive on Day 10 for three nights. The itinerary names The Gad Lanna Terrace, Khao and North. Depart on Day 13."
+  },
+  {
+    "name": "Rosewood Bangkok",
+    "city": "Bangkok, Thailand",
+    "image": "vct-hotel-watercolor-6.png",
+    "checkin": 17,
+    "checkout": 20,
+    "trip": "",
+    "tauck": "13–15",
+    "address": "",
+    "phone": "",
+    "website": "",
+    "note": "Arrive on Day 13; lunch on arrival and dinner at Nan Bei. Farewell reception at Lennon’s Bar and dinner in the Pavilion room on Day 15."
+  }
+]

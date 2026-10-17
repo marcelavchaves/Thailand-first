@@ -1,0 +1,83 @@
+/* Wondercase / KD102 — approved September 28, 2026 brand board. */
+@font-face{font-family:Montserrat;src:url('/fonts/montserrat-400.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Montserrat;src:url('/fonts/montserrat-500.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:Montserrat;src:url('/fonts/montserrat-600.ttf') format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:Montserrat;src:url('/fonts/montserrat-700.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:Cinzel;src:url('/fonts/cinzel-400.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Cinzel;src:url('/fonts/cinzel-500.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:Cinzel;src:url('/fonts/cinzel-600.ttf') format('truetype');font-weight:600;font-display:swap}
+:root{
+  --brand-green:#315C4F;--brand-gold:#C9A962;--brand-ivory:#F9F6EC;--brand-sage:#6B8F72;
+  --font-heading:Montserrat,'Avenir Next',sans-serif;
+  --font-body:'Avenir Next',Montserrat,sans-serif;
+  --font-accent:Cinzel,Georgia,serif;
+  --paper:var(--brand-ivory);--jade:var(--brand-green);--gold:var(--brand-gold);
+  --ink:var(--brand-green);--muted:#526B59;
+  --line:color-mix(in srgb,var(--brand-gold) 32%,var(--brand-ivory));
+  --brand-gold-text:#806329;
+  --brand-surface:color-mix(in srgb,var(--brand-ivory) 65%,white);
+  --brand-soft:color-mix(in srgb,var(--brand-green) 12%,var(--brand-ivory));
+}
+html,body,.app-shell{background:var(--paper);color:var(--ink)}
+body,button,input,select,textarea{font-family:var(--font-body)}
+body{font-size:15px}
+h1,h2,h3,h4{font-family:var(--font-heading);letter-spacing:-.025em}
+a,button{touch-action:manipulation}
+:focus-visible{outline:2px solid var(--brand-green);outline-offset:4px}
+.topbar{height:88px;min-height:88px;padding:12px 18px;background:var(--brand-ivory);border-bottom:1px solid var(--brand-gold);box-shadow:none}
+.wondercase-lockup{width:100%;gap:12px;justify-content:center}
+.wondercase-mark{width:54px;height:54px;flex:none;color:var(--brand-green)}
+.wondercase-titles{gap:6px;min-width:0}
+.wondercase-titles strong{font:500 clamp(19px,5.7vw,29px)/1 var(--font-heading);letter-spacing:.13em;color:var(--brand-green);text-transform:uppercase;white-space:nowrap}
+.wondercase-titles small{font:500 clamp(7px,1.9vw,10px)/1.35 var(--font-heading);letter-spacing:.11em;color:var(--brand-green);white-space:nowrap}
+.wondercase-titles>span{font:500 8px/1.25 var(--font-heading);letter-spacing:.24em;text-transform:uppercase;color:var(--brand-gold-text)}
+.testing-banner,.pretour-review-banner{background:var(--brand-green);color:var(--brand-ivory);font:500 9px/1.5 var(--font-heading);letter-spacing:.1em;padding:7px 12px}
+.detail-nav{top:88px;background:var(--brand-ivory)}
+.intro h1,.more-page h1,.gallery-page h1,.detail-body h1{font-family:var(--font-heading);font-weight:500;font-size:32px;letter-spacing:-.035em}
+.eyebrow,.date,.pdf-eyebrow{color:var(--brand-gold-text);font-family:var(--font-heading);font-weight:600}
+.eyebrow.light{color:var(--brand-gold)}
+.bottom-nav{background:var(--brand-ivory);border-top:1px solid var(--brand-gold);box-shadow:0 -3px 18px #315C4F09}
+.bottom-nav button{color:var(--muted);border-radius:10px;gap:5px}
+.bottom-nav button span{font-family:var(--font-heading);font-size:9px;font-weight:500}
+.bottom-nav button.active{background:var(--brand-soft);color:var(--brand-green)}
+.bottom-nav button.active svg{color:var(--brand-green)}
+.bottom-nav button.active:after{content:'';width:15px;height:2px;background:var(--brand-gold);border-radius:2px}
+.home-bottom-journey,.home-swap-button,.journey-action,.pdf-export-button,.kd-tutorial-invite .button{background:var(--brand-green);color:var(--brand-ivory);border:1px solid var(--brand-gold);font-family:var(--font-heading);font-weight:600;letter-spacing:.045em}
+.home-bottom-journey{font-size:11px;line-height:1.5}
+.home-bottom-journey>span{color:var(--brand-gold)}
+.home-swap-button{font-size:11px;background:transparent;color:var(--brand-green);border-color:var(--line)}
+.home-director.xavier-contact-card{background:var(--brand-green)}
+.welcome-card,.director{background:var(--brand-green);color:var(--brand-ivory)}
+.welcome-card h2{font-family:var(--font-accent)}
+.quick-card,.hotel-card,.flight-card,.day-card,.day-disclosure,.info-accordion,.journey-today-card{border-color:var(--line);background:var(--brand-surface);border-radius:14px}
+.day-card,.hotel-card{overflow:hidden}
+.note,.rating-invitation,.kd-tutorial-invite{background:var(--brand-soft);color:var(--brand-green);border-color:var(--line)}
+.calendar-view-toggle,.home-day-switch button{background:var(--brand-ivory);color:var(--brand-green);border-color:var(--line)}
+.combined-calendar-day.singapore{background:var(--brand-green);color:var(--brand-ivory)}
+.combined-calendar-day.java{background:color-mix(in srgb,var(--brand-green) 72%,var(--brand-sage));color:var(--brand-ivory)}
+.combined-calendar-day.bali{background:var(--brand-sage);color:#08281e}
+.combined-calendar-day.komodo{background:var(--brand-gold);color:var(--brand-green)}
+.calendar-dot.singapore,.calendar-legend i.singapore{background:var(--brand-green)}
+.calendar-dot.java,.calendar-legend i.java{background:color-mix(in srgb,var(--brand-green) 72%,var(--brand-sage))}
+.calendar-dot.bali,.calendar-legend i.bali{background:var(--brand-sage)}
+.calendar-dot.komodo,.calendar-legend i.komodo{background:var(--brand-gold)}
+.timeline-time,.timeline article>span,.timeline-time-dialog h2{color:var(--brand-gold-text)}
+.timeline-time-dialog{background:var(--brand-ivory);border-color:var(--brand-gold)}
+.day-disclosure>summary,.info-accordion>summary{font-family:var(--font-heading)}
+.feedback-disclosure>summary{background:var(--brand-green);color:var(--brand-ivory)}
+.guest-list.guest-grid li.guest-entry{background:var(--brand-surface);border-color:var(--line)}
+.guest-grid .guest-profile-preview{background:var(--brand-soft);border-color:var(--line)}
+.footer{font-family:var(--font-heading);color:var(--muted)}
+.brand-komodo{display:inline-block;width:28px;height:28px;overflow:hidden;vertical-align:middle;flex:none;position:relative;border-radius:5px;margin-right:5px}
+.brand-komodo img{position:absolute;width:51px;max-width:none;height:auto;left:-10px;top:-10px}
+@media(max-width:360px){.topbar{padding-inline:12px}.wondercase-lockup{gap:8px}.wondercase-mark{width:44px;height:44px}.wondercase-titles strong{font-size:18px;letter-spacing:.1em}.wondercase-titles small{font-size:6.8px;letter-spacing:.065em}.wondercase-titles>span{font-size:7px;letter-spacing:.2em}}
+/* Approved main banner and staged tour resources. */
+.wondercase-mark{width:65px;height:58px;border-radius:11px;overflow:hidden}
+.wondercase-titles{align-items:center;gap:5px}.wondercase-titles strong{font-weight:600}.wondercase-titles small{font-size:9px;letter-spacing:.18em}.wondercase-titles>span{font-size:9px;color:var(--brand-gold-text);letter-spacing:.22em}
+.brand-icon{width:36px;height:36px;flex:none;vertical-align:middle;border-radius:9px;overflow:hidden}
+.bottom-nav .brand-icon{width:29px;height:29px}
+.release-card{margin:14px 0;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--brand-surface);overflow:hidden}
+.release-heading{display:flex;gap:12px;align-items:center}.release-heading h3{margin:0;font-size:15px;line-height:1.4}.release-soon{margin:3px 0 0;color:var(--brand-gold-text);font-size:13px;font-weight:600}.release-caption{font-size:13px;color:var(--muted);margin:10px 0 0}.release-controls{margin-top:12px;border-top:1px solid var(--line);padding-top:8px;font-size:13px}.release-controls fieldset{border:0;padding:0;display:flex;gap:8px;flex-wrap:wrap;min-width:0}.release-controls button,.upload-resource,.add-resource{padding:9px 12px;border:1px solid var(--brand-gold);border-radius:9px;background:var(--brand-ivory);color:var(--brand-green);font:inherit;cursor:pointer}.release-controls form{width:100%}.release-controls input:not([type=file]){display:block;padding:10px;width:100%;border:1px solid var(--line);border-radius:6px}.upload-resource{display:block}.upload-resource input{display:block;max-width:100%;font-size:12px;margin-top:5px}.resource-preview{border:1px dashed var(--brand-sage);padding:12px;margin-top:10px}.resource-preview>small{color:var(--brand-gold-text)}.swipe-hint{text-align:center;font-size:11px;letter-spacing:.07em;color:var(--muted);margin:8px}.swipe-enabled{touch-action:pan-y pinch-zoom}.day-hotel-resources{display:block}.release-card .info-accordion{margin:10px 0 0}.release-card .brand-icon{max-width:36px}
+@media(max-width:380px){.wondercase-mark{width:52px;height:48px}.wondercase-titles strong{font-size:20px;letter-spacing:.11em}.wondercase-titles small{font-size:7px}.wondercase-titles>span{font-size:8px}}
+
+.announcement-whatsapp{display:grid;gap:8px;margin-top:16px}.announcement-whatsapp .button{display:block;text-align:center;text-decoration:none;border-radius:10px;padding:12px;background:var(--brand-green);color:var(--brand-ivory);font-weight:600}.announcement-whatsapp small{line-height:1.5;color:var(--muted)}

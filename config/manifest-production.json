@@ -1,0 +1,28 @@
+{
+  "name": "Wondercase · xxx edition",
+  "short_name": "Wondercase",
+  "description": "Public Singapore-to-Bali travel companion for the October 17\u201330, 2026 Tauck journey.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F9F6EC",
+  "theme_color": "#315C4F",
+  "icons": [
+    {
+      "src": "/icon-v2-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/app-icon-v2-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

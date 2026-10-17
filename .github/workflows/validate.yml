@@ -1,0 +1,32 @@
+name: Validate site
+on:
+  push:
+    branches: [main, "fix/**"]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build-and-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Production build and TypeScript validation
+        run: node scripts/generate-itinerary.mjs && npx next build --webpack
+      - name: Empty and populated roster API regression checks
+        run: node tests/empty-roster.mjs
+      - name: Existing guest roster regression checks
+        run: node tests/guest-roster.mjs
+      - name: Imported content through real API handlers
+        run: node tests/published-import.mjs
+      - name: Master-admin session and access checks
+        run: node tests/master-admin.mjs && node tests/master-admin-session.mjs && node tests/td-password-readiness.mjs
+      - name: Install browser test tools
+        run: npm install --no-save --package-lock=false playwright && npx playwright install --with-deps chromium
+      - name: Desktop and mobile site smoke tests
+        run: node tests/site-smoke.mjs

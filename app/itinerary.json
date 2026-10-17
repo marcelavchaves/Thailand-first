@@ -1,0 +1,546 @@
+[
+  {
+    "date": 5,
+    "title": "Welcome To Hanoi",
+    "region": "Hanoi",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "9:00 - 11:00",
+        "Hospitality desk (location to be confirmed). Please bring your passport, visas for Vietnam and Cambodia."
+      ],
+      [
+        "18:00",
+        "Welcome reception (location to be confirmed)."
+      ],
+      [
+        "19:00",
+        "Welcome Dinner at Le Beaulieu Restaurant."
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Hanoi hotel — not named in supplied itinerary",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 6,
+    "title": "Hanoi Sightseeing - Water Puppets",
+    "region": "Hanoi",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "6:00",
+        "Breakfast is served at Spice Garden and Le Club Bar."
+      ],
+      [
+        "8:45",
+        "Depart from the lobby for a 45-minute journey through the old city on open Club cars, return to the hotel for a quick break before leaving by coach for the Presidential Palace, Ho Chi Minh’s Mausoleum, Hanoi Hilton and One Pillar Pagoda."
+      ],
+      [
+        "12:30",
+        "Lunch at Ly Club restaurant."
+      ],
+      [
+        "14:15",
+        "Approximate arrival at Hotel."
+      ],
+      [
+        "15:50",
+        "Depart from the lobby for the Water Puppet performance."
+      ],
+      [
+        "17:15",
+        "Return to hotel. Dinner is not included tonight."
+      ],
+      [
+        "21:00",
+        "Checked tagged luggage will be picked up OUTSIDE your room. No power bank in checked luggage."
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Hanoi hotel — not named in supplied itinerary",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 7,
+    "title": "Hanoi To Danang And The Rainforests",
+    "region": "Hue",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "5:30",
+        "Early Breakfast opening in Spice Garden restaurant"
+      ],
+      [
+        "6:00",
+        "Depart for the airport. Vietnam Airlines to Danang VN163/7:45-9:05. Enjoy a two hours drive to Hue and visit Emperor Tu Duc Mausoleum."
+      ],
+      [
+        "12:45",
+        "Arrive at La Residence hotel and Spa in Hue for check in and lunch included."
+      ],
+      [
+        "15:00",
+        "Depart hotel on a Cyclo tour of Hue citadel / Imperial city and Purple Forbidden City."
+      ],
+      [
+        "17:00",
+        "Return to hotel. Dinner tonight is included in Le Parfum restaurant from 18:30"
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "La Residence Hotel and Spa",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 8,
+    "title": "Hue - Da Nang",
+    "region": "Da Nang",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "6:30",
+        "Breakfast opens at Le Parfum restaurant"
+      ],
+      [
+        "8:00",
+        "Checked luggage OUTSIDE you room ready for pick up."
+      ],
+      [
+        "9:00",
+        "Depart hotel to visit Thien Mu Pagoda followed by Perfume River cruise."
+      ],
+      [
+        "12:00",
+        "Drive along the famous Highway #1 to the Vedana Lagoon Resort, beautiful scenic road.."
+      ],
+      [
+        "13:00",
+        "Included lunch at Horizon restaurant in Vedana Lagoon Resort."
+      ],
+      [
+        "14:30",
+        "Scenic drive over Hai Van mountain pass to Danang."
+      ],
+      [
+        "16:00",
+        "Arrival at Furama Resort. Located on China Beach. Dinner is included tonight in any of the Furama’s fine restaurants."
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Furama Resort",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 9,
+    "title": "Farming Village And Hoi An, Unesco Site",
+    "region": "Hoi An",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "7:00",
+        "Breakfast opens at Cafe Indochine"
+      ],
+      [
+        "8:30",
+        "Depart for a visit to a local farming village followed by a drive to Hoi An. Transfer onto Cyclos to better see this UNESCO World Heritage Site"
+      ],
+      [
+        "12:00",
+        "Time to explore the city. Lots of great choices for lunch (not included) and shopping."
+      ],
+      [
+        "13:30",
+        "First departure back to Furama hotel for those who want more time at the resort."
+      ],
+      [
+        "15:30",
+        "Second departure for those who want more time to explore Hoi An. Dinner included at your choice of restaurant"
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Furama Resort",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 10,
+    "title": "Saigon - Cu Chi Tunnels",
+    "region": "Saigon",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "6:00",
+        "Luggage pick up. Breakfast opens at Cafe Indochine"
+      ],
+      [
+        "7:30",
+        "Depart hotel for Danang Airport."
+      ],
+      [
+        "8:55",
+        "Flight departure for Saigon, arriving at 10:25am"
+      ],
+      [
+        "11:15",
+        "Depart for Cu Chi Tunnels, boxed lunch served on the way to the tunnels, 90 minutes drive."
+      ],
+      [
+        "13:00",
+        "Tour the Tunnels, wear casual clothes. After the tour we head back to Saigon. Two hour visit."
+      ],
+      [
+        "17:00",
+        "Arrive at Park Hyatt Saigon. Dinner tonight is included at Square One Restaurant"
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Park Hyatt Saigon",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 11,
+    "title": "Saigon City Tour And Vespa Tour At Night",
+    "region": "Saigon",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "6:00",
+        "Breakfast opens in Cafe Opera ( lobby level)"
+      ],
+      [
+        "9:00",
+        "Depart for Saigon tour. See the bustling Ben Tanh market, the Presidential palace, serving as the seat of government for South Vietnam during the war. Our tour continues as we see the Notre Dame Cathedral and the Eiffel inspired Post Office. We will drive by the American consulate, former American embassy."
+      ],
+      [
+        "12:30",
+        "Included lunch at Opera restaurant in the hotel (lobby level). Free time for rest of the afternoon."
+      ],
+      [
+        "18:00",
+        "Included Foodie and nightlights tour of Saigon by VESPA, newest and best addition to the tour."
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Park Hyatt Saigon",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 12,
+    "title": "Siem Reap, Cambodia",
+    "region": "Siem Reap",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "6:30",
+        "Breakfast opens at Cafe Opera and Square One."
+      ],
+      [
+        "7:15",
+        "Luggage pick up from inside the rooms."
+      ],
+      [
+        "8:30",
+        "Depart for the airport. Going through passport and security control, it can take over an hour if crowded at Saigon airport."
+      ],
+      [
+        "12:00",
+        "Air Cambodia flight K6825 for Siem Reap, arrival at 1:15pm."
+      ],
+      [
+        "13:45",
+        "Clearing Cambodia immigration and customs on arrival and check in at Raffles hotel."
+      ],
+      [
+        "15:30",
+        "Afternoon tour to Ta Prohm temple, the Tomb Raider movie temple (where trees and roots grow out of the temple ruins), Ancient city of Angkor Thom and BAYON temple."
+      ],
+      [
+        "17:30",
+        "Arrival at Raffles Grand hotel."
+      ],
+      [
+        "19:00",
+        "Included dinner and Cambodian dance performance at Apsara restaurant."
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Raffles Grand Hotel",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 13,
+    "title": "Sunrise At Angkor Wat & Tonle Sap Lake",
+    "region": "Siem Reap",
+    "image": "",
+    "intro": "Conservative dress code all day today, shorts are fine as long as they cover your knees.",
+    "events": [
+      [
+        "5:00",
+        "Depart to visit Angkor Wat, sure to be one of the highlights of your tour to Asia."
+      ],
+      [
+        "8:00",
+        "Return to hotel for Breakfast"
+      ],
+      [
+        "11:00",
+        "Depart to Tonle Sap Lake. Our private boat tour will reveal the hard life of the people living in the floating villages of this largest freshwater lake in Southeast Asia."
+      ],
+      [
+        "12:30",
+        "Lunch at Sokkhak River Side restaurant in Siem Reap town."
+      ],
+      [
+        "17:30",
+        "Return to hotel."
+      ],
+      [
+        "18:00",
+        "Included A La Carte dinner at Cafe D’Angkor"
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Raffles Grand Hotel",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 14,
+    "title": "Siem Reap To Bangkok To Chiang Mai",
+    "region": "Chiang Mai",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "5:30",
+        "Checked luggage outside rooms for pick up."
+      ],
+      [
+        "6:00",
+        "Breakfast opens at Cafe D’Angkor"
+      ],
+      [
+        "7:00",
+        "Depart for the airport, around 45 minutes ride."
+      ],
+      [
+        "9:50",
+        "Thai Airways flight for Bangkok (luggage checked through to Chiang Mai)"
+      ],
+      [
+        "10:55",
+        "Arrival at Bangkok’s Suvarnbhumi international airport. We will clear Thai immigration here. Please have have Passport, e-visa, boarding pass from Siem Reap and boarding pass from Bangkok to Chiang Mai ready to present at immigration. After Thai immigration, we enter into the Domestic Side of the airport, where there are several restaurants and shops available. Lunch today is not included. Once you go through security, you’ll be in the Domestic side of the airport, and there are no food courts at the Domestic gates. Make sure you have lunch before going into the Domestic area."
+      ],
+      [
+        "13:30",
+        "Flight departure for Chiang Mai"
+      ],
+      [
+        "14:45",
+        "On arrival in Chiang Mai, follow signage for International Baggage Claim, we will clear Thai Customs here. Tour the Old Walled City of Chiang Mai before going to the hotel."
+      ],
+      [
+        "16:30",
+        "Arrive at Intercontinental our home for the next three nights."
+      ],
+      [
+        "18:30",
+        "Thai Welcome Dinner and traditional show as we enjoy dinner."
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Intercontinental Chiang Mai",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 15,
+    "title": "Kanta Elephant Sanctuary - Hill Tribe Village",
+    "region": "Chiang Mai",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "6:30",
+        "Breakfast opens at The Gad Lanna Terrace"
+      ],
+      [
+        "9:00",
+        "Depart for KANTA ELEPHANT SANCTUARY. Dress casually, bring a bathing suit or change of underwear if you want to bathe the elephants. The sanctuary provides their own clothing as well as lockers, changing rooms, towel and showers. Lunch is catered by the Four Seasons at the elephant sanctuary."
+      ],
+      [
+        "13:00",
+        "After lunch, we have a fascinating visit to the Mae Rim Hill Tribe Village. See their distinct culture and living conditions. See the Long Neck Karen tribe with their brass neck rings. Bring some Thai Baht if you’re interested to purchase some of their homemade handicrafts. No US cash or cards accepted here."
+      ],
+      [
+        "14:45",
+        "Return to hotel and rest of the day at leisure. Dinner included at your restaurant choice, Khao (local cuisine) or North (Western cuisine)"
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Intercontinental Chiang Mai",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 16,
+    "title": "Doi Suthep Buddhist Temple",
+    "region": "Chiang Mai",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "7:00",
+        "Breakfast opens"
+      ],
+      [
+        "9:00",
+        "Depart for a visit to DOI SUTHEP temple."
+      ],
+      [
+        "13:00",
+        "Return to hotel and rest of the day at leisure. Lunch today is not included. Dinner at hotel at your restaurant choice. Enjoy our last night in Chiang Mai!!"
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Intercontinental Chiang Mai",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 17,
+    "title": "Bangkok - Krung Thep - City Of Angels",
+    "region": "Bangkok",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "6:00",
+        "Checked luggage outside rooms for pick up."
+      ],
+      [
+        "7:00",
+        "Breakfast opens."
+      ],
+      [
+        "8:00",
+        "Depart for Airport. Bangkok airways flight at 10:10am arriving in Bangkok at 11:35am"
+      ],
+      [
+        "12:45",
+        "Included lunch on arrival at Rosewood Hotel"
+      ],
+      [
+        "15:00",
+        "Depart by Skytrain to visit the Jim Thompson House, known worldwide as the man who revitalized the Thai Silk industry. Bangkok’ BTS or SKYTRAIN connects the whole city by an overhead rail line. Our hotel is conveniently located right at a Skytrain stop."
+      ],
+      [
+        "17:00",
+        "Return to hotel and rest of the day at leisure. Dinner is included tonight at hotel’s Nan Bei restaurant (19th floor). Please, make your dinner reservation time at lunch today."
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Rosewood Bangkok",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 18,
+    "title": "Klongs Of Old Bangkok & Temple Of Dawn",
+    "region": "Bangkok",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "7:00",
+        "Breakfast opens at Lakorn restaurant"
+      ],
+      [
+        "8:30",
+        "Depart to River City on the Chao Phraya River and get on our boat."
+      ],
+      [
+        "9:15",
+        "Cross the river and visit to Bangkok’s Iconic Wat Arun (the Temple of Dawn)"
+      ],
+      [
+        "10:00",
+        "Transfer to our special canal boat for a fascinating tour through the canals (Klongs) of Old Bangkok, known as the Venice of the East"
+      ],
+      [
+        "12:30",
+        "Included lunch at famous Sorndaeng restaurant (Michelin Star)"
+      ],
+      [
+        "14:30",
+        "Return to Rosewood hotel and rest of the ay at leisure. Dinner tonight is not included, see suggestions sheet"
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Rosewood Bangkok",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 19,
+    "title": "Reclining Buddha - Emerald Buddha / Palace",
+    "region": "Bangkok",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "6:30",
+        "Breakfast opens on 7th floor"
+      ],
+      [
+        "8:00",
+        "Depart for the Highlight temples of Bangkok"
+      ],
+      [
+        "8:30",
+        "Visit the temple of the Emerald Buddha and the Grand Palace, shorts not allowed."
+      ],
+      [
+        "10:30",
+        "A police escorted Tuk Tuk ride through the streets of Bangkok."
+      ],
+      [
+        "11:00",
+        "Visit to Wat Po, famous temple of the Reclining Buddha, more than 140 feet long and 50 feet high. The complex contains beautiful traditional Thai architecture and home to the teaching school for traditional Thai massage."
+      ],
+      [
+        "13:00",
+        "Return to hotel and rest of the day at leisure."
+      ],
+      [
+        "18:15",
+        "Farewell cocktail reception at Lennon’s Bar on 30th floor!!"
+      ],
+      [
+        "19:00",
+        "Farewell dinner at Pavilion room, on 5th floor!! BRING COMMENT CARDS"
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "Rosewood Bangkok",
+    "meals": "See daily schedule"
+  },
+  {
+    "date": 20,
+    "title": "Safe Travel Home! See You Soon, I Hope !",
+    "region": "Bangkok",
+    "image": "",
+    "intro": "",
+    "events": [
+      [
+        "",
+        "Safe travel home! See you soon, I hope!"
+      ]
+    ],
+    "note": "Times and activities as provided in the supplied itinerary; subject to change.",
+    "hotel": "",
+    "meals": "See daily schedule"
+  }
+]

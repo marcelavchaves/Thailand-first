@@ -1,0 +1,22 @@
+import {build} from 'esbuild';
+import {mkdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import sharp from 'sharp';
+await mkdir('.pdf-build',{recursive:true});
+globalThis.photoTest={user:null,item:null,version:0};
+await build({entryPoints:['netlify/functions/director-photo.mts'],outfile:'.pdf-build/photo-handler-test.mjs',bundle:true,platform:'node',format:'esm',external:['sharp'],plugins:[{name:'isolated-test-dependencies',setup(b){
+ b.onResolve({filter:/^@netlify\/(blobs|identity)$|td-auth$/},a=>({path:a.path,namespace:'mock'}));
+ b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path==='@netlify/blobs'?`export function getStore(){return {getWithMetadata:async()=>globalThis.photoTest.item,setJSON:async(key,data,options)=>{const s=globalThis.photoTest;if(options.onlyIfNew&&s.item||options.onlyIfMatch&&options.onlyIfMatch!==s.item?.etag)return {modified:false};const etag=String(++s.version);s.item={data,etag};return {modified:true,etag};}}}`:a.path==='@netlify/identity'?`export async function getUser(){return globalThis.photoTest.user;}`:`export function sameOrigin(r){return r.headers.get('origin')===new URL(r.url).origin} export function isTourDirector(u){return u?.email==='xbrunelle@tauck.com'&&u.roles?.includes('tour-director')}`,loader:'js'}));
+}}]});
+const {default:handler}=await import('../.pdf-build/photo-handler-test.mjs');
+const call=(body,origin='https://example.test')=>handler(new Request('https://example.test/api/director-photo',{method:'PUT',headers:{origin,'Content-Type':'application/json'},body:JSON.stringify(body)}));
+assert.equal((await call({photo:null,revision:null})).status,401);
+assert.equal(globalThis.photoTest.item,null);
+globalThis.photoTest.user={email:'someone@example.test',roles:['tour-director']};assert.equal((await call({photo:null,revision:null})).status,401);
+globalThis.photoTest.user={email:'xbrunelle@tauck.com',roles:['tour-director']};assert.equal((await call({photo:null,revision:null},'https://other.test')).status,403);
+const bytes=await sharp({create:{width:32,height:24,channels:3,background:'#246349'}}).jpeg().toBuffer();
+const saved=await call({photo:'data:image/jpeg;base64,'+bytes.toString('base64'),revision:null});assert.equal(saved.status,200);const record=await saved.json();assert.ok(record.photo.startsWith('data:image/jpeg;base64,'));
+globalThis.photoTest.user=null;const publicRead=await handler(new Request('https://example.test/api/director-photo'));assert.deepEqual(await publicRead.json(),record);assert.equal((await call({photo:null,revision:record.revision})).status,401);
+globalThis.photoTest.user={email:'xbrunelle@tauck.com',roles:['tour-director']};assert.equal((await call({photo:null,revision:null})).status,409);assert.equal((await call({photo:'data:image/jpeg;base64,broken',revision:record.revision})).status,400);
+assert.equal((await call({photo:null,revision:record.revision})).status,200);assert.equal(globalThis.photoTest.item.data.photo,null);
+console.log('PASS: director-only writes, origin protection, JPEG validation, save/read, stale-update rejection, original-photo restore. Isolated storage; no site data changed.');

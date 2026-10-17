@@ -1,0 +1,66 @@
+[
+  {
+    "id": "java",
+    "title": "Java — The Island That Built Indonesia",
+    "days": [
+      8,
+      9,
+      10
+    ],
+    "hotelIndex": -1,
+    "category": "Destination story",
+    "description": "A six-minute journey through Java’s history, temples and traditions.",
+    "pages": 8,
+    "returnTo": "/?tab=journey&day=4"
+  },
+  {
+    "id": "bali",
+    "title": "Bali — The Island of Gods",
+    "days": [
+      11,
+      12,
+      13,
+      16,
+      17,
+      18
+    ],
+    "hotelIndex": -1,
+    "category": "Destination story",
+    "description": "Discover Bali’s living traditions, art and spiritual life.",
+    "pages": 8,
+    "returnTo": "/?tab=journey&day=7"
+  },
+  {
+    "id": "komodo-flores",
+    "title": "Komodo & Flores — The Land of Dragons",
+    "days": [
+      14,
+      15
+    ],
+    "hotelIndex": -1,
+    "category": "Destination story",
+    "description": "Explore the natural world and island stories of Komodo and Flores.",
+    "pages": 8,
+    "returnTo": "/?tab=journey&day=10"
+  },
+  {
+    "id": "sayan",
+    "title": "Four Seasons Sayan — Ubud Stay Guide",
+    "days": [],
+    "hotelIndex": 3,
+    "category": "Destination stay guide",
+    "description": "A destination guide to dining, getting around Ubud and enjoying your stay.",
+    "pages": 4,
+    "returnTo": "/?tab=hotels&hotel=hotel-3"
+  },
+  {
+    "id": "jimbaran",
+    "title": "Four Seasons Jimbaran Bay — Stay Guide",
+    "days": [],
+    "hotelIndex": 5,
+    "category": "Destination stay guide",
+    "description": "A destination guide to dining, the beach and a relaxing final stay.",
+    "pages": 4,
+    "returnTo": "/?tab=hotels&hotel=hotel-5"
+  }
+]

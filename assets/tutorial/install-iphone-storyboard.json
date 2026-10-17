@@ -1,0 +1,72 @@
+[
+  {
+    "step": 1,
+    "title": "Start with Chervil’s email",
+    "caption": "Open Chervil’s email on your iPhone. Find the Kingdoms & Dragons app link. Keep Wi-Fi or mobile data on."
+  },
+  {
+    "step": 2,
+    "title": "Open the app link",
+    "caption": "Tap the app link once. If it opens in Safari, continue to the app page. If it opens in another browser or inside email, follow the next steps."
+  },
+  {
+    "step": 3,
+    "title": "If needed: copy the link",
+    "caption": "Return to the email. Touch and hold the app link, then choose Copy Link or Copy. The link is now ready to paste."
+  },
+  {
+    "step": 4,
+    "title": "Open Safari",
+    "caption": "Find Safari, the blue compass icon. Tap it. Use Safari for this iPhone installation walkthrough."
+  },
+  {
+    "step": 5,
+    "title": "Paste the app address",
+    "caption": "Tap Safari’s address bar. Touch and hold inside it, then tap Paste and Go. If you see Paste instead, tap Paste, then Go."
+  },
+  {
+    "step": 6,
+    "title": "Check the journey page",
+    "caption": "Wait for Kingdoms & Dragons to load. You should see the journey title. If the app was already open in Safari, start here."
+  },
+  {
+    "step": 7,
+    "title": "Find the Share button",
+    "caption": "Tap Share: a square with an upward arrow. Depending on Safari’s layout, first tap the Page Menu, then Share."
+  },
+  {
+    "step": 8,
+    "title": "Expand the Share sheet",
+    "caption": "Swipe upward on the Share sheet to reveal more actions. Look below the row of app icons for Add to Home Screen."
+  },
+  {
+    "step": 9,
+    "title": "Tap Add to Home Screen",
+    "caption": "Tap Add to Home Screen. If it is missing, scroll to Edit Actions, then add the Add to Home Screen action."
+  },
+  {
+    "step": 10,
+    "title": "Check the app options",
+    "caption": "Keep the suggested name K&D102. If Open as Web App appears, leave it switched on. Older iPhones may not show that switch."
+  },
+  {
+    "step": 11,
+    "title": "Tap Add",
+    "caption": "Tap Add in the upper-right corner. Wait for the new icon to be placed on this iPhone’s Home Screen."
+  },
+  {
+    "step": 12,
+    "title": "Find your new app icon",
+    "caption": "Return to the Home Screen: swipe up from the bottom, or press the physical Home button. Swipe between pages to find K&D102."
+  },
+  {
+    "step": 13,
+    "title": "Open your journey",
+    "caption": "Tap the new app icon. Use it each day instead of finding the email again. Travelers do not need Chervil’s TD Login. Keep internet on for current updates."
+  },
+  {
+    "step": 14,
+    "title": "If you need a little help",
+    "caption": "Cannot find the icon? Swipe down on the Home Screen and search its name. If installation did not finish, reopen the link in Safari and repeat Share → Add to Home Screen."
+  }
+]

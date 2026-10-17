@@ -1,0 +1,33 @@
+[build]
+  command = "node scripts/generate-itinerary.mjs && npx next build --webpack"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  external_node_modules = ["pdfkit", "sharp", "@netlify/identity"]
+  included_files = ["node_modules/@netlify/identity/**"]
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[functions."current-itinerary"]
+  included_files = ["netlify/data/itinerary-content.json", "scripts/fonts/**", "public/images/**", "public/documents/**"]
+
+[functions."journey-timeline"]
+  included_files = ["netlify/data/itinerary-content.json", "scripts/fonts/**", "public/images/**", "public/documents/**"]
+
+[functions."export-itinerary"]
+  included_files = ["netlify/data/itinerary-content.json", "scripts/fonts/**", "public/images/**", "public/documents/**"]
