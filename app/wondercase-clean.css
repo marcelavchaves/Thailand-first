@@ -139,3 +139,10 @@ html,body,.app-shell{background:#fff}
 .day-list .day-card > img.journey-day-thumbnail { width: 96px; flex: 0 0 96px; min-height: 128px; align-self: stretch; object-fit: cover; object-position: center; }
 .day-list .day-card > div { min-width: 0; flex: 1; }
 @media (max-width: 360px) { .day-list .day-card > img.journey-day-thumbnail { width: 80px; flex-basis: 80px; } }
+
+/* Three-line app identity; allow the destination to wrap on small phones. */
+.topbar { height: auto; min-height: 104px; }
+.wondercase-titles { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.wondercase-titles strong { font-size: clamp(23px, 6vw, 30px); line-height: 1.1; letter-spacing: .04em; text-transform: none; white-space: normal; }
+.wondercase-titles small { font-size: clamp(11px, 3.2vw, 15px); line-height: 1.35; letter-spacing: .025em; white-space: normal; text-transform: none; }
+.wondercase-titles > span { font-size: 9px; line-height: 1.3; letter-spacing: .12em; text-transform: none; }

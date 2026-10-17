@@ -1,3 +1,8 @@
+## Section navigation and banner
+
+- Scroll newly opened More and Essentials sections into view below the sticky banner; respect reduced-motion preferences.
+- Show Wondercase, Vietnam, Cambodia & Thailand, and xxx Edition as three banner lines.
+
 ## Journey destination watercolors
 
 - Add matching watercolor destination thumbnails to the left of all 16 days in the Journey list, including Hue, Hoi An, Cu Chi, Angkor, Chiang Mai, Doi Suthep and Bangkok. Keep day labels and navigation readable on mobile.

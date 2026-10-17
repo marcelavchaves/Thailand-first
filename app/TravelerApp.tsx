@@ -1704,6 +1704,23 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
   const [learnDay, setLearnDay] = useState(5);
   const [hotelTarget, setHotelTarget] = useState<string | null>(null);
   const activeEssentialsSection = hotelTarget ? "hotels" : essentialsSection;
+  const sectionScrollTarget = useRef<string | null>(null);
+  useEffect(() => {
+    const targetId = sectionScrollTarget.current;
+    if (!targetId) return;
+    sectionScrollTarget.current = null;
+    const frame = requestAnimationFrame(() => {
+      const section = document.getElementById(targetId);
+      if (!section || section.hidden) return;
+      const bannerHeight = document.querySelector('.topbar')?.getBoundingClientRect().height ?? 0;
+      window.scrollTo({
+        top: Math.max(0, window.scrollY + section.getBoundingClientRect().top - bannerHeight - 12),
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [activeEssentialsSection, moreSection]);
+
   const [homeOrder, setHomeOrder] = useState<'journey'|'announcements'>('journey');
   const [homeDateOverride, setHomeDateOverride] = useState<number | null>(null);
   useEffect(() => {
@@ -1811,8 +1828,9 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         <div className="wondercase-lockup">
           <WondercaseMark />
           <div className="wondercase-titles">
-            <strong>Vietnam, Cambodia &amp; Thailand</strong>
-            <span>xxx edition</span>
+            <strong>Wondercase</strong>
+            <small>Vietnam, Cambodia &amp; Thailand</small>
+            <span>xxx Edition</span>
           </div>
         </div>
       </header>
@@ -1948,7 +1966,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             {key:'hotels',title:'Hotels',image:'/images/essentials-hotels.svg'},
             {key:'flights',title:'Flights',image:'/images/essentials-flights.svg'},
             {key:'local-guides',title:'Local guides',image:'/images/essentials-local-guides.svg'},
-          ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={activeEssentialsSection===item.key} aria-controls={`essentials-${item.key}`} onClick={()=>{setEssentialsSection(activeEssentialsSection===item.key?null:item.key);setHotelTarget(null);}}><img src={item.image} alt=""/><strong>{item.title}</strong></button>)}</div>
+          ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={activeEssentialsSection===item.key} aria-controls={`essentials-${item.key}`} onClick={()=>{const next=activeEssentialsSection===item.key?null:item.key;sectionScrollTarget.current=next?`essentials-${next}`:null;setEssentialsSection(next);setHotelTarget(null);}}><img src={item.image} alt=""/><strong>{item.title}</strong></button>)}</div>
           <section id="essentials-local-guides" hidden={activeEssentialsSection!=='local-guides'} aria-labelledby="local-guides-title"><h2 id="local-guides-title">Local guides</h2><ResourceGroup group="local-guides"/>{localGuides.map((guide,i)=><ResourceSlot key={guide.name} id={`local-${i}`} title={guide.name} group="local-guides" icon="people"><section className="local-guide-panel"><h3>{guide.name} · {guide.destination}</h3><img src={`/images/${guide.image}`} alt={guide.name}/><p>{guide.introduction}</p></section></ResourceSlot>)}</section>
           <section className="essentials-handouts" id="essentials-handouts" hidden={activeEssentialsSection!=='handouts'} aria-labelledby="handouts-title"><h2 id="handouts-title">Handouts</h2><Handouts/>
 </section><section id="essentials-hotels" hidden={activeEssentialsSection!=='hotels'} aria-labelledby="stays"><h2 id="stays">Hotels</h2><p>Overnight stays · November 16–December 1, 2026. Vedana Lagoon Resort is a lunch stop on November 19, not an overnight stay.</p>
@@ -2040,7 +2058,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           {key:'help',title:'Help & Tutorials',icon:'book',image:'/images/more-help.svg'},
           {key:'shop',title:'Journey Shop',icon:'shop',image:'/images/more-shop.svg'},
           {key:'rating',title:'Help Wondercase Grow',icon:'feedback',image:'/images/more-grow.svg'},
-        ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={moreSection===item.key} aria-controls={`more-${item.key}`} onClick={()=>setMoreSection(current=>current===item.key?null:item.key)}><img src={item.image} alt=""/><strong>{item.title}</strong><small>{item.key==='learn'?'Trivia & language':item.key==='help'?'FAQs, how-tos & tutorials':item.key==='shop'?'Coming soon':item.key==='rating'?'Your ideas help us bloom':null}</small></button>)}</div>
+        ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={moreSection===item.key} aria-controls={`more-${item.key}`} onClick={()=>{const next=moreSection===item.key?null:item.key;sectionScrollTarget.current=next?`more-${next}`:null;setMoreSection(next);}}><img src={item.image} alt=""/><strong>{item.title}</strong><small>{item.key==='learn'?'Trivia & language':item.key==='help'?'FAQs, how-tos & tutorials':item.key==='shop'?'Coming soon':item.key==='rating'?'Your ideas help us bloom':null}</small></button>)}</div>
         {moreSection==='help'&&<HelpAndTutorials/>}
         {moreSection==='learn'&&<section id="more-learn" className="more-open-panel"><h2>Learn more</h2><label>Choose a journey day<select value={learnDay} onChange={event=>setLearnDay(Number(event.target.value))}>{days.map(day=><option key={day.date} value={day.date}>Day {tauck(day.date)} · {day.title}</option>)}</select></label><LocalLanguageLesson key={`learn-language-${learnDay}`} region={days.find(day=>day.date===learnDay)!.region}/><DailyTrivia key={`learn-trivia-${learnDay}`} date={learnDay}/></section>}
 
