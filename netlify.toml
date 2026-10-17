@@ -1,5 +1,5 @@
 [build]
-  command = "node scripts/generate-itinerary.mjs && npx next build --webpack"
+  command = "npx next build --webpack"
   publish = "out"
 
 [build.environment]

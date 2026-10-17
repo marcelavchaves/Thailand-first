@@ -1,3 +1,7 @@
+## Thailand build fix
+
+- Use the supplied Vietnam, Cambodia & Thailand itinerary PDF directly. Remove the inherited PDF-generation step from the Netlify build, which failed on missing legacy day artwork.
+
 ## Preview: TD password readiness and sessions — October 16, 2026
 
 - TD sign-in recognizes both a password saved through Master Admin and the original CHERVIL_NOTES_PASSWORD configuration.
