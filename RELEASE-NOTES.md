@@ -1,3 +1,7 @@
+## Discreet admin entry
+
+- Display WONDERCASE in capitals and use the unstyled title to open master-admin sign-in. Remove the visible admin link from More. Existing authentication remains required.
+
 ## Section navigation and banner
 
 - Scroll newly opened More and Essentials sections into view below the sticky banner; respect reduced-motion preferences.

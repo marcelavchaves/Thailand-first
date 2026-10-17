@@ -1828,7 +1828,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         <div className="wondercase-lockup">
           <WondercaseMark />
           <div className="wondercase-titles">
-            <strong>Wondercase</strong>
+            <strong><a className="wondercase-admin-entry" href="/master-admin">WONDERCASE</a></strong>
             <small>Vietnam, Cambodia &amp; Thailand</small>
             <span>xxx Edition</span>
           </div>
@@ -2049,7 +2049,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
       )}
       {tab === "info" && <section className="page info-page travelers-page"><XavierContactCard onSuitcase={()=>nav("td")}/><GuestProfiles/></section>}
       {tab === "more" && <section className="section more-page">
-        <h1>More</h1><p><a href="/master-admin">Master-admin sign-in →</a></p>
+        <h1>More</h1>
 
         <div className="more-tile-grid">{[
           {key:'reading',title:'Recommended reading',icon:'book',image:'/images/more-reading.svg'},
