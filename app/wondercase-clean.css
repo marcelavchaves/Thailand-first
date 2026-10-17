@@ -134,3 +134,8 @@ html,body,.app-shell{background:#fff}
 .xavier-welcome-panel>summary>span:nth-child(2){min-width:0}
 .xavier-welcome-panel>summary strong{font-size:clamp(12px,3.7vw,16px);white-space:nowrap}
 .xavier-letter h2{font-size:clamp(10px,2.8vw,14px);white-space:nowrap;letter-spacing:-.2px}
+
+/* Destination watercolors remain beside the day text on narrow screens. */
+.day-list .day-card > img.journey-day-thumbnail { width: 96px; flex: 0 0 96px; min-height: 128px; align-self: stretch; object-fit: cover; object-position: center; }
+.day-list .day-card > div { min-width: 0; flex: 1; }
+@media (max-width: 360px) { .day-list .day-card > img.journey-day-thumbnail { width: 80px; flex-basis: 80px; } }

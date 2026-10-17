@@ -1836,7 +1836,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
                 key={d.date}
                 onClick={() => setSelected(d.date)}
               >
-                
+                <img className="journey-day-thumbnail" src={`/images/${d.image}`} alt={`Watercolor of ${d.region}`} loading="lazy" width={96} height={128} />
                 <div>
                   <span className="date">
                     {weekday(d.date).toUpperCase()} · {shortTripDate(d.date).toUpperCase()}

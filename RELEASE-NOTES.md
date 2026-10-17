@@ -1,3 +1,7 @@
+## Journey destination watercolors
+
+- Add matching watercolor destination thumbnails to the left of all 16 days in the Journey list, including Hue, Hoi An, Cu Chi, Angkor, Chiang Mai, Doi Suthep and Bangkok. Keep day labels and navigation readable on mobile.
+
 ## Fictional guest names
 
 - Replace the 16 guest names with cute fictional names, keeping guest IDs and Safe assignments stable. Refresh the published roster independently of daily schedules.
