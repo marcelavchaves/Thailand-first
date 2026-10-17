@@ -3,20 +3,20 @@ export function HelpAndTutorials(){
   <span className="eyebrow">A LITTLE GUIDANCE, WHENEVER YOU NEED IT</span>
   <h2>Help &amp; Tutorials</h2><p>Make yourself at home in Wondercase. Start with a question, or follow a quick guide.</p>
   <details open><summary>How do I…?</summary>
-   <details><summary>Open My Safe</summary><p>Go to Travelers, find your own guest card and tap <strong>Open My Safe</strong>. Enter your Safe password on the sign-in screen. If the guest list is still hidden or you need help with your password, ask Chervil.</p><a href="/?tab=info">Go to Travelers →</a></details>
+   <details><summary>Open My Safe</summary><p>Go to Travelers, find your own guest card and tap <strong>Open My Safe</strong>. Enter your Safe password on the sign-in screen. If the guest list is still hidden or you need help with your password, ask Xavier.</p><a href="/?tab=info">Go to Travelers →</a></details>
    <details><summary>Find today’s schedule</summary><p>Open Journey and choose your journey day. Look for the day’s activities and Xavier’s latest notes. Check back for updates as you travel.</p><a href="/?tab=journey">Open Journey →</a></details>
    <details><summary>Find trip documents</summary><p>Open your Safe for personal documents. Shared destination information and handouts are available in the journey’s resource sections.</p><a href="/?tab=journey">Explore journey resources →</a></details>
    <details><summary>Add Wondercase to my phone</summary><p>Follow the illustrated installation guide for iPhone or Android, then open Wondercase from your home screen.</p><a href="/installation-help/">Show me how →</a></details>
    <details><summary>Find our shared photos</summary><p>Open Gallery and follow the PhotoCircle link when your group’s album is available.</p><a href="/?tab=gallery">Go to Gallery →</a></details>
   </details>
   <details><summary>Frequently Asked Questions</summary>
-   <details><summary>Why can’t I see the guest list yet?</summary><p>Chervil controls when the list is revealed. If it is hidden, you will see a message until it is ready.</p></details>
+   <details><summary>Why can’t I see the guest list yet?</summary><p>Xavier controls when the list is revealed. If it is hidden, you will see a message until it is ready.</p></details>
    <details><summary>Do I need internet access?</summary><p>Connect to the internet for the latest schedule, shared photos, feedback and Safe content. Previously viewed pages may be available offline, but reconnect to check for updates.</p></details>
    <details><summary>Can I update my feedback?</summary><p>Yes. Return to Help Wondercase Grow using the same browser and device, then choose “Add to or update my thoughts.”</p></details>
-   <details><summary>Who can help with my Safe password?</summary><p>Ask Chervil for help accessing your assigned Safe. Please keep your password private.</p></details>
+   <details><summary>Who can help with my Safe password?</summary><p>Ask Xavier for help accessing your assigned Safe. Please keep your password private.</p></details>
   </details>
   <details><summary>Watch a Tutorial</summary><p>A short introduction to your travel companion.</p><video controls preload="none" playsInline aria-label="Wondercase introduction tutorial" src="/tutorial/k-d102-v0.003.mp4"/><div className="extras-links"><a href="/tutorial/k-d102-v0.003.html">Open the tutorial guide →</a><a href="/instruction-booklet/">Read the instruction booklet →</a></div></details>
-  <details><summary>Something Not Working?</summary><p>Check your internet connection, close and reopen Wondercase, and try again. For a Safe password or trip question, contact Chervil through Travelers.</p><p>For an app issue, tell us what you were trying to do, what happened, and which phone or browser you used. Please leave passwords and personal documents out of your message.</p><a href="/?tab=info">Find Xavier’s contact details →</a></details>
+  <details><summary>Something Not Working?</summary><p>Check your internet connection, close and reopen Wondercase, and try again. For a Safe password or trip question, contact Xavier through Travelers.</p><p>For an app issue, tell us what you were trying to do, what happened, and which phone or browser you used. Please leave passwords and personal documents out of your message.</p><a href="/?tab=info">Find Xavier’s contact details →</a></details>
  </section>;
 }
 

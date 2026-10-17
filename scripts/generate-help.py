@@ -73,7 +73,7 @@ def page(number,title):
  c.bookmarkPage(f'page-{number}');c.addOutlineEntry(title,f'page-{number}',0,False)
 page(1,'App instruction booklet');txt('K&D102',42,697,46,True,G);para('Your app, step by step',42,641,490,25,True,G)
 para('Traveler Edition • October 3 - 16, 2026',42,591,490,13)
-para('A practical guide to installation, the daily journey, hotels and flights, menus, guest introductions, and Chervil’s director tools.',42,548,490,16)
+para('A practical guide to installation, the daily journey, hotels and flights, menus, guest introductions, and Xavier’s director tools.',42,548,490,16)
 qr=qrcode.make(base).convert('RGB');qr.save(out/'live-app-qr.png');c.drawImage(ImageReader(qr),42,273,145,145)
 para('OPEN THE LIVE APP',211,397,330,15,True,G);para('Scan this code with your phone camera, or tap here in the PDF.',211,366,314,13)
 c.linkURL(base,(38,269,554,423),relative=0)

@@ -7,7 +7,7 @@ font=lambda n,b=False:ImageFont.truetype(str(root/'scripts/fonts'/('DejaVuSans-B
 G='#18483f';gold='#d5b76d';ink='#243e37';blue='#087abf'
 # Screen illustrations are intentionally schematic, avoiding dependence on a particular OS layout.
 iphone=[
-('Start with Chervil’s email','email','Open Chervil’s email on your iPhone. Find the Kingdoms & Dragons app link. Keep Wi-Fi or mobile data on.',(365,510)),
+('Start with Xavier’s email','email','Open Xavier’s email on your iPhone. Find the Kingdoms & Dragons app link. Keep Wi-Fi or mobile data on.',(365,510)),
 ('Open the app link','email','Tap the app link once. If it opens in Safari, continue to the app page. If it opens in another browser or inside email, follow the next steps.',(365,510)),
 ('If needed: copy the link','copy','Return to the email. Touch and hold the app link, then choose Copy Link or Copy. The link is now ready to paste.',(360,600)),
 ('Open Safari','safari','Find Safari, the blue compass icon. Tap it. Use Safari for this iPhone installation walkthrough.',(360,525)),
@@ -19,11 +19,11 @@ iphone=[
 ('Check the app options','confirm','Keep the suggested name K&D102. If Open as Web App appears, leave it switched on. Older iPhones may not show that switch.',(495,630)),
 ('Tap Add','confirm','Tap Add in the upper-right corner. Wait for the new icon to be placed on this iPhone’s Home Screen.',(525,305)),
 ('Find your new app icon','homescreen','Return to the Home Screen: swipe up from the bottom, or press the physical Home button. Swipe between pages to find K&D102.',(250,450)),
-('Open your journey','finished','Tap the new app icon. Use it each day instead of finding the email again. Travelers do not need Chervil’s TD Login. Keep internet on for current updates.',(250,450)),
+('Open your journey','finished','Tap the new app icon. Use it each day instead of finding the email again. Travelers do not need Xavier’s TD Login. Keep internet on for current updates.',(250,450)),
 ('If you need a little help','help','Cannot find the icon? Swipe down on the Home Screen and search its name. If installation did not finish, reopen the link in Safari and repeat Share → Add to Home Screen.',None)
 ]
 android=[
-('Start with Chervil’s email','email','Open Chervil’s email on your Android phone. Find the Kingdoms & Dragons app link. Keep Wi-Fi or mobile data on.',(365,510)),
+('Start with Xavier’s email','email','Open Xavier’s email on your Android phone. Find the Kingdoms & Dragons app link. Keep Wi-Fi or mobile data on.',(365,510)),
 ('Tap the app link','email','Tap the app link once. Use Google Chrome for these steps. Otherwise, choose Open in Chrome if offered, or copy and paste using the next steps.',(365,510)),
 ('If needed: copy the link','copy','Return to the email. Touch and hold the app link, then choose Copy link address or Copy link.',(360,600)),
 ('Open Google Chrome','chrome','Find the round red, yellow, green and blue Chrome icon. Tap it to open the browser.',(360,525)),
@@ -35,7 +35,7 @@ android=[
 ('Give it a moment','waiting','Allow the phone a moment to finish. Then go to your Home Screen using the Home button or your usual swipe-up gesture.',(360,800)),
 ('Find the new app','homescreen','Look for the K&D102 icon. Swipe between Home Screen pages. If you do not see it, open your app list and search for it.',(250,450)),
 ('If needed: place the icon','appdrawer','If the app is only in your app list, touch and hold its icon. Choose Add to Home, or drag it onto the Home Screen.',(250,450)),
-('Tap to open your journey','finished','Tap the new icon. You can now open the journey without returning to the email. Travelers do not need Chervil’s TD Login. Keep internet on for current updates.',(250,450)),
+('Tap to open your journey','finished','Tap the new icon. You can now open the journey without returning to the email. Travelers do not need Xavier’s TD Login. Keep internet on for current updates.',(250,450)),
 ('If Install is missing','help','Make sure the page is open in Chrome, not an email preview. Try a normal tab and reload. Check the app list first: Chrome may show Open app if it is already installed.',None)
 ]
 def wrap(d,text,xy,width,size=25,color=ink,bold=False,gap=8):
@@ -59,7 +59,7 @@ def scene(platform,i,entry,total):
  def row(t,y,fill='#eef2f1'):
   d.rounded_rectangle((151,y,569,y+59),radius=10,fill=fill);txt(t,170,y+16,19)
  if state in ['email','copy']:
-  txt('Inbox',153,286,22,True);txt('From: Chervil',153,351,20);wrap(d,'Your Kingdoms & Dragons journey',(153,395),410,27,G,True);row('Open the journey app',487,'#e3f1f9');txt('Tap the link above to begin.',153,574,19)
+  txt('Inbox',153,286,22,True);txt('From: Xavier',153,351,20);wrap(d,'Your Kingdoms & Dragons journey',(153,395),410,27,G,True);row('Open the journey app',487,'#e3f1f9');txt('Tap the link above to begin.',153,574,19)
   if state=='copy':d.rounded_rectangle((178,555,542,680),radius=16,fill='#f1f1f1',outline='#c6cecb');txt('Copy Link',215,588,26,True);txt('(wording may vary)',215,635,16)
  elif state in ['safari','chrome']:
   txt('Open your browser',171,325,27,True)
@@ -68,7 +68,7 @@ def scene(platform,i,entry,total):
   else:
    d.pieslice((282,443,438,599),180,300,fill='#e55345');d.pieslice((282,443,438,599),300,60,fill='#f7c642');d.pieslice((282,443,438,599),60,180,fill='#49a564');d.ellipse((322,483,398,559),fill='#348dcc',outline='white',width=5);txt('Chrome',301,625,27,True)
  elif state=='paste':
-  txt('Safari' if platform=='iphone' else 'Chrome',155,300,24,True);row('Search or enter website',385);row('Paste and Go' if platform=='iphone' else 'Paste',447,'#ddecf5');txt('Use the link from Chervil’s email.',151,552,17);d.rounded_rectangle((151,685,569,846),radius=12,fill='#edf0f2');txt('Your phone keyboard',230,735,20);d.rounded_rectangle((472,789,555,833),radius=10,fill=blue);txt('Go',495,799,19,True,'white')
+  txt('Safari' if platform=='iphone' else 'Chrome',155,300,24,True);row('Search or enter website',385);row('Paste and Go' if platform=='iphone' else 'Paste',447,'#ddecf5');txt('Use the link from Xavier’s email.',151,552,17);d.rounded_rectangle((151,685,569,846),radius=12,fill='#edf0f2');txt('Your phone keyboard',230,735,20);d.rounded_rectangle((472,789,555,833),radius=10,fill=blue);txt('Go',495,799,19,True,'white')
  elif state in ['website','share','more','finished']:
   if state!='finished':
    row('Journey app address',285)
@@ -94,7 +94,7 @@ def scene(platform,i,entry,total):
   else:txt('Swipe to check other pages →',158,777,20)
  elif state=='help':
   txt('Quick checks',163,314,30,True)
-  items=['Use '+('Safari' if platform=='iphone' else 'Chrome'),'Open Chervil’s app link','Check your Home Screen','Ask Chervil if you need help']
+  items=['Use '+('Safari' if platform=='iphone' else 'Chrome'),'Open Xavier’s app link','Check your Home Screen','Ask Xavier if you need help']
   for n,t in enumerate(items):row(t,403+n*92)
  d.rounded_rectangle((285,925,435,931),radius=3,fill=ink)
  d.rounded_rectangle((25,986,695,1199),radius=18,fill=G);wrap(d,caption,(45,1005),630,25,'#fff9e9',False,8)

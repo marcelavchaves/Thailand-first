@@ -17,7 +17,7 @@ import storytelling from "./storytelling.json";
 import hotelResources from "./hotel-resources.json";
 import AppRatings from './AppRatings';
 import {HelpAndTutorials} from './JourneyExtras';
-import useChervilPhoto from "./useXavierPhoto";
+import useXavierPhoto from "./useXavierPhoto";
 import GuestProfiles from "./GuestProfiles";
 import JourneyTimeline from "./JourneyTimeline";
 import DayPhoto from "./DayPhoto";
@@ -438,7 +438,7 @@ function CurrentTripDay({ date, now, onPrevious, onNext }: { date: number; now: 
         {viewingToday && statusDetail && <p className="home-journey-countdown">{statusDetail}</p>}
       </div>
       <ResourceSlot id={`schedule-${date}`} title="Your schedule" group="schedules" icon="calendar" caption="Xavier will share your plans here."><div className="home-schedule"><h3>{viewingToday ? 'Today’s schedule' : `Day ${tauckDay} schedule`}</h3><ol>{(schedule || day.events).map(([time,activity],index) => <li key={`${time}-${index}`}><strong>{time}</strong><span>{activity}</span></li>)}</ol></div></ResourceSlot>
-      {date === days[0].date && <ChervilWelcomePanel expanded />}
+      {date === days[0].date && <XavierWelcomePanel expanded />}
     </section>
   );
 }
@@ -612,7 +612,7 @@ function formatJournalDate(value: string) {
   });
 }
 
-type ChervilNote = {
+type XavierNote = {
   tripDate: number;
   text: string;
   updatedAt: string;
@@ -629,21 +629,21 @@ function MemoryTextLinks({ text }: { text: string }) {
   })}</>;
 }
 
-function ChervilWelcomePanel({ expanded = false }: { expanded?: boolean }) {
+function XavierWelcomePanel({ expanded = false }: { expanded?: boolean }) {
   return <details className="info-accordion xavier-welcome-panel" open={expanded || undefined}>
     <summary>
       <span className="accordion-icon"><Icon name="people" size={18} /></span>
       <span><small>FROM YOUR TOUR DIRECTOR</small><strong>Xavier’s Welcome Letter</strong></span>
       <b>＋</b>
     </summary>
-    <ChervilWelcome />
+    <XavierWelcome />
   </details>;
 }
 
-function ChervilDailyNote({ date, home = false, currentDay = false }: { date: number; home?: boolean; currentDay?: boolean }) {
+function XavierDailyNote({ date, home = false, currentDay = false }: { date: number; home?: boolean; currentDay?: boolean }) {
   const { authenticated, configured, refresh: refreshTD } = useTDSession();
   const legacyMode = configured === false;
-  const [note, setNote] = useState<ChervilNote | null>(null);
+  const [note, setNote] = useState<XavierNote | null>(null);
   const [draft, setDraft] = useState("");
   const [password, setPassword] = useState("");
   const [managing, setManaging] = useState(false);
@@ -660,7 +660,7 @@ function ChervilDailyNote({ date, home = false, currentDay = false }: { date: nu
     try {
       const cached = localStorage.getItem(cacheKey);
       if (cached) {
-        const cachedNote = JSON.parse(cached) as ChervilNote;
+        const cachedNote = JSON.parse(cached) as XavierNote;
         if (cachedNote?.tripDate === date && cachedNote.text) {
           hasCachedNote = true;
           setNote(cachedNote);
@@ -681,7 +681,7 @@ function ChervilDailyNote({ date, home = false, currentDay = false }: { date: nu
       })
       .then((data) => {
         if (controller.signal.aborted) return;
-        const freshNote = data.note?.tripDate === date ? data.note as ChervilNote : null;
+        const freshNote = data.note?.tripDate === date ? data.note as XavierNote : null;
         setNote(freshNote);
         setDraft(freshNote?.text || "");
         if (freshNote) localStorage.setItem(cacheKey, JSON.stringify(freshNote));
@@ -778,7 +778,7 @@ function ChervilDailyNote({ date, home = false, currentDay = false }: { date: nu
             setMessage("");
           }}
         >
-          {note ? "CHERVIL: EDIT NOTE" : "CHERVIL: ADD NOTE"}
+          {note ? "XAVIER: EDIT NOTE" : "XAVIER: ADD NOTE"}
         </button>
       ) : (
         <form className="xavier-note-form" onSubmit={save}>
@@ -794,7 +794,7 @@ function ChervilDailyNote({ date, home = false, currentDay = false }: { date: nu
             />
           </label>
           {legacyMode && <label>
-            CHERVIL’S PASSWORD
+            XAVIER’S PASSWORD
             <input
               required
               type="password"
@@ -1261,10 +1261,10 @@ function JourneyHotelResources({name}:{name:string}) {
                     </div>;
 }
 
-function ChervilContactCard({onSuitcase}:{onSuitcase:()=>void}) {
+function XavierContactCard({onSuitcase}:{onSuitcase:()=>void}) {
   const [contactOpen, setContactOpen] = useState(false);
   const {authenticated}=useTDSession();
-  const portrait=useChervilPhoto();
+  const portrait=useXavierPhoto();
   return <section className="director-simple">
     <button type="button" className="director-toggle" aria-expanded={contactOpen} aria-controls="director-contact-details" onClick={()=>setContactOpen(open=>!open)}>
       <span className="director-placeholder"><BrandIcon name="people"/></span>
@@ -1279,9 +1279,9 @@ function ChervilContactCard({onSuitcase}:{onSuitcase:()=>void}) {
   </section>;
 }
 
-function ChervilWelcome() { return <article className="xavier-letter"><span className="eyebrow">YOUR TOUR DIRECTOR</span><h2>Xavier Brunelle</h2><p>Vietnam, Cambodia &amp; Thailand · xxx edition</p><p>Please follow the supplied itinerary for your hospitality desk, welcome reception and dinner details.</p></article>; }
+function XavierWelcome() { return <article className="xavier-letter"><span className="eyebrow">YOUR TOUR DIRECTOR</span><h2>Xavier Brunelle</h2><p>Vietnam, Cambodia &amp; Thailand · xxx edition</p><p>Please follow the supplied itinerary for your hospitality desk, welcome reception and dinner details.</p></article>; }
 
-function ChervilJavaGuide() {
+function XavierJavaGuide() {
   const originalPages = ["IMG_8807.jpeg", "IMG_8808.jpeg", "IMG_8809.jpeg"];
   return (
     <article className="java-guide">
@@ -1373,7 +1373,7 @@ function ChervilJavaGuide() {
   );
 }
 
-function ChervilBaliGuide() {
+function XavierBaliGuide() {
   const originalPages = ["IMG_9427.jpeg", "IMG_9428.jpeg", "IMG_9429.jpeg"];
   return (
     <article className="java-guide bali-guide">
@@ -1489,11 +1489,11 @@ function SingaporeDiningGuide() {
     <details className="info-accordion dining-guide-accordion">
       <summary>
         <span className="accordion-icon"><Icon name="compass" size={18} /></span>
-        <span><small>FOOD RECOMMENDATIONS BY CHERVIL TAN</small><strong>Cher’s food recommendations</strong></span>
+        <span><small>FOOD RECOMMENDATIONS BY XAVIER BRUNELLE</small><strong>Xavier’s food recommendations</strong></span>
         <b>＋</b>
       </summary>
       <section className="dining-guide">
-        <p><a href="/documents/cher/food-recommendations.pdf" target="_blank" rel="noopener noreferrer">Open Cher’s original food recommendations (PDF) ↗</a></p>
+        <p><a href="/documents/cher/food-recommendations.pdf" target="_blank" rel="noopener noreferrer">Open Xavier’s original food recommendations (PDF) ↗</a></p>
         <p className="dining-guide-intro">
           Tap any recommendation to open it in Google Maps. Reservations are especially important for Jumbo Seafood, Keng Eng Kee, Kotuwa, Peach Blossoms, Odette, and HolyCrab.
         </p>
@@ -1820,7 +1820,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         <>
           <div className="home-panels">
             {(homeOrder === 'journey' ? ['journey','announcements'] : ['announcements','journey']).map(panel => <div key={panel}>
-              {panel === 'journey' ? <CurrentTripDay key={homeDay} date={homeDay} now={now} onPrevious={() => setHomeDateOverride(Math.max(5, homeDay - 1))} onNext={() => setHomeDateOverride(Math.min(20, homeDay + 1))} /> : <ChervilDailyNote key={homeDay} date={homeDay} home currentDay={homeDay === currentDay} />}
+              {panel === 'journey' ? <CurrentTripDay key={homeDay} date={homeDay} now={now} onPrevious={() => setHomeDateOverride(Math.max(5, homeDay - 1))} onNext={() => setHomeDateOverride(Math.min(20, homeDay + 1))} /> : <XavierDailyNote key={homeDay} date={homeDay} home currentDay={homeDay === currentDay} />}
             </div>)}
           </div>
         </>
@@ -1896,7 +1896,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
               <div><span className="detail-date">{longTripDate(detail.date)}</span><span className="day-local-time">{now?.toLocaleTimeString('en-US',{timeZone:"Asia/Bangkok",hour:'numeric',minute:'2-digit'}) ?? '–'} local time</span></div>
             </div>
             <h1>{detail.title}</h1>
-            <ChervilDailyNote date={detail.date} />
+            <XavierDailyNote date={detail.date} />
             <ResourceSlot id={`schedule-${detail.date}`} title="Today’s schedule" group="schedules" icon="calendar"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} /></ResourceSlot>
             <div className="detail-footer">
               <div>
@@ -1914,7 +1914,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
                 <strong>{detail.meals}</strong>
               </div>
             </div>
-            {detail.date === days[0].date && <><ChervilWelcomePanel expanded /></>}
+            {detail.date === days[0].date && <><XavierWelcomePanel expanded /></>}
             <JourneyHotelResources name={detail.hotel}/>
             <SafePlans key={`personal-${detail.date}`} date={tripDate(detail.date).toISOString().slice(0,10)} embedded/>
               {localGuides.filter(guide => guide.days.includes(detail.date)).map(guide => <ResourceSlot id={`local-${localGuides.indexOf(guide)}`} title="Meet your local guide" group="local-guides" icon="people" key={guide.name}><section className="local-guide-panel" aria-label="Meet your local guide"><span className="eyebrow">MEET YOUR LOCAL GUIDE</span><h2>{guide.name} <small>· {guide.destination}</small></h2><a href={`/images/${guide.image}`} target="_blank" rel="noreferrer" aria-label={`Open ${guide.name}’s guide card at full size`}><img src={`/images/${guide.image}`} alt={`${guide.name}, your local guide in ${guide.destination}`} /></a><p>{guide.introduction}</p></section></ResourceSlot>)}
@@ -2029,7 +2029,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
 
         </section>
       )}
-      {tab === "info" && <section className="page info-page travelers-page"><ChervilContactCard onSuitcase={()=>nav("td")}/><GuestProfiles/></section>}
+      {tab === "info" && <section className="page info-page travelers-page"><XavierContactCard onSuitcase={()=>nav("td")}/><GuestProfiles/></section>}
       {tab === "more" && <section className="section more-page">
         <h1>More</h1><p><a href="/master-admin">Master-admin sign-in →</a></p>
 
@@ -2049,10 +2049,10 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         <details id="more-rating" key={`rating-${moreSection}`} hidden={moreSection!=='rating'} open className="day-disclosure feedback-disclosure"><summary>Help Wondercase Grow</summary><AppRatings /></details>
       </section>}
       {tab === "gallery" && <section className="section gallery-page"><h1>Gallery</h1><article className="album-invite"><span className="eyebrow">PHOTOCIRCLE</span><h2>Our shared memories</h2><p>View and share photos from our journey.</p>{travelerAlbumUrl?<a className="album-join-link" href={travelerAlbumUrl} target="_blank" rel="noopener noreferrer">Join our photo album <span aria-hidden="true">↗</span></a>:<p>The photo album is coming soon.</p>}<small>Opens in PhotoCircle</small></article></section>}
-      {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><ChervilDailyNote key={day} date={day}/>} groups={[{id:'handouts',title:'Handouts'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
+      {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day}/>} groups={[{id:'handouts',title:'Handouts'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
        {id:'guide-singapore',title:'Singapore Guide',group:'guides',content:<span/>},
-       {id:'guide-java',title:'Java Guide',group:'guides',content:<ChervilJavaGuide/>},
-       {id:'guide-bali',title:'Bali Guide',group:'guides',content:<ChervilBaliGuide/>},
+       {id:'guide-java',title:'Java Guide',group:'guides',content:<XavierJavaGuide/>},
+       {id:'guide-bali',title:'Bali Guide',group:'guides',content:<XavierBaliGuide/>},
        {id:'guide-bali-map',title:'Bali Map',group:'guides',content:<BaliMap/>},
        ...hotelResources.map(r=>({id:`menu-${r.id}`,title:r.title,group:`hotel-${hotels.findIndex(h=>h.name===r.hotel)}`,content:<a href={`/hotel-menus.html?menu=${r.id}`} target="_blank" rel="noreferrer">Open {r.title} ↗</a>})),
        ...storytelling.map(r=>({id:`story-${r.id}`,title:r.title,group:r.hotelIndex>=0?`hotel-${r.hotelIndex}`:'stories',content:<a href={`/storytelling.html?story=${r.id}`} target="_blank" rel="noreferrer">Open {r.title} ↗</a>})),

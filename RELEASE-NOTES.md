@@ -1,3 +1,7 @@
+## Xavier director naming
+
+- Replace remaining Chervil/Cher labels with Xavier throughout the app, notifications, help text, tutorial captions and downloadable guides. Preserve the existing TD password binding for compatibility.
+
 ## Thailand build fix
 
 - Use the supplied Vietnam, Cambodia & Thailand itinerary PDF directly. Remove the inherited PDF-generation step from the Netlify build, which failed on missing legacy day artwork.

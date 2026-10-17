@@ -30,7 +30,7 @@ export async function sendPush(item:TravelerUpdate){
   await Promise.all(page.blobs.map(async blob=>{
    try{
     const sub=await store.get(blob.key,{type:'json'}) as webpush.PushSubscription|null;
-    if(sub)await webpush.sendNotification(sub,JSON.stringify({title:'Chervil updated the journey',body:item.action+' · '+item.section,url:item.url,id:item.id}),{TTL:86400});
+    if(sub)await webpush.sendNotification(sub,JSON.stringify({title:'Xavier updated the journey',body:item.action+' · '+item.section,url:item.url,id:item.id}),{TTL:86400});
    }catch(error){
     const status=(error as {statusCode?:number}).statusCode;
     if(status===404||status===410)await store.delete(blob.key);

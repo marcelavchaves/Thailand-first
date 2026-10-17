@@ -45,8 +45,8 @@ export default function GuestProfiles({directorMode=false}:{directorMode?:boolea
     <details className="guest-profile-editor" data-pdf-exclude><summary>{authenticated?'Edit introduction':'Write your own introduction'}</summary>
      <form data-pdf-exclude onSubmit={e=>{e.preventDefault();const form=e.currentTarget;const intro=String(new FormData(form).get('intro')||'');void save(guest.id,authenticated?'intro':'submit',{intro});}}>
       <label>{authenticated?'Edit introduction':'Write your own introduction'}<textarea name="intro" maxLength={600} required rows={3} defaultValue={authenticated?p.intro:''} key={`${authenticated}-${p.intro}`} placeholder="Share a little about yourself…"/></label>
-      {!authenticated&&<small>Introductions are shared with fellow travelers after Chervil approves them. Please submit only your own.</small>}
-      <button type="submit">{authenticated?'Save introduction':'Send to Chervil'}</button>
+      {!authenticated&&<small>Introductions are shared with fellow travelers after Xavier approves them. Please submit only your own.</small>}
+      <button type="submit">{authenticated?'Save introduction':'Send to Xavier'}</button>
      </form>
     </details>
     {authenticated&&<div className="guest-admin" data-pdf-exclude><label>Add or replace photo<input type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>void photo(guest.id,e.target.files?.[0])}/></label>{p.photo&&<button onClick={()=>void save(guest.id,'photo',{photo:null})}>Remove photo</button>}

@@ -1,4 +1,4 @@
-const CACHE = "vietnam-cambodia-thailand-20261116-v1",
+const CACHE = "vietnam-cambodia-thailand-20261116-v2",
   ASSETS = [
     "/",
     "/manifest.webmanifest",
@@ -84,7 +84,7 @@ self.addEventListener("fetch", (e) => {
 
 self.addEventListener("push",event=>{
   let payload={};try{payload=event.data?.json()||{};}catch{}
-  event.waitUntil(self.registration.showNotification(payload.title||"Chervil updated the journey",{body:payload.body||"Open the app to see the change.",icon:"/icon-v2-192.png",badge:"/icon-v2-192.png",tag:payload.id||"xavier-update",data:{url:payload.url||"/"}}));
+  event.waitUntil(self.registration.showNotification(payload.title||"Xavier updated the journey",{body:payload.body||"Open the app to see the change.",icon:"/icon-v2-192.png",badge:"/icon-v2-192.png",tag:payload.id||"xavier-update",data:{url:payload.url||"/"}}));
 });
 self.addEventListener("notificationclick",event=>{
   event.notification.close();

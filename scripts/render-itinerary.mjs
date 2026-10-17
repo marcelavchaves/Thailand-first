@@ -68,7 +68,7 @@ text('The itinerary, hotels and flights, fellow travelers, contacts, destination
 text('Open the journey app',{link:baseUrl,color:gold,bold:true});
 text('Export a section →',{link:baseUrl+'/export-pdf',color:green,bold:true,size:14});
 text('Use the contents, bookmarks and page navigation to explore. Underlined links open websites, maps, email, phone contacts and the tutorial. Internet access is needed for these links.');
-text('Daily schedules reflect saved changes when this PDF is generated. Reopen the travel book for the latest version. Approved guest introductions and profile photos reflect the latest saved profiles. Chervil’s announcements, memories, comments and album photographs remain live in the app.');
+text('Daily schedules reflect saved changes when this PDF is generated. Reopen the travel book for the latest version. Approved guest introductions and profile photos reflect the latest saved profiles. Xavier’s announcements, memories, comments and album photographs remain live in the app.');
 text(`App revision ${sourceHash.slice(0,12)} · Generated ${new Date().toISOString().slice(0,10)}`,{size:8});
 if (testEdition) text('TEST EDITION · Review copy',{bold:true,color:gold});
 
@@ -90,12 +90,12 @@ for (const day of data.days) {
   photo(`/images/${day.image.includes(".") ? day.image : day.image + ".jpg"}`,day.events.length >= 8 ? 65 : 120);
   text(day.intro,{size:11,gap:16});
   if (day.date === data.days[0].date) {
-    const welcome = content.sections.find(s => s.title === 'Chervil’s Welcome Letter');
+    const welcome = content.sections.find(s => s.title === 'Xavier’s Welcome Letter');
     for (const block of welcome?.blocks ?? []) text(block.text,{size:block.kind==='heading'?14:10,bold:block.kind==='heading',color:block.href?gold:ink,link:block.href});
     room(110);
     text('Today’s journey',{size:16,bold:true,color:green,gap:14});
   }
-  if(day.updatedAt) text('Schedule updated by Chervil: '+day.updatedAt,{size:9,color:gold});
+  if(day.updatedAt) text('Schedule updated by Xavier: '+day.updatedAt,{size:9,color:gold});
   for (const [time,event] of day.events) {
     room(55); text(time,{size:9,bold:true,color:gold,gap:4}); text(event);
   }

@@ -22,12 +22,12 @@ export default async function handler(request:Request, context:{waitUntil?:(prom
  const raw=await request.text();if(raw.length>800000)return reply({error:'Photo is too large.'},413);
  let b;try{b=JSON.parse(raw);}catch{return reply({error:'Invalid request.'},400);}
  if(!ids.includes(b.id)||!['submit','intro','photo','approve','reject'].includes(b.action))return reply({error:'Invalid guest or action.'},400);
- if(b.action!=='submit'&&!td)return reply({error:'Sign in with Chervil’s TD Login.'},401);
+ if(b.action!=='submit'&&!td)return reply({error:'Sign in with Xavier’s TD Login.'},401);
  const item=await store.getWithMetadata(`guest/${b.id}`,{type:'json'});const p=item?.data as any||{};
  if(td&&b.action!=='submit'&&(b.revision||null)!==(item?.etag||null))return reply({error:'This profile changed. Refresh before saving again.'},409);
  if(b.action==='submit'||b.action==='intro'){
   if(typeof b.intro!=='string'||!b.intro.trim()||b.intro.length>600)return reply({error:'Write an introduction of 1–600 characters.'},400);
-  if(b.action==='submit'){if(p.pending)return reply({error:'An introduction is already awaiting Chervil’s review.'},409);p.pending=b.intro.trim();}
+  if(b.action==='submit'){if(p.pending)return reply({error:'An introduction is already awaiting Xavier’s review.'},409);p.pending=b.intro.trim();}
   else p.intro=b.intro.trim();
  }
  if(b.action==='approve'){if(!p.pending)return reply({error:'No introduction to approve.'},400);p.intro=p.pending;delete p.pending;}
