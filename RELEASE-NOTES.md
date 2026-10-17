@@ -1,3 +1,7 @@
+## Fictional guest names
+
+- Replace the 16 guest names with cute fictional names, keeping guest IDs and Safe assignments stable. Refresh the published roster independently of daily schedules.
+
 ## Xavier director naming
 
 - Replace remaining Chervil/Cher labels with Xavier throughout the app, notifications, help text, tutorial captions and downloadable guides. Preserve the existing TD password binding for compatibility.

@@ -1,5 +1,6 @@
 // Explicit publication of Xavier's supplied KD 103 schedules and guest list.
 // TD edits/hides saved with this version take precedence after the import.
+export const GUEST_IMPORT_VERSION="thailand-cute-guests-v1";
 export const TOUR_IMPORT_VERSION='kd103-cher-sm23-published-v2';
 /** @param {Record<string, any>} entries @returns {Record<string, any>} */
 export function importedReleaseEntries(entries={}){

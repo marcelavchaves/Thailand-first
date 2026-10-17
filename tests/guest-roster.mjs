@@ -1,11 +1,11 @@
 import {build} from 'esbuild';
 import assert from 'node:assert/strict';
-import {TOUR_IMPORT_VERSION} from '../shared/tour-import.mjs';
+import {GUEST_IMPORT_VERSION} from '../shared/tour-import.mjs';
 const mock=`export function getStore(){return {getWithMetadata:async k=>globalThis.rosterTest.data.get(k)||null,setJSON:async(k,data,o)=>{const old=globalThis.rosterTest.data.get(k);if(globalThis.rosterTest.race||o.onlyIfNew&&old||o.onlyIfMatch&&old?.etag!==o.onlyIfMatch)return {modified:false};const etag=String(++globalThis.rosterTest.seq);globalThis.rosterTest.data.set(k,{data:structuredClone(data),etag});return {modified:true,etag};}}}`;
 await build({entryPoints:['netlify/functions/guest-roster.mts'],outfile:'.pdf-build/roster-test.mjs',bundle:true,platform:'node',format:'esm',plugins:[{name:'mock',setup(b){b.onResolve({filter:/td-auth|^@netlify\/blobs$/},a=>({path:a.path,namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path.includes('td-auth')?`export async function hasTDSession(){return globalThis.rosterTest.td};export function sameOrigin(r){return r.headers.get('origin')===new URL(r.url).origin}`:mock,loader:'js'}));}}]});
 await build({entryPoints:['lib/guest-roster.ts'],outfile:'.pdf-build/roster-parser.mjs',bundle:true,platform:'node',format:'esm'});
 const {default:handler}=await import('../.pdf-build/roster-test.mjs');const {parseGuestText,cleanGuests}=await import('../.pdf-build/roster-parser.mjs');
-globalThis.rosterTest={data:new Map([['roster',{data:{guests:[],revealed:false,guestListVersion:TOUR_IMPORT_VERSION},etag:'initial-empty'}]]),seq:0,td:false};
+globalThis.rosterTest={data:new Map([['roster',{data:{guests:[],revealed:false,guestListVersion:GUEST_IMPORT_VERSION},etag:'initial-empty'}]]),seq:0,td:false};
 const call=(body,origin='https://test.example')=>handler(new Request('https://test.example/api/guest-roster',{method:body===undefined?'GET':'POST',headers:{Origin:origin},body:body===undefined?undefined:JSON.stringify(body)}));
 let guests=parseGuestText('Name,Hometown,Bio,Phone,Email,Social link\nTest One,"Boston, MA",Likes books,+15555550101,one@example.test,https://example.test/one\nTest Two,London,Likes walking,,,');assert.equal(guests.length,2);assert.equal(guests[0].origin,'Boston, MA');assert.equal(guests[0].shareContact,false);
 assert.equal((await call({guests,revision:null})).status,401);

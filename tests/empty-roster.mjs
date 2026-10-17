@@ -10,15 +10,21 @@ const request=body=>new Request('https://example.test/api/guest-profiles',{metho
 const provided=rosterData();
 assert.equal(provided.guests.length,16);
 assert.equal(new Set(provided.guests.map(g=>g.id)).size,16);
-assert.equal(provided.guests[0].name,'Ms. Victoria Millett');
-assert.equal(provided.guests.at(-1).name,'Mr. Dave Bell');
+assert.equal(provided.guests[0].name,'Poppy Petal');
+assert.equal(provided.guests.at(-1).name,'Archie Acorn');
+const previousGuest={...provided.guests[0],name:'Previous guest name'};
+const migrated=rosterData({guests:[previousGuest],revealed:true,guestListVersion:'previous-version',safeAssignments:{byGuest:{[previousGuest.id]:'TG40'},next:41}});
+assert.equal(migrated.guests[0].name,'Poppy Petal');
+assert.equal(migrated.guests[0].id,previousGuest.id);
+assert.equal(migrated.guests[0].safeId,'TG40');
+
 assert.equal(provided.revealed,true);
 assert.equal(rosterData({guests:[],revealed:false}).guests.length,16);
 assert.equal((await(await roster(request())).json()).guests.length,16);
 assert.equal((await(await roster(request())).json()).guestCount,16);
 globalThis.rosterRegression.td=true;
 assert.equal((await(await roster(request())).json()).guests.length,16);
-assert.equal((await assignedGuest('TG16')).name,'Mr. Dave Bell');
+assert.equal((await assignedGuest('TG16')).name,'Archie Acorn');
 const carried=rosterData({guests:[],revealed:false,safeAssignments:{byGuest:{removed:'TG01'},next:2}});
 assert.equal(carried.guests[0].safeId,'TG02');
 assert.equal(carried.safeAssignments.byGuest.removed,'TG01');
