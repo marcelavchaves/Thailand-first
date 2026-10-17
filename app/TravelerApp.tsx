@@ -28,9 +28,9 @@ type LocalGuide = { name: string; destination: string; days: number[]; image: st
 const localGuides: LocalGuide[] = [];
 
 const travelerAlbumUrl: string = "";
-const xavierPhoneDisplay = "To be confirmed";
-const xavierPhoneUrl = "";
-const xavierEmail = "";
+const xavierPhoneDisplay = "+46 70 549 7222";
+const xavierPhoneUrl = "https://wa.me/46705497222";
+const xavierEmail = "xbrunelle@tauck.com";
 const isBaliDay = (date: number) => [11, 12, 13, 16, 17, 18].includes(date);
 
 import itinerary from "./itinerary.json";
@@ -1262,18 +1262,23 @@ function JourneyHotelResources({name}:{name:string}) {
 }
 
 function XavierContactCard({onSuitcase}:{onSuitcase:()=>void}) {
-  const [contactOpen, setContactOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(true);
   const {authenticated}=useTDSession();
   const portrait=useXavierPhoto();
   return <section className="director-simple">
     <button type="button" className="director-toggle" aria-expanded={contactOpen} aria-controls="director-contact-details" onClick={()=>setContactOpen(open=>!open)}>
-      <span className="director-placeholder"><BrandIcon name="people"/></span>
+      <img className="xavier-profile-portrait" src={portrait.photo || "/images/xavier-brunelle.jpeg"} alt="Xavier Brunelle" width={86} height={104}/>
       <span><small>Your tour director</small><strong>Xavier Brunelle</strong></span><span className="director-expand" aria-hidden="true">{contactOpen?'−':'+'}</span>
     </button>
     {contactOpen && <div id="director-contact-details" className="director-contact-details">
-      <p>Contact details for Xavier Brunelle to be confirmed.</p>
-      <p>KD 103 WhatsApp group · Invitation coming soon</p>
-      <details className="director-about"><summary>More about Xavier</summary><p>Xavier’s introduction is coming soon.</p></details>
+      <div className="director-contact-links">
+        <a href={xavierPhoneUrl} target="_blank" rel="noopener noreferrer"><small>WhatsApp</small><span>{xavierPhoneDisplay}</span></a>
+        <a href={`mailto:${xavierEmail}`}><small>Email</small><span>{xavierEmail}</span></a>
+      </div>
+      <details className="director-about" open><summary>About Xavier</summary>
+        <p>Born in Montreal, Canada, Xavier has built an international career in tourism, hospitality and wellness. He began working in tourism in Mexico in 2001 and became a tour leader in 2006, guiding Spanish-speaking travelers through Canada. During those years, he divided his time between Canada and Indonesia, where he worked as a scuba diving instructor and later as a wellness and fitness coach at a retreat in Bali.</p>
+        <p>Since 2017, Xavier has been a Tour Director with Tauck, leading journeys across Canada, Scandinavia, other parts of Europe, Cuba and Southeast Asia. After decades of living and working around the world, he now calls Palma de Mallorca home, where he lives with his Swedish wife and their two daughters.</p>
+      </details>
     </div>}
     <button type="button" className="director-signin" onClick={onSuitcase}>TD Suitcase · {authenticated ? "Open workspace" : "Sign in"}</button>
   </section>;

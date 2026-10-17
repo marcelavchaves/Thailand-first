@@ -149,3 +149,12 @@ html,body,.app-shell{background:#fff}
 
 .wondercase-admin-entry, .wondercase-admin-entry:visited, .wondercase-admin-entry:hover, .wondercase-admin-entry:active { color: inherit; font: inherit; text-decoration: none; cursor: inherit; }
 .wondercase-admin-entry:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 4px; }
+
+.director-toggle > img.xavier-profile-portrait { width: 86px; height: 104px; flex: 0 0 86px; object-fit: cover; object-position: center 20%; }
+.director-simple .director-contact-links { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; border-top: 1px solid var(--line); padding-top: 14px; }
+.director-contact-links a { display: grid; gap: 5px; min-width: 0; color: var(--brand-green); text-decoration: none; overflow-wrap: anywhere; }
+.director-contact-links a small { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
+.director-contact-links a span { font-size: 14px; }
+.director-about { margin-top: 16px; }
+.director-about p { font-size: 15px; line-height: 1.75; }
+@media(max-width:360px) { .director-simple .director-contact-links { grid-template-columns: 1fr; } }

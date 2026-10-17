@@ -1,3 +1,7 @@
+## Xavier profile
+
+- Add the supplied portrait, WhatsApp number, email and full biography to the Info tab. Show contact details and About Xavier expanded by default; omit the old tour group invitation.
+
 ## Banner typography
 
 - Slightly reduce WONDERCASE and enlarge Vietnam, Cambodia & Thailand, with wrapping on small screens.
