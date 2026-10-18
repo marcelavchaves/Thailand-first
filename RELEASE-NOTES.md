@@ -1,3 +1,7 @@
+## More trip recommendations
+
+- Replace the Vietnam, Cambodia & Thailand recommendation with Kingdoms & Dragons: Singapore to Bali, its 14-day route and official Tauck link. Correct the matching Tauck reading-resource title. Details checked against the original Tauck trip documents; a fresh website check awaits network access.
+
 ## Xavier profile
 
 - Add the supplied portrait, WhatsApp number, email and full biography to the Info tab. Show contact details and About Xavier expanded by default; omit the old tour group invitation.
