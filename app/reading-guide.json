@@ -1,0 +1,220 @@
+{
+  "books": [
+    {
+      "title": "The Things They Carried",
+      "byline": "Tim O'Brien (Vietnam)",
+      "description": "A groundbreaking masterpiece of war fiction and personal reflection that blurs the lines between memory and truth, capturing the visceral sensory details and emotional baggage of soldiers marching through the Vietnamese countryside.",
+      "links": [
+        {
+          "label": "Bookshop.org",
+          "url": "https://bookshop.org/book/9780618706419"
+        },
+        {
+          "label": "Amazon",
+          "url": "https://amazon.com/dp/0618706410"
+        },
+        {
+          "label": "Goodreads",
+          "url": "https://goodreads.com/book/show/133518"
+        }
+      ]
+    },
+    {
+      "title": "Catfish and Mandala: A Two-Wheeled Voyage Through Vietnam",
+      "byline": "Andrew X. Pham (Vietnam)",
+      "description": "A poignant travel memoir chronicling an American-Vietnamese refugee's solo bicycle odyssey across modern Vietnam. Pham confronts memory, diaspora identity, post-war reconstruction, and family history from Saigon to Hanoi.",
+      "links": [
+        {
+          "label": "Bookshop.org",
+          "url": "https://bookshop.org/book/9780312267148"
+        },
+        {
+          "label": "Amazon",
+          "url": "https://amazon.com/dp/0312267148"
+        },
+        {
+          "label": "Goodreads",
+          "url": "https://goodreads.com/book/show/4370"
+        }
+      ]
+    },
+    {
+      "title": "The Sympathizer",
+      "byline": "Viet Thanh Nguyen (Vietnam)",
+      "description": "Winner of the Pulitzer Prize for Fiction, this sharp, satirical spy novel chronicles the life of a dual-agent army captain navigating the 1975 fall of Saigon, exile in California, and subsequent re-education.",
+      "links": [
+        {
+          "label": "Bookshop.org",
+          "url": "https://bookshop.org/book/9780802124944"
+        },
+        {
+          "label": "Amazon",
+          "url": "https://amazon.com/dp/0802124941"
+        },
+        {
+          "label": "Goodreads",
+          "url": "https://goodreads.com/book/show/23168277"
+        }
+      ]
+    },
+    {
+      "title": "First They Killed My Father: A Daughter of Cambodia Remembers",
+      "byline": "Loung Ung (Cambodia)",
+      "description": "A devastatingly powerful, intimate child's-eye memoir chronicling the 1975 Khmer Rouge evacuation of Phnom Penh, forced labor camps, survival, and ultimate resilience.",
+      "links": [
+        {
+          "label": "Bookshop.org",
+          "url": "https://bookshop.org/book/9780060856267"
+        },
+        {
+          "label": "Amazon",
+          "url": "https://amazon.com/dp/0060856262"
+        },
+        {
+          "label": "Goodreads",
+          "url": "https://goodreads.com/book/show/4373"
+        }
+      ]
+    },
+    {
+      "title": "Angkor and the Khmer Civilization",
+      "byline": "Michael D. Coe (Cambodia)",
+      "description": "The quintessential historical and archaeological introduction to the Khmer Empire. Coe synthesizes inscriptions, hydraulic engineering, religion, and temple architecture, perfect reading before walking Angkor Wat and the Bayon.",
+      "links": [
+        {
+          "label": "Bookshop.org",
+          "url": "https://bookshop.org/book/9780500284421"
+        },
+        {
+          "label": "Amazon",
+          "url": "https://amazon.com/dp/0500284428"
+        },
+        {
+          "label": "Goodreads",
+          "url": "https://goodreads.com/book/show/117397"
+        }
+      ]
+    },
+    {
+      "title": "Sightseeing",
+      "byline": "Rattawut Lapcharoensap (Thailand)",
+      "description": "A luminous, award-winning collection of short stories depicting contemporary Thai life—from American tourism clashes in tropical island beach towns to youthful coming-of-age moments in working-class Bangkok.",
+      "links": [
+        {
+          "label": "Bookshop.org",
+          "url": "https://bookshop.org/book/9780802142344"
+        },
+        {
+          "label": "Amazon",
+          "url": "https://amazon.com/dp/0802142346"
+        },
+        {
+          "label": "Goodreads",
+          "url": "https://goodreads.com/book/show/42227"
+        }
+      ]
+    },
+    {
+      "title": "A History of Thailand",
+      "byline": "Chris Baker & Pasuk Phongpaichit (Thailand)",
+      "description": "An authoritative, highly engaging single-volume history tracing Thailand from early forest settlements and the Siamese kingdoms of Ayutthaya and Thonburi through modern democratic politics and cultural shifts.",
+      "links": [
+        {
+          "label": "Bookshop.org",
+          "url": "https://bookshop.org/book/9781107420212"
+        },
+        {
+          "label": "Amazon",
+          "url": "https://amazon.com/dp/1107420210"
+        },
+        {
+          "label": "Goodreads",
+          "url": "https://goodreads.com/book/show/369947"
+        }
+      ]
+    }
+  ],
+  "films": [
+    {
+      "title": "The Quiet American (2002) — Vietnam",
+      "byline": "Phillip Noyce | Starring Michael Caine, Brendan Fraser",
+      "description": "Adapted from Graham Greene's classic novel, this atmospheric political drama portrays Saigon in 1952 during the waning days of the First Indochina War. Filmed extensively on location in Hanoi, Saigon, and Ninh Binh, it offers exceptional historical texture.",
+      "availability": "Available on Amazon Prime Video, Apple TV"
+    },
+    {
+      "title": "Indochine (1992) — Vietnam",
+      "byline": "Régis Wargnier | Starring Catherine Deneuve, Vincent Perez",
+      "description": "Academy Award winner for Best Foreign Language Film. An epic romantic historical drama set against the twilight of French colonial rubber plantations from the 1930s through 1954, showcasing breathtaking panoramic footage of Ha Long Bay and imperial Hue.",
+      "availability": "Available on Amazon Prime Video, Apple TV"
+    },
+    {
+      "title": "The Scent of Green Papaya (1993) — Vietnam",
+      "byline": "Tran Anh Hung",
+      "description": "A visually meditative French-Vietnamese film depicting domestic life, traditional culinary rituals, and family dynamics in 1950s Saigon. It serves as a gentle, sensory celebration of Vietnamese home life and cuisine.",
+      "availability": "Available on Kino Lorber, Amazon Prime Video"
+    },
+    {
+      "title": "The Vietnam War (2017 Mini-series) — Vietnam",
+      "byline": "Ken Burns & Lynn Novick (10 Episodes)",
+      "description": "An extraordinary, balanced documentary masterclass that weaves together archival footage, music, and first-hand testimonies from North Vietnamese soldiers, South Vietnamese fighters, and American veterans.",
+      "availability": "Available on PBS Passport, Amazon Prime Video"
+    },
+    {
+      "title": "First They Killed My Father (2017) — Cambodia",
+      "byline": "Angelina Jolie | Produced by Rithy Panh",
+      "description": "Filmed entirely in Cambodia in the Khmer language with an all-Cambodian cast, this film faithfully adapts Loung Ung's memoir of childhood survival during the Khmer Rouge reign. A visually striking, deeply respectful production.",
+      "availability": "Available exclusively on Netflix"
+    },
+    {
+      "title": "The Killing Fields (1984) — Cambodia",
+      "byline": "Roland Joffé | Starring Sam Waterston, Dr. Haing S. Ngor",
+      "description": "The landmark three-time Academy Award-winning historical drama chronicling the real friendship between American journalist Sydney Schanberg and Cambodian photojournalist Dith Pran during the 1975 fall of Phnom Penh.",
+      "availability": "Available on Apple TV, Amazon Prime Video"
+    },
+    {
+      "title": "The Railway Man (2013) — Thailand",
+      "byline": "Jonathan Teplitzky | Starring Colin Firth, Nicole Kidman, Hiroyuki Sanada",
+      "description": "A moving biographical drama based on the true story of British officer Eric Lomax, who was held as a prisoner of war on the notorious Thai-Burma 'Death Railway' and bridge at Kanchanaburi, exploring enduring trauma and wartime reconciliation.",
+      "availability": "Available on Amazon Prime Video, Apple TV"
+    },
+    {
+      "title": "Uncle Boonmee Who Can Recall His Past Lives (2010) — Thailand",
+      "byline": "Apichatpong Weerasethakul",
+      "description": "Winner of the Palme d'Or at Cannes. A hypnotic, artistic cinematic masterpiece that immerses viewers in northeastern Thai spiritual animism, reincarnation, and mystical jungle lore.",
+      "availability": "Available on Strand Releasing, Kanopy, Amazon Prime Video"
+    }
+  ],
+  "series": [
+    {
+      "title": "Street Food: Asia (Netflix, Season 1)",
+      "episodes": "Key Episodes: Bangkok, Thailand (Episode 1) & Ho Chi Minh City, Vietnam (Episode 7)",
+      "description": "Produced by the team behind Chef's Table. The Bangkok episode spotlights Supinya Junsuta (Jay Fai) and her crab omelet mastery; the Saigon episode captures sidewalk snail (ốc) culture and broken rice heritage."
+    },
+    {
+      "title": "Somebody Feed Phil (Netflix)",
+      "episodes": "Key Episodes: Bangkok (S1:E1), Saigon (S1:E2), and Chiang Mai (Season 1)",
+      "description": "Lighthearted, joyful culinary exploration. Perfect pre-trip viewing for navigating morning pho stalls, floating markets, and northern Thai khao soi noodle soup traditions."
+    },
+    {
+      "title": "Anthony Bourdain: Parts Unknown (CNN / Max)",
+      "episodes": "Key Episodes: Hanoi, Vietnam (S8:E1) & Chiang Mai, Thailand (S3:E7)",
+      "description": "Features Bourdain's celebrated dinner of bún chả and cold beer with President Barack Obama at Hương Liên in Hanoi, as well as nighttime explorations of northern Thai herbal sausages and night markets."
+    },
+    {
+      "title": "Luke Nguyen's Vietnam (SBS / Prime Video)",
+      "episodes": "Key Episodes: Comprehensive 10-episode journey from Saigon to the Mekong, Hue, and Hanoi",
+      "description": "Intimate, market-level cooking demonstrations highlighting Vietnamese regional herbs, river fish, and age-old culinary techniques right on river barges and village courtyards."
+    },
+    {
+      "title": "Gordon Ramsay: Uncharted (Disney+ / National Geographic)",
+      "episodes": "Key Episodes: Cambodia (Season 3, Episode 6)",
+      "description": "Ramsay travels down the Mekong River and across Tonle Sap lake to explore traditional Khmer curries, freshwater fish traps, and indigenous aromatics."
+    }
+  ],
+  "weeks": [
+    "Week 1 (Focus on Vietnam): Read 'The Things They Carried'; Watch 'The Quiet American' and 'Somebody Feed Phil: Saigon'.",
+    "Week 2 (Focus on Vietnam): Read 'Catfish and Mandala'; Watch Ken Burns' 'The Vietnam War' (Episodes 1-3) & 'Street Food: Asia (Saigon)'.",
+    "Week 3 (Focus on Cambodia): Read 'Angkor and the Khmer Civilization' & 'First They Killed My Father'; Stream 'First They Killed My Father' on Netflix.",
+    "Week 4 (Focus on Thailand): Read 'Sightseeing'; Watch 'The Railway Man' and 'Somebody Feed Phil: Bangkok & Chiang Mai'."
+  ]
+}

@@ -158,3 +158,6 @@ html,body,.app-shell{background:#fff}
 .director-about { margin-top: 16px; }
 .director-about p { font-size: 15px; line-height: 1.75; }
 @media(max-width:360px) { .director-simple .director-contact-links { grid-template-columns: 1fr; } }
+
+.reading-guide-links { display: flex; flex-wrap: wrap; gap: 12px; }
+.reading-guide-links a { overflow-wrap: anywhere; }

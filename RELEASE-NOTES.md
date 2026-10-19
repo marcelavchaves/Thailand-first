@@ -1,3 +1,7 @@
+## Southeast Asia reading and viewing guide
+
+- Replace the inherited reading resources with all 7 books, 8 films/documentaries and 5 cultural series from the supplied guide, including book links, viewing information and the four-week plan. Offer the source guide for download.
+
 ## More trip recommendations
 
 - Replace the Vietnam, Cambodia & Thailand recommendation with Kingdoms & Dragons: Singapore to Bali, its 14-day route and official Tauck link. Correct the matching Tauck reading-resource title. Details checked against the original Tauck trip documents; a fresh website check awaits network access.
