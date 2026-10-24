@@ -1,5 +1,6 @@
 "use client";
 import {useEffect,useRef,useState} from 'react';
+import InteractiveRouteMap from './InteractiveRouteMap';
 import hotels from './hotels.json';
 import {ResourceGroup,useResources} from './ResourceLibrary';
 
@@ -22,7 +23,7 @@ const tiles=[
  {key:'shared',title:'Other maps',subtitle:'Shared by your tour director',image:'/images/maps-other.svg'},
 ];
 
-export default function JourneyMaps(){
+export default function JourneyMaps({onOpenFlights}:{onOpenFlights:()=>void}){
  const [selected,setSelected]=useState<string|null>(null),[provider,setProvider]=useState<'google'|'osm'>('google');
  const panel=useRef<HTMLElement>(null),hotelMap=useRef<HTMLDivElement>(null);
  useEffect(()=>{
@@ -46,6 +47,7 @@ export default function JourneyMaps(){
  const sharedMaps=Object.values(items).some(item=>item.group==='maps'&&item.visible&&!item.deleted);
  return <section className="page maps-page">
   <div className="intro"><h1>Maps</h1><p>Explore each city, find your hotel and discover Xavier’s local maps.</p></div>
+  <InteractiveRouteMap src="/images/vct-route-map.jpg" onOpenFlights={onOpenFlights}/>
   <h2>Visited cities</h2>
   <div className="more-tile-grid" role="group" aria-label="City maps">{tiles.filter(t=>t.key.startsWith('city-')).map(tile=>renderTile(tile))}</div>
   <div className="more-tile-grid" role="group" aria-label="More maps">

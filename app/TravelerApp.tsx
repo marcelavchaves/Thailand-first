@@ -1733,7 +1733,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
       });
     });
     return () => cancelAnimationFrame(frame);
-  }, [activeEssentialsSection, moreSection]);
+  }, [tab, activeEssentialsSection, moreSection]);
 
   useLayoutEffect(() => {
     if (tab === "hotels" && hotelTarget) {
@@ -1761,6 +1761,10 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     if (requestedDay >= 1 && requestedDay <= 16) setSelected(requestedDay + 4);
     const requestedTab = params.get('tab');
     const requestedHotel = params.get('hotel');
+    if (requestedTab === 'hotels' && params.get('section') === 'flights') {
+      setEssentialsSection('flights');
+      sectionScrollTarget.current = 'essentials-flights';
+    }
     if (requestedTab === 'hotels' && /^hotel-[0-6]$/.test(requestedHotel || '')) setHotelTarget(requestedHotel);
     if (['home', 'journey', 'map', 'hotels', 'info', 'more', 'gallery', 'td'].includes(requestedTab || '')) setTab(requestedTab === 'journey' ? 'home' : requestedTab as Tab);
     return () => window.clearInterval(timer);
@@ -1998,7 +2002,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
 
         </section>
       )}
-      {tab === "map" && <JourneyMaps/>}
+      {tab === "map" && <JourneyMaps onOpenFlights={()=>{setHotelTarget(null);setEssentialsSection('flights');sectionScrollTarget.current='essentials-flights';setTab('hotels');}}/>}
       {tab === "info" && <section className="page info-page travelers-page"><XavierContactCard onSuitcase={()=>nav("td")}/><GuestProfiles/></section>}
       {tab === "more" && <section className="section more-page">
         <h1>More</h1>

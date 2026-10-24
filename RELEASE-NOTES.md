@@ -1,3 +1,8 @@
+## Interactive journey route map
+
+- Add the original Vietnam, Cambodia & Thailand route map from Tauck’s tour page to Maps. City markers open Google Maps; both airplanes open Essentials with Flights expanded and scrolled into view.
+- Support keyboard navigation and a map enlargement control with horizontal panning, plus an accessible list of map locations.
+
 ## Prioritize Xavier’s Hanoi map
 
 - Make Xavier’s supplied Hanoi map the main map card, opening directly in Google Maps. Move the generic Hanoi map to a secondary “Open the city’s map” link.

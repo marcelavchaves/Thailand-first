@@ -229,3 +229,16 @@ html,body,.app-shell{background:#fff}
 .map-xavier-primary span span { font-size:14px; line-height:1.5; }
 .map-xavier-primary b { font-size:15px; color:var(--brand-gold); }
 .map-xavier-primary:focus-visible { outline:3px solid var(--brand-gold); outline-offset:3px; }
+
+.interactive-route-map { margin:24px 0; }
+.route-map-scroll { overflow-x:auto; border:1px solid var(--line); border-radius:6px; }
+.route-map-image { position:relative; width:100%; }
+.route-map-image.is-enlarged { min-width:640px; }
+.route-map-image>img { display:block; width:100%; height:auto; }
+.route-map-hotspot { position:absolute; display:block; width:24px; height:24px; transform:translate(-50%,-50%); border:2px solid transparent; border-radius:50%; }
+.route-map-hotspot:hover,.route-map-hotspot:focus-visible { border-color:var(--brand-green); background:rgba(201,169,98,.25); outline:3px solid var(--brand-gold); outline-offset:2px; }
+
+.route-map-image.is-enlarged .route-map-hotspot,.route-map-flight { width:44px; height:44px; }
+.route-map-size { min-height:44px; padding:10px 16px; margin:0 0 12px; background:var(--brand-green); color:white; border:0; border-radius:5px; font:inherit; cursor:pointer; }
+.route-map-locations { margin-top:14px; }
+.route-map-locations summary { cursor:pointer; padding:12px 0; }
