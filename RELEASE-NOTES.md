@@ -1,3 +1,7 @@
+## Journey calendar visibility
+
+- Replace the blank-looking date grid with readable November and December 2026 calendars. Highlight all 16 tour dates by country and keep date buttons linked to the daily itinerary.
+
 ## Southeast Asia reading and viewing guide
 
 - Replace the inherited reading resources with all 7 books, 8 films/documentaries and 5 cultural series from the supplied guide, including book links, viewing information and the four-week plan. Offer the source guide for download.

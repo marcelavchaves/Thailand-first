@@ -332,7 +332,31 @@ const calendarLabels: Record<CalendarTone, string> = {
   komodo: "Komodo",
 };
 function TripCalendar({onSelect}: {onSelect: (date: number) => void}) {
- return <section className="trip-calendar"><h2>Your 16-day journey</h2><p>November 16–December 1, 2026.</p><div className="calendar-grid">{days.map(day=><button className="calendar-day calendar-trip" key={day.date} onClick={()=>onSelect(day.date)} aria-label={`Day ${tauck(day.date)}: ${day.title}`}><strong>{shortTripDate(day.date)}</strong><small>Day {tauck(day.date)} · {day.region}</small></button>)}</div></section>;
+  const months = [{month:10,label:"November 2026"},{month:11,label:"December 2026"}];
+  return <section className="trip-calendar journey-calendar" aria-label="Journey calendar">
+    <div className="calendar-top"><div><h2>Your journey calendar</h2><p>November 16–December 1, 2026 · 16 days</p></div></div>
+    {months.map(({month,label})=>{
+      const offset = new Date(Date.UTC(2026,month,1)).getUTCDay();
+      const total = new Date(Date.UTC(2026,month+1,0)).getUTCDate();
+      return <section className="journey-calendar-month" key={month} aria-label={label}>
+        <h3>{label}</h3>
+        <div className="journey-calendar-weekdays" aria-hidden="true">{['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=><span key={d}>{d}</span>)}</div>
+        <div className="journey-month-grid">
+          {Array.from({length:offset},(_,i)=><span key={`empty-${i}`} aria-hidden="true"/>)}
+          {Array.from({length:total},(_,i)=>{
+            const date=i+1;
+            const day=days.find(d=>tripDate(d.date).getUTCMonth()===month&&tripDate(d.date).getUTCDate()===date);
+            if(!day)return <span className="journey-calendar-outside" key={date}>{date}</span>;
+            const number=tauck(day.date);
+            const country=number<=7?'vietnam':number<=9?'cambodia':'thailand';
+            return <button type="button" className={`journey-calendar-date ${country}`} key={date} onClick={()=>onSelect(day.date)} aria-label={`${longTripDate(day.date)}, Day ${number}: ${day.title}`}><strong>{date}</strong><small>Day {number}</small></button>;
+          })}
+        </div>
+      </section>;
+    })}
+    <div className="journey-calendar-legend"><span className="vietnam">Vietnam</span><span className="cambodia">Cambodia</span><span className="thailand">Thailand</span></div>
+    <p className="calendar-hint">Tap a highlighted date to open that day’s itinerary.</p>
+  </section>;
 }
 
 function TimeAtHome() {

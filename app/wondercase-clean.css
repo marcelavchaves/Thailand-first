@@ -161,3 +161,21 @@ html,body,.app-shell{background:#fff}
 
 .reading-guide-links { display: flex; flex-wrap: wrap; gap: 12px; }
 .reading-guide-links a { overflow-wrap: anywhere; }
+
+/* Keep the Journey calendar independent of the legacy white-text day styles. */
+.journey-calendar .calendar-top p { font-size: 13px; line-height: 1.5; margin: 8px 0 0; }
+.journey-calendar-month + .journey-calendar-month { margin-top: 22px; }
+.journey-calendar-month h3 { margin: 0 0 10px; font-size: 16px; font-weight: 500; }
+.journey-calendar-weekdays, .journey-month-grid { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 4px; }
+.journey-calendar-weekdays { margin-bottom: 6px; font-size: 10px; text-align: center; color: var(--muted); }
+.journey-calendar-outside { min-height: 44px; display: grid; place-items: center; font-size: 13px; color: #758179; }
+.journey-calendar-date { min-width: 0; min-height: 46px; padding: 5px 1px; display: grid; align-content: center; justify-items: center; gap: 4px; border: 1px solid transparent; border-radius: 5px; cursor: pointer; }
+.journey-calendar-date strong { font-size: 16px; font-weight: 600; line-height: 1; }
+.journey-calendar-date small { font-size: 8px; line-height: 1; white-space: nowrap; }
+.journey-calendar-date.vietnam, .journey-calendar-legend .vietnam { background: #e3efeb; color: #164d3e; }
+.journey-calendar-date.cambodia, .journey-calendar-legend .cambodia { background: #f6ecd3; color: #6e5115; }
+.journey-calendar-date.thailand, .journey-calendar-legend .thailand { background: #f5e5dd; color: #783a25; }
+.journey-calendar-date:hover { border-color: currentColor; }
+.journey-calendar-date:focus-visible { outline: 2px solid var(--brand-green); outline-offset: 2px; }
+.journey-calendar-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 15px; }
+.journey-calendar-legend span { padding: 5px 8px; border-radius: 4px; font-size: 10px; }
