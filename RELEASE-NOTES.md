@@ -1,3 +1,8 @@
+## Maps city and hotel tiles
+
+- Match the Essentials and More tile layout, with separate city and hotel icons, expandable map panels and automatic scrolling.
+- Add Xav’s supplied Hanoi map link; retain Google Maps, OpenStreetMap and shared maps.
+
 ## Timeline time and zoom controls
 
 - Reduce the itinerary time size and move each entry’s enlarged-view control to the right edge. Replace the diagonal arrow with a magnifying-glass-plus icon, retaining the accessible dialog and large touch target.

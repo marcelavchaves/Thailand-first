@@ -219,3 +219,5 @@ html,body,.app-shell{background:#fff}
 .timeline-entry-zoom svg { width:23px; height:23px; }
 .timeline-entry-zoom:focus-visible { outline:2px solid var(--brand-green); outline-offset:3px; }
 @media(max-width:360px) { .journey-timeline-panel .timeline article.timeline-entry { grid-template-columns:52px minmax(0,1fr) 44px; gap:6px; } }
+
+.map-xavier-link { display:block; padding:16px; margin:12px 0 18px; background:var(--brand-green); color:white; border-radius:5px; font-weight:600; text-align:center; }

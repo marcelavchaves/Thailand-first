@@ -1,5 +1,5 @@
 "use client";
-import {useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import hotels from './hotels.json';
 import {ResourceGroup,useResources} from './ResourceLibrary';
 
@@ -15,25 +15,52 @@ const destinations=[
 ];
 const google=(query:string)=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
+const confirmedHotels=hotels.filter(h=>!h.name.includes('to be confirmed'));
+const tiles=[
+ ...destinations.map((d,i)=>({key:`city-${i}`,title:d.name,subtitle:d.country,image:'/images/maps-city.svg'})),
+ ...confirmedHotels.map((h,i)=>({key:`hotel-${i}`,title:h.name,subtitle:h.city,image:'/images/essentials-hotels.svg'})),
+ {key:'shared',title:'Other maps',subtitle:'Shared by your tour director',image:'/images/maps-other.svg'},
+];
+
 export default function JourneyMaps(){
- const [destination,setDestination]=useState(0),[provider,setProvider]=useState<'google'|'osm'>('google');
- const place=destinations[destination],query=`${place.name}, ${place.country}`;
- const osm=`https://www.openstreetmap.org/?mlat=${place.lat}&mlon=${place.lon}#map=13/${place.lat}/${place.lon}`;
- const osmEmbed=`https://www.openstreetmap.org/export/embed.html?bbox=${place.lon-.07},${place.lat-.05},${place.lon+.07},${place.lat+.05}&layer=mapnik&marker=${place.lat},${place.lon}`;
+ const [selected,setSelected]=useState<string|null>(null),[provider,setProvider]=useState<'google'|'osm'>('google');
+ const panel=useRef<HTMLElement>(null);
+ useEffect(()=>{
+  if(!selected)return;
+  const frame=requestAnimationFrame(()=>{
+   if(!panel.current)return;
+   const bannerHeight=document.querySelector('.topbar')?.getBoundingClientRect().height??0;
+   window.scrollTo({top:Math.max(0,window.scrollY+panel.current.getBoundingClientRect().top-bannerHeight-12),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  });
+  return ()=>cancelAnimationFrame(frame);
+ },[selected]);
+ const city=selected?.startsWith('city-')?destinations[Number(selected.slice(5))]:null;
+ const hotel=selected?.startsWith('hotel-')?confirmedHotels[Number(selected.slice(6))]:null;
+ const query=city?`${city.name}, ${city.country}`:hotel?`${hotel.name}, ${hotel.city}`:'';
+ const osm=city?`https://www.openstreetmap.org/?mlat=${city.lat}&mlon=${city.lon}#map=13/${city.lat}/${city.lon}`:'';
+ const osmEmbed=city?`https://www.openstreetmap.org/export/embed.html?bbox=${city.lon-.07},${city.lat-.05},${city.lon+.07},${city.lat+.05}&layer=mapnik&marker=${city.lat},${city.lon}`:'';
  const {items,loaded}=useResources();
  const sharedMaps=Object.values(items).some(item=>item.group==='maps'&&item.visible&&!item.deleted);
  return <section className="page maps-page">
-  <div className="intro"><h1>Maps</h1><p>Explore the places on your journey and find your hotel.</p></div>
-  <section className="map-viewer" aria-labelledby="destination-map-title">
-   <h2 id="destination-map-title">Destination maps</h2>
-   <label htmlFor="map-destination">Choose a destination</label>
-   <select id="map-destination" value={destination} onChange={e=>setDestination(Number(e.target.value))}>{destinations.map((d,i)=><option value={i} key={d.name}>{i+1}. {d.name} · {d.country}</option>)}</select>
-   <div className="map-provider-switch" role="group" aria-label="Map provider"><button type="button" aria-pressed={provider==='google'} onClick={()=>setProvider('google')}>Google Maps</button><button type="button" aria-pressed={provider==='osm'} onClick={()=>setProvider('osm')}>OpenStreetMap</button></div>
-   <iframe key={`${provider}-${destination}`} title={`${provider==='google'?'Google Maps':'OpenStreetMap'}: ${query}`} src={provider==='google'?`https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=12&output=embed`:osmEmbed} loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade"/>
-   <a className="map-open-link" href={provider==='google'?google(query):osm} target="_blank" rel="noopener noreferrer">Open {place.name} in {provider==='google'?'Google Maps':'OpenStreetMap'} ↗</a>
-   <p className="map-online-note">Interactive maps need an internet connection. If the map does not load, use the link above.</p>
-  </section>
-  <section className="map-hotels" aria-labelledby="hotel-maps-title"><h2 id="hotel-maps-title">Hotel maps</h2><div className="map-link-list">{hotels.filter(h=>!h.name.includes('to be confirmed')).map(h=><a key={h.name} href={google(`${h.name}, ${h.city}`)} target="_blank" rel="noopener noreferrer"><strong>{h.name}</strong><span>{h.city} ↗</span></a>)}</div></section>
-  <section className="map-shared" aria-labelledby="other-maps-title"><h2 id="other-maps-title">Other maps</h2><p>Printable maps and local maps shared by your tour director.</p>{loaded&&!sharedMaps&&<p>No shared maps yet.</p>}<ResourceGroup group="maps"/></section>
+  <div className="intro"><h1>Maps</h1><p>Explore each city, find your hotel and discover Xavier’s local maps.</p></div>
+  <h2>Visited cities</h2>
+  <div className="more-tile-grid" role="group" aria-label="City maps">{tiles.filter(t=>t.key.startsWith('city-')).map(tile=>renderTile(tile))}</div>
+  <h2>Hotels</h2>
+  <div className="more-tile-grid" role="group" aria-label="Hotel maps">{tiles.filter(t=>t.key.startsWith('hotel-')).map(tile=>renderTile(tile))}</div>
+  <p>Hanoi hotel details will be added once confirmed.</p>
+  <div className="more-tile-grid" role="group" aria-label="Other maps">{renderTile(tiles[tiles.length-1])}</div>
+  {selected&&<section id="selected-map" ref={panel} className="map-viewer" aria-labelledby="selected-map-title">
+   <h2 id="selected-map-title">{city?.name??hotel?.name??'Other maps'}</h2>
+   {selected==='shared'?<><p>Printable maps and local maps shared by your tour director.</p>{loaded&&!sharedMaps&&<p>No shared maps yet.</p>}<ResourceGroup group="maps"/></>:<>
+    {city===destinations[0]&&<a className="map-open-link map-xavier-link" href="https://maps.app.goo.gl/xYNpoB1qDGe6rfy76?g_st=i" target="_blank" rel="noopener noreferrer">Open Xav’s Hanoi map ↗</a>}
+    {city&&<div className="map-provider-switch" role="group" aria-label="Map provider"><button type="button" aria-pressed={provider==='google'} onClick={()=>setProvider('google')}>Google Maps</button><button type="button" aria-pressed={provider==='osm'} onClick={()=>setProvider('osm')}>OpenStreetMap</button></div>}
+    <iframe key={`${selected}-${provider}`} title={`${city&&provider==='osm'?'OpenStreetMap':'Google Maps'}: ${query}`} src={city&&provider==='osm'?osmEmbed:`https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=${hotel?16:12}&output=embed`} loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade"/>
+    <a className="map-open-link" href={city&&provider==='osm'?osm:google(query)} target="_blank" rel="noopener noreferrer">Open {city?.name??hotel?.name} in {city&&provider==='osm'?'OpenStreetMap':'Google Maps'} ↗</a>
+    <p className="map-online-note">Interactive maps need an internet connection. If the map does not load, use the link above.</p>
+   </>}
+  </section>}
  </section>;
+ function renderTile(tile:typeof tiles[number]){
+  return <button key={tile.key} type="button" className="more-tile" aria-expanded={selected===tile.key} aria-controls={selected===tile.key?'selected-map':undefined} onClick={()=>{setSelected(selected===tile.key?null:tile.key);setProvider('google');}}><img src={tile.image} alt=""/><strong>{tile.title}</strong><small>{tile.subtitle}</small></button>;
+ }
 }
