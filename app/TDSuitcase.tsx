@@ -2,6 +2,7 @@
 import {useState,type ReactNode} from 'react';
 import {TDLogin,useTDSession} from './TDSession';
 import {ResourceSlot,ResourceGroup,useResources} from './ResourceLibrary';
+import CityMapUploads from './CityMapUploads';
 import JourneyTimeline from './JourneyTimeline';
 import useXavierPhoto from './useXavierPhoto';
 import './td-suitcase.css';
@@ -20,11 +21,12 @@ export default function TDSuitcase({days,dateLabel,announcement,resources,groups
   <header className="td-suitcase-heading"><WondercaseMark/><div><span className="eyebrow">WONDERCASE · K&D103</span><h1>TD Suitcase</h1><p>{authenticated?(masterAdmin?'Marcela · Master admin':'Xavier’s tour workspace'):'Tour director sign-in'}</p></div></header>
   {!authenticated?<div className="td-locked"><h2>Everything for your tour, in one place.</h2><p>Sign in to share announcements, adjust each day’s schedule and prepare documents for your travelers.</p><TDLogin open onClose={onBack} onSignedIn={()=>{}}/>{configured===null&&<button onClick={()=>void refresh()}>Check connection</button>}</div>:<>
    <TDLogin open={false} onClose={()=>{}}/>
-   <nav className="td-workspace-nav" aria-label="TD Suitcase sections">{[['announcements','Announcements'],['schedule','Daily schedule'],['documents','Documents & menus'],['travelers','Travelers'],['account','My account']].map(([id,title])=><button key={id} aria-pressed={section===id} onClick={()=>setSection(id)}>{title}</button>)}</nav>
+   <nav className="td-workspace-nav" aria-label="TD Suitcase sections">{[['announcements','Announcements'],['schedule','Daily schedule'],['documents','Documents & menus'],['maps','Maps'],['travelers','Travelers'],['account','My account']].map(([id,title])=><button key={id} aria-pressed={section===id} onClick={()=>setSection(id)}>{title}</button>)}</nav>
    {(section==='announcements'||section==='schedule')&&<label className="td-day-picker">Journey day<select value={dayId} onChange={e=>setDayId(Number(e.target.value))}>{days.map((d,i)=><option key={d.date} value={d.date}>Day {i+1} · {dateLabel(d.date)} · {d.title}</option>)}</select></label>}
    {section==='announcements'&&<div key={`note-${dayId}`}><p className="td-hint">Post an announcement for the selected day. Once saved, you can share it through WhatsApp.</p>{announcement(dayId)}</div>}
    {section==='schedule'&&<div key={`schedule-${dayId}`}><ResourceSlot id={`schedule-${dayId}`} title={`Day ${days.indexOf(day)+1} schedule`} group="schedules" icon="calendar"/><JourneyTimeline day={dayId} dateLabel={dateLabel(dayId)} events={day.events} note={day.note}/></div>}
    {section==='documents'&&<div><h2>Documents &amp; menus</h2><p className="td-hint">Upload PDFs or images up to 3 MB. New uploads stay hidden until you reveal them. Add handouts as needed; this collection starts empty. Revealed documents appear in Essentials under the matching collection or hotel; the Maps collection appears in the Map tab.</p><label className="td-day-picker">Collection<select value={group} onChange={e=>setGroup(e.target.value)}>{groups.map(g=><option key={g.id} value={g.id}>{g.title}</option>)}</select></label>{error&&<p role="alert">{error} <button onClick={()=>void reload()}>Try again</button></p>}{loaded&&<p className="td-hint">{Object.values(items).filter(i=>i.group===group&&i.visible&&!i.deleted).length} released in this collection</p>}{resources.filter(r=>r.group===group).map(r=><ResourceSlot key={r.id} id={r.id} title={r.title} group={r.group}>{r.content}</ResourceSlot>)}<ResourceGroup key={group} group={group}/></div>}
+   {section==='maps'&&<CityMapUploads/>}
    {section==='travelers'&&<div><h2>Traveler profiles</h2><GuestProfiles directorMode/></div>}
    {section==='account'&&(masterAdmin?<div><h2>Master admin</h2><p>Manage your account and reset Xavier’s password from your admin workspace.</p><a href="/master-admin">Open master-admin workspace →</a></div>:<TDAccount/>)}
   </>}

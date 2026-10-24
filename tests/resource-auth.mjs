@@ -1,5 +1,5 @@
 import {build} from 'esbuild';import assert from 'node:assert/strict';
-const identity=`export const getIdentityConfig=()=>null;export const getUser=async()=>null;`;
+const identity=`export const getIdentityConfig=()=>null;export const getUser=async()=>null;export const admin={getUser:async()=>null};`;
 const blobs=`export function getStore({name}){const db=globalThis.db[name]??=(new Map());return {get:async k=>db.get(k)?.data||null,getWithMetadata:async k=>db.get(k)||null,setJSON:async(k,data,o)=>{const old=db.get(k);if(o?.onlyIfNew&&old||o?.onlyIfMatch&&old?.etag!==o.onlyIfMatch)return {modified:false};const etag=String(++globalThis.rev);db.set(k,{data,etag});return {modified:true,etag}},set:async(k,data)=>db.set(k,{data}),delete:async k=>db.delete(k),list:async()=>({blobs:[...db.keys()].filter(k=>k.startsWith('entry/')).map(key=>({key}))})};}`;
 await build({stdin:{contents:'export {default as handler} from "./netlify/functions/tour-resources.mts";export {hasTDSession,passwordSessionCookie} from "./netlify/lib/td-auth";',resolveDir:process.cwd(),loader:'ts'},outfile:'.pdf-build/resource-test.mjs',bundle:true,platform:'node',format:'esm',plugins:[{name:'mock',setup(b){b.onResolve({filter:/^@netlify\/(identity|blobs)$/},a=>({path:a.path,namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path.endsWith('identity')?identity:blobs,loader:'js'}));}}]});
 globalThis.db={};globalThis.rev=0;globalThis.Netlify={env:{get:()=> 'unit-test-password'}};
@@ -15,6 +15,18 @@ const data=await (await handler(request(cookie))).json();assert.equal(data.items
 const revision=data.items['guide-java'].revision;
 assert.equal((await handler(request(cookie,{...b,revision,action:'delete'}))).status,200);
 assert.equal((await (await handler(request())).json()).items['guide-java'].deleted,true);
+const map={id:'city-map-hue',title:'Xav’s Hue map',group:'maps',action:'upload',revision:null,upload:{type:'application/pdf',data:Buffer.from('%PDF-1.4 city map').toString('base64')}};
+assert.equal((await handler(request('',map))).status,401);
+assert.equal((await handler(request(cookie,map))).status,200);
+let mapEntry=(await (await handler(request(cookie))).json()).items[map.id];
+assert.equal(mapEntry.visible,false);
+assert.equal((await handler(new Request(base+'/api/tour-resources?file='+map.id))).status,404);
+assert.equal((await handler(new Request(base+'/api/tour-resources?file='+map.id,{headers:{Cookie:cookie}}))).status,200);
+assert.equal((await handler(request(cookie,{...map,action:'reveal',revision:mapEntry.revision}))).status,200);
+assert.equal((await handler(new Request(base+'/api/tour-resources?file='+map.id))).status,200);
+mapEntry=(await (await handler(request(cookie))).json()).items[map.id];
+assert.equal((await handler(request(cookie,{...map,action:'hide',revision:mapEntry.revision}))).status,200);
+assert.equal((await handler(new Request(base+'/api/tour-resources?file='+map.id))).status,404);
 await passwordSessionCookie(request(cookie));assert.equal(await hasTDSession(request(cookie)),false);
 assert.equal((await handler(request(cookie,b))).status,401);
 console.log('Resource authorization: anonymous writes, CSRF, session, reveal, conflicts, delete and logout checks passed.');

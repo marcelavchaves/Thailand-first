@@ -1,5 +1,6 @@
 "use client";
 import {useEffect,useRef,useState} from 'react';
+import {preferredCityMap} from './city-maps';
 import InteractiveRouteMap from './InteractiveRouteMap';
 import hotels from './hotels.json';
 import {ResourceGroup,useResources} from './ResourceLibrary';
@@ -38,12 +39,13 @@ export default function JourneyMaps({onOpenFlights}:{onOpenFlights:()=>void}){
  },[selected]);
  const hotelsExpanded=selected==='hotels'||!!selected?.startsWith('hotel-');
  const city=selected?.startsWith('city-')?destinations[Number(selected.slice(5))]:null;
- const hasXavMap=city===destinations[0];
+
  const hotel=selected?.startsWith('hotel-')?confirmedHotels[Number(selected.slice(6))]:null;
  const query=city?`${city.name}, ${city.country}`:hotel?`${hotel.name}, ${hotel.city}`:'';
  const osm=city?`https://www.openstreetmap.org/?mlat=${city.lat}&mlon=${city.lon}#map=13/${city.lat}/${city.lon}`:'';
  const osmEmbed=city?`https://www.openstreetmap.org/export/embed.html?bbox=${city.lon-.07},${city.lat-.05},${city.lon+.07},${city.lat+.05}&layer=mapnik&marker=${city.lat},${city.lon}`:'';
  const {items,loaded}=useResources();
+ const xavMap=city?preferredCityMap(city.icon,items):null;
  const sharedMaps=Object.values(items).some(item=>item.group==='maps'&&item.visible&&!item.deleted);
  return <section className="page maps-page">
   <div className="intro"><h1>Maps</h1><p>Explore each city, find your hotel and discover Xavier’s local maps.</p></div>
@@ -59,8 +61,8 @@ export default function JourneyMaps({onOpenFlights}:{onOpenFlights:()=>void}){
    {hotelsExpanded&&<><div className="more-tile-grid" role="group" aria-label="Hotel maps">{tiles.filter(t=>t.key.startsWith('hotel-')).map(tile=>renderTile(tile))}</div><p>Hanoi hotel details will be added once confirmed.</p></>}
    {selected==='hotels'?null:selected==='shared'?<><p>Printable maps and local maps shared by your tour director.</p>{loaded&&!sharedMaps&&<p>No shared maps yet.</p>}<ResourceGroup group="maps"/></>:<div ref={hotelMap}>
     {hotel&&<h3>{hotel.name}</h3>}
-    {hasXavMap?<>
-     <a className="map-xavier-primary" href="https://maps.app.goo.gl/xYNpoB1qDGe6rfy76?g_st=i" target="_blank" rel="noopener noreferrer" aria-label="Open Xav’s Hanoi map in Google Maps"><img src="/images/maps-hanoi.svg" alt=""/><span><strong>Xav’s Hanoi map</strong><span>Explore Hanoi with Xavier’s personal map</span><b>Open map ↗</b></span></a>
+    {xavMap&&city?<>
+     <a className="map-xavier-primary" href={xavMap} target="_blank" rel="noopener noreferrer" aria-label={`Open Xav’s ${city.name} map`}><img src={`/images/maps-${city.icon}.svg`} alt=""/><span><strong>Xav’s {city.name} map</strong><span>Explore {city.name} with Xavier’s personal map</span><b>Open map ↗</b></span></a>
      <a className="map-open-link" href={google(query)} target="_blank" rel="noopener noreferrer">Open the city’s map ↗</a>
     </>:<>
     {city&&<div className="map-provider-switch" role="group" aria-label="Map provider"><button type="button" aria-pressed={provider==='google'} onClick={()=>setProvider('google')}>Google Maps</button><button type="button" aria-pressed={provider==='osm'} onClick={()=>setProvider('osm')}>OpenStreetMap</button></div>}

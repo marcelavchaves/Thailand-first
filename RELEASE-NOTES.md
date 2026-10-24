@@ -1,3 +1,8 @@
+## Preferred city maps and TD uploads
+
+- Journey map markers and city cards open revealed TD city maps first, then Xav’s existing Hanoi link, with Google Maps as the fallback.
+- Add a Maps section to TD Suitcase with city-specific PDF/image uploads, preview and reveal controls, plus other shared maps. Hidden uploads stay private and do not replace traveler maps.
+
 ## Interactive journey route map
 
 - Add the original Vietnam, Cambodia & Thailand route map from Tauck’s tour page to Maps. City markers open Google Maps; both airplanes open Essentials with Flights expanded and scrolled into view.
