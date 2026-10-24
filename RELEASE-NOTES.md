@@ -1,3 +1,7 @@
+## Group hotel maps
+
+- Combine hotel maps under one Hotels tile; expand it to browse individual hotels and open their maps.
+
 ## Maps city and hotel tiles
 
 - Match the Essentials and More tile layout, with separate city and hotel icons, expandable map panels and automatic scrolling.
