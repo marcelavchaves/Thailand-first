@@ -1,3 +1,8 @@
+## Unified Home and journey
+
+- Move the calendar to the top of Home and bring all day lists, itinerary details, swipe navigation and daily tools into Home. Remove Journey from bottom navigation.
+- Keep Day 1 preview before departure and preserve old journey/day links as Home links.
+
 ## Home preview and navigation labels
 
 - Show the Day 1 itinerary on Home before departure, including when live schedule data is unavailable or not released. Preserve visibility controls after the trip starts.

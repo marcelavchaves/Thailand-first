@@ -1732,7 +1732,7 @@ function TutorialHelp() {
 export const tripContent = { days, hotels, hotelResources, localGuides, storytelling, internalFlights, tripDate, shortTripDate, longTripDate, tauck, travelerAlbumUrl, xavierPhoneDisplay, xavierPhoneUrl, xavierEmail };
 
 function TravelerHome({ initialTab = "home", initialSelected = null }: { initialTab?: Tab; initialSelected?: number | null }) {
-  const [tab, setTab] = useState<Tab>(initialTab),
+  const [tab, setTab] = useState<Tab>(initialTab === "journey" ? "home" : initialTab),
     [selected, setSelected] = useState<number | null>(initialSelected);
   const [essentialsSection, setEssentialsSection] = useState<string | null>(null);
   const [moreSection, setMoreSection] = useState<string | null>(null);
@@ -1776,6 +1776,14 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
       const card = document.getElementById(hotelTarget);
       if (card) { card.scrollIntoView({block:"start",behavior:"instant"}); card.focus({preventScroll:true}); return; }
     }
+    if (tab === "home" && selected !== null) {
+      const day = document.getElementById('home-day-detail');
+      if (day) {
+        const headerHeight = document.querySelector('.topbar')?.getBoundingClientRect().height ?? 0;
+        window.scrollTo({top: Math.max(0, window.scrollY + day.getBoundingClientRect().top - headerHeight), behavior:'instant'});
+        return;
+      }
+    }
     window.scrollTo({top:0,left:0,behavior:"instant"});
   }, [tab, selected, hotelTarget]);
   const swipeStart = useRef<{ x: number; y: number } | null>(null);
@@ -1790,7 +1798,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     const requestedTab = params.get('tab');
     const requestedHotel = params.get('hotel');
     if (requestedTab === 'hotels' && /^hotel-[0-6]$/.test(requestedHotel || '')) setHotelTarget(requestedHotel);
-    if (['home', 'journey', 'map', 'hotels', 'info', 'more', 'gallery', 'td'].includes(requestedTab || '')) setTab(requestedTab as Tab);
+    if (['home', 'journey', 'map', 'hotels', 'info', 'more', 'gallery', 'td'].includes(requestedTab || '')) setTab(requestedTab === 'journey' ? 'home' : requestedTab as Tab);
     return () => window.clearInterval(timer);
   }, []);
   const clock = now ? getJourneyStatus(now) : null;
@@ -1834,7 +1842,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     window.scrollTo({ top: 0, behavior: "instant" });
   }
   function openDay(date: number) {
-    setTab("journey");
+    setTab("home");
     setSelected(date);
     window.scrollTo({ top: 0, behavior: "instant" });
   }
@@ -1881,23 +1889,24 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
       </header>
       {tab === "home" && (
         <>
-          <div className="home-panels">
+          <section className="page home-calendar" aria-label="Journey overview"><TripCalendar onSelect={openDay}/></section>
+          {!detail && <div className="home-panels">
             {(homeOrder === 'journey' ? ['journey','announcements'] : ['announcements','journey']).map(panel => <div key={panel}>
               {panel === 'journey' ? <CurrentTripDay key={homeDay} date={homeDay} now={now} onPrevious={() => setHomeDateOverride(Math.max(5, homeDay - 1))} onNext={() => setHomeDateOverride(Math.min(20, homeDay + 1))} /> : <XavierDailyNote key={homeDay} date={homeDay} home currentDay={homeDay === currentDay} />}
             </div>)}
-          </div>
+          </div>}
         </>
       )}
-      {tab === "journey" && !detail && (
-        <section className="page">
-          <TripCalendar onSelect={setSelected} />
+      {tab === "home" && !detail && (
+        <section className="page home-day-list">
+          <h2>Explore all 16 days</h2>
 
           <div className="day-list">
             {days.map((d) => (
               <button
                 className="day-card"
                 key={d.date}
-                onClick={() => setSelected(d.date)}
+                onClick={() => openDay(d.date)}
               >
                 <img className="journey-day-thumbnail" src={`/images/${d.image}`} alt={`Watercolor of ${d.region}`} loading="lazy" width={96} height={128} />
                 <div>
@@ -1919,8 +1928,9 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           <section className="route-section journey-route-section"><h2>The journey at a glance</h2><p>Hanoi · Hue · Da Nang · Hoi An · Saigon · Siem Reap · Chiang Mai · Bangkok</p></section>
         </section>
       )}
-      {tab === "journey" && detail && (
+      {tab === "home" && detail && (
         <section
+          id="home-day-detail"
           key={`journey-day-${detail.date}`}
           className="detail swipe-enabled"
           onTouchStart={startDaySwipe}
@@ -2130,7 +2140,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         {(
           [
             { key: "home", label: "Home", icon: "home" },
-            { key: "journey", label: "Journey", icon: "calendar" },
             { key: "map", label: "Maps", icon: "map" },
             { key: "hotels", label: "Essentials", icon: "book" },
             { key: "gallery", label: "Gallery", icon: "gallery" },
