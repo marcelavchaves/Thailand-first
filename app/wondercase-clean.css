@@ -270,3 +270,12 @@ html,body,.app-shell{background:#fff}
 .language-quiz label { display:flex; align-items:center; gap:10px; min-height:44px; margin:5px 0; cursor:pointer; }
 .language-quiz input { min-height:0; width:18px; height:18px; flex-shrink:0; accent-color:var(--brand-green); }
 .language-quiz button { min-height:44px; padding:10px 18px; background:var(--brand-green); border:0; border-radius:5px; color:white; cursor:pointer; font:inherit; }
+
+.language-practice { display:flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:9px 10px; border:1px solid var(--brand-green); border-radius:5px; background:var(--brand-green); color:white; cursor:pointer; font:inherit; font-size:13px; }
+.language-practice .brand-icon { width:20px; height:20px; flex-shrink:0; }
+.language-practice:disabled,.language-listen:disabled { opacity:.6; cursor:default; }
+.language-practice[aria-pressed=true] { outline:2px solid var(--brand-gold); outline-offset:2px; }
+.language-practice-note { font-size:13px; line-height:1.6; }
+.language-practice-feedback { display:grid; gap:6px; margin:6px 0 0; padding:10px; background:white; border-left:3px solid var(--brand-gold); font-size:13px; line-height:1.5; overflow-wrap:anywhere; }
+.language-practice-feedback strong { font-size:13px; font-weight:500; }
+.language-practice-feedback.success { border-color:var(--brand-green); }

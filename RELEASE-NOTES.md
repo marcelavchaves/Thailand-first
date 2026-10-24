@@ -1,3 +1,9 @@
+## Speaking practice
+
+- Add microphone practice to each local phrase using browser speech recognition with the lesson’s Vietnamese, Khmer or Thai locale. Give encouraging word-recognition feedback without a pronunciation score.
+- Start only on a traveler click; support stopping, time limits, background/unmount cleanup and clear microphone, language, network and browser errors. Audio is not saved by the app.
+- Allow microphone use only for the app’s own origin in Permissions-Policy.
+
 ## Explore locations, flights, meals and local languages
 
 - Emphasize Explore Map Locations, add icons to location links and add a matching Flights list linked to Essentials.
