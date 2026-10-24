@@ -1,3 +1,8 @@
+## Journey navigation and Map tab
+
+- Match the 103 edition’s day navigation layout, keep it below the resized banner, and restore day artwork.
+- Add a Map tab with Google Maps, OpenStreetMap, eight destination choices, hotel links and a Maps collection for tour-director uploads.
+
 ## Journey calendar visibility
 
 - Replace the blank-looking date grid with readable November and December 2026 calendars. Highlight all 16 tour dates by country and keep date buttons linked to the daily itinerary.

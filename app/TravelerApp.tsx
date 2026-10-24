@@ -35,6 +35,7 @@ const isBaliDay = (date: number) => [11, 12, 13, 16, 17, 18].includes(date);
 
 import itinerary from "./itinerary.json";
 import RecommendedReading from "./RecommendedReading";
+import JourneyMaps from "./JourneyMaps";
 import hotelList from "./hotels.json";
 type Day = {
   date: number;
@@ -1627,7 +1628,7 @@ function Icon({ name, size = 20 }: { name: string; size?: number }) {
     </svg>
   );
 }
-type Tab = "home" | "journey" | "hotels" | "info" | "more" | "gallery" | "td";
+type Tab = "map" | "home" | "journey" | "hotels" | "info" | "more" | "gallery" | "td";
 function TutorialHelp() {
   const [buffering, setBuffering] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -1736,6 +1737,16 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
   const activeEssentialsSection = hotelTarget ? "hotels" : essentialsSection;
   const sectionScrollTarget = useRef<string | null>(null);
   useEffect(() => {
+    const header=document.querySelector('.topbar');
+    if(!header)return;
+    const update=()=>document.documentElement.style.setProperty('--app-header-height',`${header.getBoundingClientRect().height}px`);
+    update();
+    const observer=new ResizeObserver(update);
+    observer.observe(header);
+    return ()=>observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     const targetId = sectionScrollTarget.current;
     if (!targetId) return;
     sectionScrollTarget.current = null;
@@ -1775,7 +1786,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     const requestedTab = params.get('tab');
     const requestedHotel = params.get('hotel');
     if (requestedTab === 'hotels' && /^hotel-[0-6]$/.test(requestedHotel || '')) setHotelTarget(requestedHotel);
-    if (['home', 'journey', 'hotels', 'info', 'more', 'gallery', 'td'].includes(requestedTab || '')) setTab(requestedTab as Tab);
+    if (['home', 'journey', 'map', 'hotels', 'info', 'more', 'gallery', 'td'].includes(requestedTab || '')) setTab(requestedTab as Tab);
     return () => window.clearInterval(timer);
   }, []);
   const clock = now ? getJourneyStatus(now) : null;
@@ -1937,6 +1948,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             </button>
           </nav>
           <p className="swipe-hint">← Swipe to explore another day →</p>
+          <img className="detail-image" src={`/images/${detail.image}`} alt={`Watercolor of ${detail.region}`} width={480} height={320}/>
           
           <div className="detail-body">
             <div className="day-heading-meta">
@@ -2077,6 +2089,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
 
         </section>
       )}
+      {tab === "map" && <JourneyMaps/>}
       {tab === "info" && <section className="page info-page travelers-page"><XavierContactCard onSuitcase={()=>nav("td")}/><GuestProfiles/></section>}
       {tab === "more" && <section className="section more-page">
         <h1>More</h1>
@@ -2097,7 +2110,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         <details id="more-rating" key={`rating-${moreSection}`} hidden={moreSection!=='rating'} open className="day-disclosure feedback-disclosure"><summary>Help Wondercase Grow</summary><AppRatings /></details>
       </section>}
       {tab === "gallery" && <section className="section gallery-page"><h1>Gallery</h1><article className="album-invite"><span className="eyebrow">PHOTOCIRCLE</span><h2>Our shared memories</h2><p>View and share photos from our journey.</p>{travelerAlbumUrl?<a className="album-join-link" href={travelerAlbumUrl} target="_blank" rel="noopener noreferrer">Join our photo album <span aria-hidden="true">↗</span></a>:<p>The photo album is coming soon.</p>}<small>Opens in PhotoCircle</small></article></section>}
-      {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day}/>} groups={[{id:'handouts',title:'Handouts'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
+      {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day}/>} groups={[{id:'handouts',title:'Handouts'},{id:'maps',title:'Maps'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
        {id:'guide-singapore',title:'Singapore Guide',group:'guides',content:<span/>},
        {id:'guide-java',title:'Java Guide',group:'guides',content:<XavierJavaGuide/>},
        {id:'guide-bali',title:'Bali Guide',group:'guides',content:<XavierBaliGuide/>},
@@ -2114,6 +2127,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           [
             { key: "home", label: "Home", icon: "home" },
             { key: "journey", label: "Journey", icon: "calendar" },
+            { key: "map", label: "Map", icon: "map" },
             { key: "hotels", label: "Essentials", icon: "book" },
             { key: "gallery", label: "Gallery", icon: "gallery" },
             { key: "info", label: "Info", icon: "people" },
