@@ -1,3 +1,8 @@
+## Home preview and navigation labels
+
+- Show the Day 1 itinerary on Home before departure, including when live schedule data is unavailable or not released. Preserve visibility controls after the trip starts.
+- Rename Map to Maps and Info to The Group.
+
 ## Journey navigation and Map tab
 
 - Match the 103 edition’s day navigation layout, keep it below the resized banner, and restore day artwork.

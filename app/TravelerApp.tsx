@@ -440,6 +440,10 @@ function CurrentTripDay({ date, now, onPrevious, onNext }: { date: number; now: 
   const {items}=useResources();
   const scheduleVisible=items[`schedule-${date}`]?.visible;
   const [schedule, setSchedule] = useState<[string,string][] | null>(null);
+  const previewFirstDay = beforeTrip && date === days[0].date;
+  const scheduleEvents = previewFirstDay && (!schedule?.length || schedule[0][0] === 'COMING SOON') ? day.events : schedule || day.events;
+  const scheduleContent = <div className="home-schedule"><h3>{previewFirstDay ? 'Day 1 itinerary' : viewingToday ? 'Today’s schedule' : `Day ${tauckDay} schedule`}</h3><ol>{scheduleEvents.map(([time,activity],index)=><li key={`${time}-${index}`}><strong>{time}</strong><span>{activity}</span></li>)}</ol></div>;
+
   useEffect(() => {
     const controller = new AbortController();
     setSchedule(null);
@@ -463,7 +467,7 @@ function CurrentTripDay({ date, now, onPrevious, onNext }: { date: number; now: 
         <div className="home-overview-date"><h2>{overviewDate}</h2><p>{day.region}</p></div>
         {viewingToday && statusDetail && <p className="home-journey-countdown">{statusDetail}</p>}
       </div>
-      <ResourceSlot id={`schedule-${date}`} title="Your schedule" group="schedules" icon="calendar" caption="Xavier will share your plans here."><div className="home-schedule"><h3>{viewingToday ? 'Today’s schedule' : `Day ${tauckDay} schedule`}</h3><ol>{(schedule || day.events).map(([time,activity],index) => <li key={`${time}-${index}`}><strong>{time}</strong><span>{activity}</span></li>)}</ol></div></ResourceSlot>
+      {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><div className="release-heading"><BrandIcon name="calendar"/><div><h3>Day 1 itinerary</h3><p>{day.title}</p></div></div>{scheduleContent}</section> : <ResourceSlot id={`schedule-${date}`} title="Your schedule" group="schedules" icon="calendar" caption="Xavier will share your plans here.">{scheduleContent}</ResourceSlot>}
       {date === days[0].date && <XavierWelcomePanel expanded />}
     </section>
   );
@@ -2127,10 +2131,10 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           [
             { key: "home", label: "Home", icon: "home" },
             { key: "journey", label: "Journey", icon: "calendar" },
-            { key: "map", label: "Map", icon: "map" },
+            { key: "map", label: "Maps", icon: "map" },
             { key: "hotels", label: "Essentials", icon: "book" },
             { key: "gallery", label: "Gallery", icon: "gallery" },
-            { key: "info", label: "Info", icon: "people" },
+            { key: "info", label: "The Group", icon: "people" },
             { key: "more", label: "More…", icon: "more" },
           ] as const
         ).map((x) => (

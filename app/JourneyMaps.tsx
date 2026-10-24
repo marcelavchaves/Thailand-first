@@ -23,7 +23,7 @@ export default function JourneyMaps(){
  const {items,loaded}=useResources();
  const sharedMaps=Object.values(items).some(item=>item.group==='maps'&&item.visible&&!item.deleted);
  return <section className="page maps-page">
-  <div className="intro"><h1>Map</h1><p>Explore the places on your journey and find your hotel.</p></div>
+  <div className="intro"><h1>Maps</h1><p>Explore the places on your journey and find your hotel.</p></div>
   <section className="map-viewer" aria-labelledby="destination-map-title">
    <h2 id="destination-map-title">Destination maps</h2>
    <label htmlFor="map-destination">Choose a destination</label>
