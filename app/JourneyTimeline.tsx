@@ -4,7 +4,7 @@ import {useTDSession} from './TDSession';
 import LoadingIndicator from './LoadingIndicator';
 type Event=[string,string];
 type Schedule={events:Event[];note:string;updatedAt?:string};
-export default function JourneyTimeline({day,dateLabel,events,note}:{day:number;dateLabel:string;events:Event[];note:string}){
+export default function JourneyTimeline({day,dateLabel,events,note,previewUnavailable=false}:{day:number;dateLabel:string;events:Event[];note:string;previewUnavailable?:boolean}){
  const {authenticated,refresh}=useTDSession();
  const [schedule,setSchedule]=useState<Schedule>({events,note}),[revision,setRevision]=useState<string|null>(null);
  const [loaded,setLoaded]=useState(false),[editing,setEditing]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[zoom,setZoom]=useState(0);
@@ -17,7 +17,7 @@ export default function JourneyTimeline({day,dateLabel,events,note}:{day:number;
   return()=>{element.close();document.body.style.overflow=previousOverflow;};
  },[expandedEvent]);
  const [draft,setDraft]=useState<Schedule>({events,note});
- const load=useCallback(async(signal?:AbortSignal)=>{try{const r=await fetch(`/api/journey-timeline?day=${day}`,{cache:'no-store',signal});if(!r.ok)throw Error();const d=await r.json();if(signal?.aborted)return;setSchedule(d.schedule||{events,note});setRevision(d.revision);setLoaded(true);setMessage(m=>m.startsWith("Unable to check schedule updates")?"":m);}catch{if(!signal?.aborted)setMessage('Unable to check schedule updates. Please try again when connected.');}},[day,events,note]);
+ const load=useCallback(async(signal?:AbortSignal)=>{try{const r=await fetch(`/api/journey-timeline?day=${day}`,{cache:'no-store',signal});if(!r.ok)throw Error();const d=await r.json();if(signal?.aborted)return;setSchedule(previewUnavailable && (!d.schedule?.events?.length || d.schedule.events[0][0]==='COMING SOON') ? {events,note} : d.schedule||{events,note});setRevision(d.revision);setLoaded(true);setMessage(m=>m.startsWith("Unable to check schedule updates")?"":m);}catch{if(!signal?.aborted)setMessage('Unable to check schedule updates. Please try again when connected.');}},[day,events,note,previewUnavailable]);
  useEffect(()=>{if(editing)return;const controller=new AbortController();void load(controller.signal);const check=()=>void load(controller.signal);window.addEventListener('focus',check);const timer=window.setInterval(check,60000);return()=>{controller.abort();window.removeEventListener('focus',check);clearInterval(timer);};},[load,editing]);
  useEffect(()=>{if(!authenticated)setEditing(false);},[authenticated]);
  function update(index:number,column:0|1,value:string){setDraft(d=>({...d,events:d.events.map((e,i)=>i===index?(column===0?[value,e[1]]:[e[0],value]):e)}));}

@@ -1,3 +1,8 @@
+## Original Home day controls
+
+- Use the 103 edition’s compact Home previous/day/next controls, date and local clock below the calendar. Open the current day (Day 1 before departure) by default.
+- Remove destination thumbnails, hero images and the separate Journey navigation bar from Home while retaining daily itinerary tools, swipe navigation and calendar date selection.
+
 ## Unified Home and journey
 
 - Move the calendar to the top of Home and bring all day lists, itinerary details, swipe navigation and daily tools into Home. Remove Journey from bottom navigation.

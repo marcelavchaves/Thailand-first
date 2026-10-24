@@ -1,7 +1,6 @@
 "use client";
 import {Handouts} from './ResourceLibrary';
 import {ResourceProvider, ResourceSlot, ResourceGroup, useResources} from "./ResourceLibrary";
-import DestinationOutline from './DestinationOutline';
 import BrandIcon from "./BrandIcon";
 import TDSuitcase from "./TDSuitcase";
 import SafePlans from "./SafePlans";
@@ -430,47 +429,18 @@ function TimeAtHome() {
 function CurrentTripDay({ date, now, onPrevious, onNext }: { date: number; now: Date | null; onPrevious: () => void; onNext: () => void }) {
   const clock = now ? getJourneyStatus(now) : null;
   const day = days.find(d => d.date === date)!;
-  const tauckDay = tauck(date);
-  const viewingToday = date === (clock?.dayId ?? 5);
   const beforeTrip = clock?.beforeTrip ?? true;
-  const statusDetail = clock?.beforeTrip ? `Your journey starts in ${clock.daysToGo} days` : clock?.afterTrip ? "Until the next journey" : "";
-  const overviewDate = longTripDate(date);
-  const dayTimeZone = "Asia/Bangkok";
-  const {authenticated}=useTDSession();
-  const {items}=useResources();
-  const scheduleVisible=items[`schedule-${date}`]?.visible;
-  const [schedule, setSchedule] = useState<[string,string][] | null>(null);
-  const previewFirstDay = beforeTrip && date === days[0].date;
-  const scheduleEvents = previewFirstDay && (!schedule?.length || schedule[0][0] === 'COMING SOON') ? day.events : schedule || day.events;
-  const scheduleContent = <div className="home-schedule"><h3>{previewFirstDay ? 'Day 1 itinerary' : viewingToday ? 'Today’s schedule' : `Day ${tauckDay} schedule`}</h3><ol>{scheduleEvents.map(([time,activity],index)=><li key={`${time}-${index}`}><strong>{time}</strong><span>{activity}</span></li>)}</ol></div>;
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setSchedule(null);
-    const load = () => fetch(`/api/journey-timeline?day=${date}`, {cache:'no-store',signal:controller.signal})
-      .then(response => response.ok ? response.json() : null)
-      .then(data => { if (!controller.signal.aborted) setSchedule(data?.schedule?.events || null); })
-      .catch(() => {});
-    void load();
-    window.addEventListener('focus', load);
-    const timer = window.setInterval(load, 60000);
-    return () => { controller.abort(); window.removeEventListener('focus', load); window.clearInterval(timer); };
-  }, [date, authenticated, scheduleVisible]);
-  return (
-    <section className="current-day-card journey-today-card" aria-live="polite">
-      <div className={`home-day-overview${beforeTrip ? ' before-trip' : ''}`}>
-        <DestinationOutline region={day.region}/>
-        <div className="home-overview-top">
-          {!beforeTrip && <div className="home-day-switch"><button type="button" aria-label="Previous Home day" disabled={date === 5} onClick={onPrevious}>‹</button><span className="journey-day-number">Day {tauckDay}</span><button type="button" aria-label="Next Home day" disabled={date === 20} onClick={onNext}>›</button></div>}
-          <div className="home-local-clock">{now && <time dateTime={now.toISOString()}>{now.toLocaleTimeString('en-US', {timeZone:dayTimeZone,hour:'numeric',minute:'2-digit'})}</time>}<small>{day.region} time</small></div>
-        </div>
-        <div className="home-overview-date"><h2>{overviewDate}</h2><p>{day.region}</p></div>
-        {viewingToday && statusDetail && <p className="home-journey-countdown">{statusDetail}</p>}
+  const statusDetail = beforeTrip && date === days[0].date && clock ? `Your journey starts in ${clock.daysToGo} days` : clock?.afterTrip ? 'Until the next journey' : '';
+  return <section className="current-day-card journey-today-card" aria-live="polite">
+    <div className={`home-day-overview${beforeTrip ? ' before-trip' : ''}`}>
+      <div className="home-overview-top">
+        <div className="home-day-switch"><button type="button" aria-label="Previous Home day" disabled={date === days[0].date} onClick={onPrevious}>‹</button><span className="journey-day-number">Day {tauck(date)}</span><button type="button" aria-label="Next Home day" disabled={date === days[days.length-1].date} onClick={onNext}>›</button></div>
+        <div className="home-local-clock">{now && <time dateTime={now.toISOString()}>{now.toLocaleTimeString('en-US', {timeZone:'Asia/Bangkok',hour:'numeric',minute:'2-digit'})}</time>}<small>{day.region} time</small></div>
       </div>
-      {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><div className="release-heading"><BrandIcon name="calendar"/><div><h3>Day 1 itinerary</h3><p>{day.title}</p></div></div>{scheduleContent}</section> : <ResourceSlot id={`schedule-${date}`} title="Your schedule" group="schedules" icon="calendar" caption="Xavier will share your plans here.">{scheduleContent}</ResourceSlot>}
-      {date === days[0].date && <XavierWelcomePanel expanded />}
-    </section>
-  );
+      <div className="home-overview-date"><h2>{longTripDate(date)}</h2><p>{day.region}</p></div>
+      {statusDetail && <p className="home-journey-countdown">{statusDetail}</p>}
+    </div>
+  </section>;
 }
 
 type UsageVisitor = {
@@ -1766,11 +1736,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     return () => cancelAnimationFrame(frame);
   }, [activeEssentialsSection, moreSection]);
 
-  const [homeOrder, setHomeOrder] = useState<'journey'|'announcements'>('journey');
-  const [homeDateOverride, setHomeDateOverride] = useState<number | null>(null);
-  useEffect(() => {
-    if (localStorage.getItem('kd-home-first-v1') === 'announcements') setHomeOrder('announcements');
-  }, []);
   useLayoutEffect(() => {
     if (tab === "hotels" && hotelTarget) {
       const card = document.getElementById(hotelTarget);
@@ -1803,7 +1768,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
   }, []);
   const clock = now ? getJourneyStatus(now) : null;
   const currentDay = clock?.dayId ?? 5;
-  const homeDay = homeDateOverride ?? currentDay;
   useEffect(() => {
     if ("serviceWorker" in navigator)
       navigator.serviceWorker.register("/sw.js").catch(() => {});
@@ -1868,7 +1832,8 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     if (deltaX < 0 && detail.date < 20) openDay(detail.date + 1);
     if (deltaX > 0 && detail.date > 5) openDay(detail.date - 1);
   }
-  const detail = days.find((d) => d.date === selected);
+  const detail = tab === "home" ? days.find((d) => d.date === (selected ?? currentDay)) : undefined;
+  const previewFirstDay = (clock?.beforeTrip ?? true) && detail?.date === days[0].date;
   return (
     <main className="app-shell">
       {process.env.NEXT_PUBLIC_APP_ENV === "pretour" && (
@@ -1887,47 +1852,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           </div>
         </div>
       </header>
-      {tab === "home" && (
-        <>
-          <section className="page home-calendar" aria-label="Journey overview"><TripCalendar onSelect={openDay}/></section>
-          {!detail && <div className="home-panels">
-            {(homeOrder === 'journey' ? ['journey','announcements'] : ['announcements','journey']).map(panel => <div key={panel}>
-              {panel === 'journey' ? <CurrentTripDay key={homeDay} date={homeDay} now={now} onPrevious={() => setHomeDateOverride(Math.max(5, homeDay - 1))} onNext={() => setHomeDateOverride(Math.min(20, homeDay + 1))} /> : <XavierDailyNote key={homeDay} date={homeDay} home currentDay={homeDay === currentDay} />}
-            </div>)}
-          </div>}
-        </>
-      )}
-      {tab === "home" && !detail && (
-        <section className="page home-day-list">
-          <h2>Explore all 16 days</h2>
-
-          <div className="day-list">
-            {days.map((d) => (
-              <button
-                className="day-card"
-                key={d.date}
-                onClick={() => openDay(d.date)}
-              >
-                <img className="journey-day-thumbnail" src={`/images/${d.image}`} alt={`Watercolor of ${d.region}`} loading="lazy" width={96} height={128} />
-                <div>
-                  <span className="date">
-                    {weekday(d.date).toUpperCase()} · {shortTripDate(d.date).toUpperCase()}
-                  </span>
-                  <strong>{/Komodo|Dragons/i.test(d.title) && <span className="brand-komodo" aria-hidden="true"><img src="/brand/komodo-reference.jpeg" alt="" /></span>}{d.title}</strong>
-                  <small>{d.region}</small>
-                  <div className="badges">
-                    {tauck(d.date) && (
-                      <span className="tauck-badge">DAY {tauck(d.date)}</span>
-                    )}
-                  </div>
-                </div>
-                <i>›</i>
-              </button>
-            ))}
-          </div>
-          <section className="route-section journey-route-section"><h2>The journey at a glance</h2><p>Hanoi · Hue · Da Nang · Hoi An · Saigon · Siem Reap · Chiang Mai · Bangkok</p></section>
-        </section>
-      )}
+      {tab === "home" && <section className="page home-calendar" aria-label="Journey overview"><TripCalendar onSelect={openDay}/></section>}
       {tab === "home" && detail && (
         <section
           id="home-day-detail"
@@ -1939,39 +1864,11 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             swipeStart.current = null;
           }}
         >
-          <nav className="detail-nav" aria-label="Journey day navigation">
-            <button
-              className="detail-nav-arrow"
-              disabled={detail.date === 5}
-              onClick={() => openDay(detail.date - 1)}
-              aria-label="Previous journey day"
-            >
-              ← <span>Previous</span>
-            </button>
-            <div className="sticky-day-summary">
-              <div className="sticky-day-date"><strong>Day {tauck(detail.date)}</strong><span>{weekday(detail.date)} · {shortTripDate(detail.date)}</span></div>
-              <button className="all-days-button" onClick={() => {setSelected(null); window.scrollTo({top:0});}}><span aria-hidden="true">▦</span> All 16 days</button>
-            </div>
-            <button
-              className="detail-nav-arrow"
-              disabled={detail.date === 20}
-              onClick={() => openDay(detail.date + 1)}
-              aria-label="Next journey day"
-            >
-              <span>Next</span> →
-            </button>
-          </nav>
-          <p className="swipe-hint">← Swipe to explore another day →</p>
-          <img className="detail-image" src={`/images/${detail.image}`} alt={`Watercolor of ${detail.region}`} width={480} height={320}/>
-          
+          <CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)}/>
           <div className="detail-body">
-            <div className="day-heading-meta">
-              <strong>Day {tauck(detail.date)}</strong>
-              <div><span className="detail-date">{longTripDate(detail.date)}</span><span className="day-local-time">{now?.toLocaleTimeString('en-US',{timeZone:"Asia/Bangkok",hour:'numeric',minute:'2-digit'}) ?? '–'} local time</span></div>
-            </div>
             <h1>{detail.title}</h1>
             <XavierDailyNote date={detail.date} />
-            <ResourceSlot id={`schedule-${detail.date}`} title="Today’s schedule" group="schedules" icon="calendar"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} /></ResourceSlot>
+            {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/></section> : <ResourceSlot id={`schedule-${detail.date}`} title="Today’s schedule" group="schedules" icon="calendar"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
             <div className="detail-footer">
               <div>
                 <span className="eyebrow">TONIGHT’S STAY</span>
