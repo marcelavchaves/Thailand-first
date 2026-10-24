@@ -21,7 +21,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Hanoi hotel — not named in supplied itinerary",
-    "meals": "See daily schedule"
+    "meals": "Dinner included",
+    "mealNotes": "Welcome dinner at Le Beaulieu. Other meals are not specified in the supplied itinerary."
   },
   {
     "date": 6,
@@ -61,7 +62,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Hanoi hotel — not named in supplied itinerary",
-    "meals": "See daily schedule"
+    "meals": "Breakfast & lunch included",
+    "mealNotes": "Breakfast at Spice Garden / Le Club Bar; lunch at Ly Club. Dinner is not included."
   },
   {
     "date": 7,
@@ -93,7 +95,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "La Residence Hotel and Spa",
-    "meals": "See daily schedule"
+    "meals": "Breakfast, lunch & dinner included",
+    "mealNotes": "Early breakfast at Spice Garden; lunch at La Residence; dinner at Le Parfum."
   },
   {
     "date": 8,
@@ -133,7 +136,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Furama Resort",
-    "meals": "See daily schedule"
+    "meals": "Breakfast, lunch & dinner included",
+    "mealNotes": "Breakfast at Le Parfum; lunch at Horizon, Vedana Lagoon Resort; dinner at your choice of Furama restaurants."
   },
   {
     "date": 9,
@@ -165,7 +169,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Furama Resort",
-    "meals": "See daily schedule"
+    "meals": "Breakfast & dinner included",
+    "mealNotes": "Breakfast at Café Indochine; dinner at your choice of restaurant. Lunch in Hoi An is not included."
   },
   {
     "date": 10,
@@ -201,7 +206,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Park Hyatt Saigon",
-    "meals": "See daily schedule"
+    "meals": "Breakfast, lunch & dinner included",
+    "mealNotes": "Breakfast at Café Indochine; boxed lunch en route to Cu Chi; dinner at Square One."
   },
   {
     "date": 11,
@@ -229,7 +235,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Park Hyatt Saigon",
-    "meals": "See daily schedule"
+    "meals": "Breakfast, lunch & dinner included",
+    "mealNotes": "Breakfast at Café Opera; lunch at Opera; dinner as part of the included Vespa foodie tour."
   },
   {
     "date": 12,
@@ -273,7 +280,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Raffles Grand Hotel",
-    "meals": "See daily schedule"
+    "meals": "Breakfast & dinner included",
+    "mealNotes": "Breakfast at Café Opera / Square One; dinner and Cambodian dance performance at Apsara. Lunch is not specified."
   },
   {
     "date": 13,
@@ -309,7 +317,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Raffles Grand Hotel",
-    "meals": "See daily schedule"
+    "meals": "Breakfast, lunch & dinner included",
+    "mealNotes": "Breakfast at the hotel; lunch at Sokkhak River Side; à la carte dinner at Café D’Angkor."
   },
   {
     "date": 14,
@@ -357,7 +366,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Intercontinental Chiang Mai",
-    "meals": "See daily schedule"
+    "meals": "Breakfast & dinner included",
+    "mealNotes": "Breakfast at Café D’Angkor; Thai welcome dinner and show. Lunch at the airport is not included."
   },
   {
     "date": 15,
@@ -385,7 +395,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Intercontinental Chiang Mai",
-    "meals": "See daily schedule"
+    "meals": "Breakfast, lunch & dinner included",
+    "mealNotes": "Breakfast at The Gad Lanna Terrace; lunch catered by Four Seasons at the elephant sanctuary; dinner at Khao or North."
   },
   {
     "date": 16,
@@ -409,7 +420,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Intercontinental Chiang Mai",
-    "meals": "See daily schedule"
+    "meals": "Breakfast & dinner included",
+    "mealNotes": "Breakfast and dinner at the hotel, with your choice of restaurant for dinner. Lunch is not included."
   },
   {
     "date": 17,
@@ -445,7 +457,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Rosewood Bangkok",
-    "meals": "See daily schedule"
+    "meals": "Breakfast, lunch & dinner included",
+    "mealNotes": "Breakfast at the hotel; lunch on arrival at Rosewood; dinner at Nan Bei. Reserve dinner at lunch."
   },
   {
     "date": 18,
@@ -481,7 +494,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Rosewood Bangkok",
-    "meals": "See daily schedule"
+    "meals": "Breakfast & lunch included",
+    "mealNotes": "Breakfast at Lakorn; lunch at Sorndaeng. Dinner is not included."
   },
   {
     "date": 19,
@@ -525,7 +539,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Rosewood Bangkok",
-    "meals": "See daily schedule"
+    "meals": "Breakfast & dinner included",
+    "mealNotes": "Breakfast on the 7th floor; farewell reception at Lennon’s Bar and dinner in the Pavilion room. Lunch is not specified."
   },
   {
     "date": 20,
@@ -541,6 +556,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "",
-    "meals": "See daily schedule"
+    "meals": "Meals not specified",
+    "mealNotes": "The supplied itinerary lists departure and farewell wishes without meal arrangements."
   }
 ]

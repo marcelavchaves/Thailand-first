@@ -34,6 +34,8 @@ const isBaliDay = (date: number) => [11, 12, 13, 16, 17, 18].includes(date);
 
 import itinerary from "./itinerary.json";
 import RecommendedReading from "./RecommendedReading";
+import flightList from './internal-flights.json';
+import LanguageQuiz from './LanguageQuiz';
 import JourneyMaps from "./JourneyMaps";
 import hotelList from "./hotels.json";
 type Day = {
@@ -46,10 +48,11 @@ type Day = {
   note: string;
   hotel: string;
   meals: string;
+  mealNotes?: string;
 };
 const days: Day[] = itinerary as Day[];
 const hotels = hotelList;
-const internalFlights: {date:number;route:string;airline:string;time:string;detail:string;duration?:string}[] = [{"date": 7, "route": "Hanoi \u2192 Da Nang", "airline": "Vietnam Airlines VN163", "time": "07:45\u201309:05", "detail": "Continue to Hue"}, {"date": 10, "route": "Da Nang \u2192 Saigon", "airline": "As provided in itinerary", "time": "08:55\u201310:25", "detail": "Continue to Cu Chi Tunnels"}, {"date": 12, "route": "Saigon \u2192 Siem Reap", "airline": "Air Cambodia K6825", "time": "12:00\u201313:15", "detail": "Cambodian immigration on arrival"}, {"date": 14, "route": "Siem Reap \u2192 Bangkok \u2192 Chiang Mai", "airline": "Thai Airways", "time": "09:50; onward 13:30", "detail": "Bangkok arrival 10:55; Chiang Mai arrival 14:45"}, {"date": 17, "route": "Chiang Mai \u2192 Bangkok", "airline": "Bangkok Airways", "time": "10:10\u201311:35", "detail": "Transfer to Rosewood Bangkok"}];
+const internalFlights: {date:number;route:string;airline:string;time:string;detail:string;duration?:string}[] = flightList;
 const tripDate = (d: number) => new Date(Date.UTC(2026, 10, 16 + d - 5));
 const weekday = (d: number) => tripDate(d).toLocaleDateString("en-US", {weekday:"short",timeZone:"UTC"});
 const shortTripDate = (d: number) => tripDate(d).toLocaleDateString("en-US", {month:"short",day:"numeric",timeZone:"UTC"});
@@ -1884,7 +1887,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
               </div>
               <div>
                 <span className="eyebrow">MEALS</span>
-                <strong>{detail.meals}</strong>
+                <strong>{detail.meals}</strong>{detail.mealNotes&&<p className="daily-meal-notes">{detail.mealNotes}</p>}
               </div>
             </div>
             {detail.date === days[0].date && <><XavierWelcomePanel expanded /></>}
@@ -2016,7 +2019,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           {key:'rating',title:'Help Wondercase Grow',icon:'feedback',image:'/images/more-grow.svg'},
         ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={moreSection===item.key} aria-controls={`more-${item.key}`} onClick={()=>{const next=moreSection===item.key?null:item.key;sectionScrollTarget.current=next?`more-${next}`:null;setMoreSection(next);}}><img src={item.image} alt=""/><strong>{item.title}</strong><small>{item.key==='learn'?'Trivia & language':item.key==='help'?'FAQs, how-tos & tutorials':item.key==='shop'?'Coming soon':item.key==='rating'?'Your ideas help us bloom':null}</small></button>)}</div>
         {moreSection==='help'&&<HelpAndTutorials/>}
-        {moreSection==='learn'&&<section id="more-learn" className="more-open-panel"><h2>Learn more</h2><label>Choose a journey day<select value={learnDay} onChange={event=>setLearnDay(Number(event.target.value))}>{days.map(day=><option key={day.date} value={day.date}>Day {tauck(day.date)} · {day.title}</option>)}</select></label><LocalLanguageLesson key={`learn-language-${learnDay}`} region={days.find(day=>day.date===learnDay)!.region}/><DailyTrivia key={`learn-trivia-${learnDay}`} date={learnDay}/></section>}
+        {moreSection==='learn'&&<section id="more-learn" className="more-open-panel"><h2>Learn more</h2><label>Choose a journey day<select value={learnDay} onChange={event=>setLearnDay(Number(event.target.value))}>{days.map(day=><option key={day.date} value={day.date}>Day {tauck(day.date)} · {day.title}</option>)}</select></label><LocalLanguageLesson key={`learn-language-${learnDay}`} region={days.find(day=>day.date===learnDay)!.region}/><LanguageQuiz key={`language-quiz-${learnDay}`} region={days.find(day=>day.date===learnDay)!.region}/><DailyTrivia key={`learn-trivia-${learnDay}`} date={learnDay}/></section>}
 
         <RecommendedReading visible={moreSection==='reading'}/>
         <details id="more-tauck" key={`tauck-${moreSection}`} hidden={moreSection!=='tauck'} open className="day-disclosure asia-journeys"><summary>More Tauck experiences</summary><div className="asia-journeys-list"><article className="asia-journey-card"><span className="asia-journey-duration">14 days</span><h2>Kingdoms &amp; Dragons: Singapore to Bali</h2><p>Journey from Singapore through Java, Bali and Flores, exploring Borobudur and Prambanan, Ubud and Komodo National Park, before ending in Jimbaran Bay.</p><a href="https://www.tauck.com/tours/kingdoms-dragons-singapore-bali-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Kingdoms &amp; Dragons: Singapore to Bali on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">16 days</span><h2>The Mekong, Vietnam, Laos &amp; Cambodia</h2><p>Ho Chi Minh City, Hanoi, Phnom Penh, Siem Reap and Luang Prabang.</p><a href="https://www.tauck.com/tours/indochina-vietnam-cambodia-laos-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View The Mekong, Vietnam, Laos &amp; Cambodia on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>A Portrait of India</h2><p>New Delhi, Agra, Jaipur, Udaipur, Mumbai, Kochi, Kumarakom and Varanasi.</p><a href="https://www.tauck.com/tours/portrait-of-india-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View A Portrait of India on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>Northern India &amp; Nepal</h2><p>New Delhi, Kathmandu, Dhulikhel, Mumbai, Bandhavgarh National Park and Chitwan National Park.</p><a href="https://www.tauck.com/tours/northern-india-and-nepal-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Northern India &amp; Nepal on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">13 days</span><h2>India’s Golden Triangle, Udaipur &amp; Mumbai</h2><p>New Delhi, Agra, Jaipur, Udaipur, Varanasi and Mumbai.</p><a href="https://www.tauck.com/tours/spotlight-on-india-guided-tour" target="_blank" rel="noopener noreferrer" aria-label="View India’s Golden Triangle, Udaipur &amp; Mumbai on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article></div></details>

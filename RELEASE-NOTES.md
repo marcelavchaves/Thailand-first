@@ -1,3 +1,9 @@
+## Explore locations, flights, meals and local languages
+
+- Emphasize Explore Map Locations, add icons to location links and add a matching Flights list linked to Essentials.
+- Extract meal inclusions and restaurant notes for all 16 days from the supplied itinerary PDF, explicitly marking unspecified meals. Sync the itinerary export snapshot.
+- Replace Malay/Indonesian lessons with Vietnamese, Khmer and Thai plus vocabulary for each destination. Add device pronunciation audio with an approximate English sound-guide fallback and a multiple-choice language test under More → Learn more.
+
 ## Simplify Maps layout
 
 - Rename the route map heading to Journey and align the enlargement control to the right of the heading.

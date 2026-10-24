@@ -1,0 +1,270 @@
+{
+  "languages": {
+    "vietnamese": {
+      "name": "Vietnamese",
+      "lang": "vi-VN",
+      "source": "vietnamese",
+      "courtesy": "Vietnamese is tonal. Use the sound guides as a starting point and listen to local speakers for the tones.",
+      "phrases": [
+        [
+          "Hello",
+          "Xin chào",
+          "sin chow"
+        ],
+        [
+          "Thank you",
+          "Cảm ơn",
+          "kahm uhn"
+        ],
+        [
+          "Yes (polite)",
+          "Dạ",
+          "yah"
+        ],
+        [
+          "Excuse me / sorry",
+          "Xin lỗi",
+          "sin loy"
+        ],
+        [
+          "How much is it?",
+          "Bao nhiêu tiền?",
+          "bow nyew tee-en"
+        ],
+        [
+          "Water",
+          "Nước",
+          "nook"
+        ],
+        [
+          "Delicious",
+          "Ngon",
+          "ngon"
+        ],
+        [
+          "Where is the restroom?",
+          "Nhà vệ sinh ở đâu?",
+          "nyah vay sin uh dow"
+        ]
+      ]
+    },
+    "khmer": {
+      "name": "Khmer",
+      "lang": "km-KH",
+      "source": "khmer",
+      "courtesy": "Bring your palms together with a small bow for a respectful sampeah greeting. These sound guides are approximate.",
+      "phrases": [
+        [
+          "Hello (polite)",
+          "ជម្រាបសួរ",
+          "joom ree-up soo-uh"
+        ],
+        [
+          "Thank you",
+          "អរគុណ",
+          "aw koon"
+        ],
+        [
+          "Please",
+          "សូម",
+          "sohm"
+        ],
+        [
+          "Excuse me / sorry",
+          "សុំទោស",
+          "sohm toh"
+        ],
+        [
+          "Yes (male speaker)",
+          "បាទ",
+          "baat"
+        ],
+        [
+          "Yes (female speaker)",
+          "ចាស",
+          "jah"
+        ],
+        [
+          "Water",
+          "ទឹក",
+          "tuk"
+        ],
+        [
+          "Delicious",
+          "ឆ្ងាញ់",
+          "ch-nganh"
+        ]
+      ]
+    },
+    "thai": {
+      "name": "Thai",
+      "lang": "th-TH",
+      "source": "thai",
+      "courtesy": "Add khrap (male speaker) or kha (female speaker) to sound polite. Thai is tonal, so listen to local speakers as well as the approximate sound guides.",
+      "phrases": [
+        [
+          "Hello",
+          "สวัสดี",
+          "sah-wat-dee"
+        ],
+        [
+          "Thank you",
+          "ขอบคุณ",
+          "khawp khoon"
+        ],
+        [
+          "Excuse me / sorry",
+          "ขอโทษ",
+          "khaw thoht"
+        ],
+        [
+          "How much is it?",
+          "เท่าไหร่",
+          "thao rai"
+        ],
+        [
+          "Water",
+          "น้ำ",
+          "nahm"
+        ],
+        [
+          "Delicious",
+          "อร่อย",
+          "ah-roy"
+        ],
+        [
+          "Restroom",
+          "ห้องน้ำ",
+          "hawng nahm"
+        ],
+        [
+          "Not spicy",
+          "ไม่เผ็ด",
+          "mai phet"
+        ]
+      ]
+    }
+  },
+  "locations": {
+    "Hanoi": {
+      "language": "vietnamese",
+      "phrases": [
+        [
+          "Lake",
+          "Hồ",
+          "hoh"
+        ],
+        [
+          "Coffee",
+          "Cà phê",
+          "kah feh"
+        ]
+      ]
+    },
+    "Hue": {
+      "language": "vietnamese",
+      "phrases": [
+        [
+          "Imperial city",
+          "Hoàng thành",
+          "hwahng tahnh"
+        ],
+        [
+          "Pagoda",
+          "Chùa",
+          "choo-ah"
+        ]
+      ]
+    },
+    "Da Nang": {
+      "language": "vietnamese",
+      "phrases": [
+        [
+          "Beach",
+          "Bãi biển",
+          "bye bee-en"
+        ],
+        [
+          "Bridge",
+          "Cầu",
+          "kow"
+        ]
+      ]
+    },
+    "Hoi An": {
+      "language": "vietnamese",
+      "phrases": [
+        [
+          "Lantern",
+          "Đèn lồng",
+          "den lohng"
+        ],
+        [
+          "Old town",
+          "Phố cổ",
+          "foh koh"
+        ]
+      ]
+    },
+    "Saigon": {
+      "language": "vietnamese",
+      "phrases": [
+        [
+          "Market",
+          "Chợ",
+          "chuh"
+        ],
+        [
+          "Post office",
+          "Bưu điện",
+          "bew dee-en"
+        ]
+      ]
+    },
+    "Siem Reap": {
+      "language": "khmer",
+      "phrases": [
+        [
+          "Temple",
+          "ប្រាសាទ",
+          "prah saht"
+        ],
+        [
+          "Goodbye (to someone staying)",
+          "ជម្រាបលា",
+          "joom ree-up lee-ah"
+        ]
+      ]
+    },
+    "Chiang Mai": {
+      "language": "thai",
+      "phrases": [
+        [
+          "Elephant",
+          "ช้าง",
+          "chahng"
+        ],
+        [
+          "Temple",
+          "วัด",
+          "wat"
+        ]
+      ]
+    },
+    "Bangkok": {
+      "language": "thai",
+      "phrases": [
+        [
+          "Boat",
+          "เรือ",
+          "reua"
+        ],
+        [
+          "Palace",
+          "วัง",
+          "wahng"
+        ]
+      ]
+    }
+  }
+}

@@ -1,6 +1,8 @@
 "use client";
 import {useState} from 'react';
 import {useResources} from './ResourceLibrary';
+import BrandIcon from './BrandIcon';
+import flights from './internal-flights.json';
 import {preferredCityMap} from './city-maps';
 
 const places=[
@@ -29,6 +31,7 @@ export default function InteractiveRouteMap({src,onOpenFlights}:{src:string;onOp
     {airplanes.map((plane,i)=><a key={i} className="route-map-hotspot route-map-flight" style={{left:`${plane.x}%`,top:`${plane.y}%`}} href="/?tab=hotels&section=flights" onClick={event=>{if(!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey){event.preventDefault();onOpenFlights();}}} aria-label="Open Flights" title="Open Flights"/>)}
    </div>
   </div>
-  <details className="route-map-locations"><summary>Map locations</summary><div className="map-link-list">{places.map(place=><a key={place.name} href={mapHref(place)} target="_blank" rel="noopener noreferrer">{place.name} ↗</a>)}</div></details>
+  <details className="route-map-locations"><summary><BrandIcon name="compass"/>Explore Map Locations</summary><div className="map-link-list">{places.map(place=><a key={place.name} href={mapHref(place)} target="_blank" rel="noopener noreferrer"><BrandIcon name="map"/><span>{place.name} ↗</span></a>)}</div></details>
+  <details className="route-map-locations route-map-flights"><summary><BrandIcon name="plane"/>Flights</summary><div className="map-flight-list">{flights.map(flight=><button type="button" key={flight.date} onClick={onOpenFlights} aria-label={`Open Flights: ${flight.route}`}><BrandIcon name="plane"/><span><strong>{flight.route}</strong><small>{new Date(Date.UTC(2026,10,16+flight.date-5)).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'})} · {flight.time}</small><small>{flight.airline}</small></span><span aria-hidden="true">↗</span></button>)}</div></details>
  </figure>;
 }
