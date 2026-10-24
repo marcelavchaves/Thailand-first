@@ -201,8 +201,8 @@ html,body,.app-shell{background:#fff}
 .home-calendar { padding-bottom: 0; }
 .home-day-list > h2 { margin: 0 0 18px; font-size: 22px; font-weight: 500; }
 
-.home-calendar-toggle { display:inline-flex; align-items:center; gap:8px; min-height:44px; margin:8px 0 12px; padding:8px 12px; border:1px solid var(--brand-green); border-radius:5px; background:transparent; color:var(--brand-green); font:inherit; font-size:13px; cursor:pointer; }
-.home-calendar-toggle .brand-icon { width:19px; height:19px; }
+.home-calendar-toggle { display:inline-flex; align-items:center; gap:10px; min-height:54px; margin:8px 0 12px; padding:10px 16px; border:1px solid var(--brand-green); border-radius:7px; background:var(--brand-green); color:white; font:inherit; font-size:15px; font-weight:600; cursor:pointer; }
+.home-calendar-toggle .brand-icon { width:30px; height:30px; color:var(--brand-gold); }
 .home-calendar-toggle:focus-visible { outline:2px solid var(--brand-gold); outline-offset:3px; }
 #home-trip-calendar .journey-calendar { margin:0; border:0; border-top:1px solid var(--line); }
 #home-trip-calendar .calendar-top h3 { margin:0; font-size:18px; font-weight:500; }

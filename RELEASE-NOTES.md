@@ -1,3 +1,7 @@
+## Calendar button visibility
+
+- Enlarge the calendar icon and touch target, with a gold icon, solid green button and stronger label.
+
 ## Collapsible combined calendar
 
 - Replace separate month calendars with one continuous, weekday-aligned grid spanning the journey dates, with month labels on each date.
