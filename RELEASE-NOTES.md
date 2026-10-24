@@ -1,3 +1,7 @@
+## Timeline time and zoom controls
+
+- Reduce the itinerary time size and move each entry’s enlarged-view control to the right edge. Replace the diagonal arrow with a magnifying-glass-plus icon, retaining the accessible dialog and large touch target.
+
 ## Calendar button visibility
 
 - Enlarge the calendar icon and touch target, with a gold icon, solid green button and stronger label.

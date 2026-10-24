@@ -209,3 +209,13 @@ html,body,.app-shell{background:#fff}
 #home-trip-calendar .journey-calendar-date { min-height:64px; gap:5px; }
 #home-trip-calendar .calendar-cell-month { font-size:9px; }
 .journey-calendar-date[aria-pressed=true] { box-shadow:inset 0 0 0 2px var(--brand-green); }
+
+/* Smaller timeline times with a dedicated zoom control at the right edge. */
+.journey-timeline-panel .timeline article.timeline-entry { grid-template-columns:60px minmax(0,1fr) 44px; gap:8px; }
+.journey-timeline-panel .timeline article > .timeline-time-label { font-size:12px; font-weight:600; line-height:1.6; letter-spacing:0; font-variant-numeric:tabular-nums; }
+.journey-timeline-panel .timeline.timeline-zoom-1 article > .timeline-time-label { font-size:15px; }
+.journey-timeline-panel .timeline.timeline-zoom-2 article > .timeline-time-label { font-size:18px; }
+.timeline-entry-zoom { display:grid; place-items:center; width:44px; min-height:44px; padding:10px; border:1px solid var(--line); border-radius:6px; background:var(--brand-ivory); color:var(--brand-green); cursor:zoom-in; }
+.timeline-entry-zoom svg { width:23px; height:23px; }
+.timeline-entry-zoom:focus-visible { outline:2px solid var(--brand-green); outline-offset:3px; }
+@media(max-width:360px) { .journey-timeline-panel .timeline article.timeline-entry { grid-template-columns:52px minmax(0,1fr) 44px; gap:6px; } }
