@@ -4,20 +4,20 @@ import hotels from './hotels.json';
 import {ResourceGroup,useResources} from './ResourceLibrary';
 
 const destinations=[
- {name:'Hanoi',country:'Vietnam',lat:21.0285,lon:105.8542},
- {name:'Hue',country:'Vietnam',lat:16.4637,lon:107.5909},
- {name:'Da Nang',country:'Vietnam',lat:16.0544,lon:108.2022},
- {name:'Hoi An',country:'Vietnam',lat:15.8801,lon:108.3380},
- {name:'Ho Chi Minh City (Saigon)',country:'Vietnam',lat:10.8231,lon:106.6297},
- {name:'Siem Reap',country:'Cambodia',lat:13.3633,lon:103.8564},
- {name:'Chiang Mai',country:'Thailand',lat:18.7883,lon:98.9853},
- {name:'Bangkok',country:'Thailand',lat:13.7563,lon:100.5018},
+ {name:'Hanoi',icon:'hanoi',country:'Vietnam',lat:21.0285,lon:105.8542},
+ {name:'Hue',icon:'hue',country:'Vietnam',lat:16.4637,lon:107.5909},
+ {name:'Da Nang',icon:'danang',country:'Vietnam',lat:16.0544,lon:108.2022},
+ {name:'Hoi An',icon:'hoian',country:'Vietnam',lat:15.8801,lon:108.3380},
+ {name:'Ho Chi Minh City (Saigon)',icon:'saigon',country:'Vietnam',lat:10.8231,lon:106.6297},
+ {name:'Siem Reap',icon:'siemreap',country:'Cambodia',lat:13.3633,lon:103.8564},
+ {name:'Chiang Mai',icon:'chiangmai',country:'Thailand',lat:18.7883,lon:98.9853},
+ {name:'Bangkok',icon:'bangkok',country:'Thailand',lat:13.7563,lon:100.5018},
 ];
 const google=(query:string)=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
 const confirmedHotels=hotels.filter(h=>!h.name.includes('to be confirmed'));
 const tiles=[
- ...destinations.map((d,i)=>({key:`city-${i}`,title:d.name,subtitle:d.country,image:'/images/maps-city.svg'})),
+ ...destinations.map((d,i)=>({key:`city-${i}`,title:d.name,subtitle:d.country,image:`/images/maps-${d.icon}.svg`})),
  ...confirmedHotels.map((h,i)=>({key:`hotel-${i}`,title:h.name,subtitle:h.city,image:'/images/essentials-hotels.svg'})),
  {key:'shared',title:'Other maps',subtitle:'Shared by your tour director',image:'/images/maps-other.svg'},
 ];

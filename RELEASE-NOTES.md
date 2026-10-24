@@ -1,3 +1,7 @@
+## Distinct city map icons
+
+- Give all eight visited cities their own landmark illustration, keeping the green, gold and ivory tile style: Turtle Tower, Hue Imperial City, Dragon Bridge, Hoi An lanterns, Saigon Central Post Office, Angkor Wat, Doi Suthep and Wat Arun.
+
 ## Group hotel maps
 
 - Combine hotel maps under one Hotels tile; expand it to browse individual hotels and open their maps.
