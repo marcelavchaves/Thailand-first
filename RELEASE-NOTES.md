@@ -1,3 +1,8 @@
+## Collapsible combined calendar
+
+- Replace separate month calendars with one continuous, weekday-aligned grid spanning the journey dates, with month labels on each date.
+- Put the Calendar toggle in the Home day header, collapsed by default. Selecting a date closes the calendar and opens that day; highlight the selected date.
+
 ## Original Home day controls
 
 - Use the 103 edition’s compact Home previous/day/next controls, date and local clock below the calendar. Open the current day (Day 1 before departure) by default.

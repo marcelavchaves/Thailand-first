@@ -331,31 +331,27 @@ const calendarLabels: Record<CalendarTone, string> = {
   bali: "Bali",
   komodo: "Komodo",
 };
-function TripCalendar({onSelect}: {onSelect: (date: number) => void}) {
-  const months = [{month:10,label:"November 2026"},{month:11,label:"December 2026"}];
+function TripCalendar({onSelect,selectedDate}: {onSelect: (date: number) => void;selectedDate:number}) {
+  const first = tripDate(days[0].date);
+  const last = tripDate(days[days.length-1].date);
+  const offset = first.getUTCDay();
+  const count = Math.round((last.getTime()-first.getTime())/86400000)+1;
+  const range = new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric',timeZone:'UTC'}).formatRange(first,last);
   return <section className="trip-calendar journey-calendar" aria-label="Journey calendar">
-    <div className="calendar-top"><div><h2>Your journey calendar</h2><p>November 16–December 1, 2026 · 16 days</p></div></div>
-    {months.map(({month,label})=>{
-      const offset = new Date(Date.UTC(2026,month,1)).getUTCDay();
-      const total = new Date(Date.UTC(2026,month+1,0)).getUTCDate();
-      return <section className="journey-calendar-month" key={month} aria-label={label}>
-        <h3>{label}</h3>
-        <div className="journey-calendar-weekdays" aria-hidden="true">{['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=><span key={d}>{d}</span>)}</div>
-        <div className="journey-month-grid">
-          {Array.from({length:offset},(_,i)=><span key={`empty-${i}`} aria-hidden="true"/>)}
-          {Array.from({length:total},(_,i)=>{
-            const date=i+1;
-            const day=days.find(d=>tripDate(d.date).getUTCMonth()===month&&tripDate(d.date).getUTCDate()===date);
-            if(!day)return <span className="journey-calendar-outside" key={date}>{date}</span>;
-            const number=tauck(day.date);
-            const country=number<=7?'vietnam':number<=9?'cambodia':'thailand';
-            return <button type="button" className={`journey-calendar-date ${country}`} key={date} onClick={()=>onSelect(day.date)} aria-label={`${longTripDate(day.date)}, Day ${number}: ${day.title}`}><strong>{date}</strong><small>Day {number}</small></button>;
-          })}
-        </div>
-      </section>;
-    })}
+    <div className="calendar-top"><div><h3>Your journey dates</h3><p>{range} · {days.length} days</p></div></div>
+    <div className="journey-calendar-weekdays" aria-hidden="true">{['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=><span key={d}>{d}</span>)}</div>
+    <div className="journey-month-grid">
+      {Array.from({length:offset},(_,i)=><span key={`empty-${i}`} aria-hidden="true"/>)}
+      {Array.from({length:count},(_,i)=>{
+        const actual = new Date(first.getTime()+i*86400000);
+        const day = days.find(d=>tripDate(d.date).getTime()===actual.getTime());
+        if(!day)return <span className="journey-calendar-outside" key={actual.toISOString()}>{actual.getUTCDate()}</span>;
+        const number=tauck(day.date),country=number<=7?'vietnam':number<=9?'cambodia':'thailand';
+        return <button type="button" className={`journey-calendar-date ${country}`} key={day.date} onClick={()=>onSelect(day.date)} aria-pressed={selectedDate===day.date} aria-label={`${longTripDate(day.date)}, Day ${number}: ${day.title}`}><small className="calendar-cell-month">{actual.toLocaleDateString('en-US',{month:'short',timeZone:'UTC'})}</small><strong>{actual.getUTCDate()}</strong><small>Day {number}</small></button>;
+      })}
+    </div>
     <div className="journey-calendar-legend"><span className="vietnam">Vietnam</span><span className="cambodia">Cambodia</span><span className="thailand">Thailand</span></div>
-    <p className="calendar-hint">Tap a highlighted date to open that day’s itinerary.</p>
+    <p className="calendar-hint">Choose a date to open its itinerary.</p>
   </section>;
 }
 
@@ -426,7 +422,8 @@ function TimeAtHome() {
   );
 }
 
-function CurrentTripDay({ date, now, onPrevious, onNext }: { date: number; now: Date | null; onPrevious: () => void; onNext: () => void }) {
+function CurrentTripDay({ date, now, onPrevious, onNext, onSelect }: { date: number; now: Date | null; onPrevious: () => void; onNext: () => void; onSelect:(date:number)=>void }) {
+  const [calendarOpen,setCalendarOpen]=useState(false);
   const clock = now ? getJourneyStatus(now) : null;
   const day = days.find(d => d.date === date)!;
   const beforeTrip = clock?.beforeTrip ?? true;
@@ -439,7 +436,9 @@ function CurrentTripDay({ date, now, onPrevious, onNext }: { date: number; now: 
       </div>
       <div className="home-overview-date"><h2>{longTripDate(date)}</h2><p>{day.region}</p></div>
       {statusDetail && <p className="home-journey-countdown">{statusDetail}</p>}
+      <button type="button" className="home-calendar-toggle" aria-expanded={calendarOpen} aria-controls="home-trip-calendar" onClick={()=>setCalendarOpen(open=>!open)}><BrandIcon name="calendar"/><span>Calendar</span><span aria-hidden="true">{calendarOpen?'▴':'▾'}</span></button>
     </div>
+    <div id="home-trip-calendar" hidden={!calendarOpen}>{calendarOpen&&<TripCalendar selectedDate={date} onSelect={day=>{setCalendarOpen(false);onSelect(day);}}/>}</div>
   </section>;
 }
 
@@ -1852,7 +1851,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           </div>
         </div>
       </header>
-      {tab === "home" && <section className="page home-calendar" aria-label="Journey overview"><TripCalendar onSelect={openDay}/></section>}
       {tab === "home" && detail && (
         <section
           id="home-day-detail"
@@ -1864,7 +1862,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             swipeStart.current = null;
           }}
         >
-          <CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)}/>
+          <CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}/>
           <div className="detail-body">
             <h1>{detail.title}</h1>
             <XavierDailyNote date={detail.date} />
