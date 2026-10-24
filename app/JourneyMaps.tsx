@@ -50,8 +50,6 @@ export default function JourneyMaps({onOpenFlights}:{onOpenFlights:()=>void}){
  return <section className="page maps-page">
   <div className="intro"><h1>Maps</h1><p>Explore each city, find your hotel and discover Xavier’s local maps.</p></div>
   <InteractiveRouteMap src="/images/vct-route-map.jpg" onOpenFlights={onOpenFlights}/>
-  <h2>Visited cities</h2>
-  <div className="more-tile-grid" role="group" aria-label="City maps">{tiles.filter(t=>t.key.startsWith('city-')).map(tile=>renderTile(tile))}</div>
   <div className="more-tile-grid" role="group" aria-label="More maps">
    <button type="button" className="more-tile" aria-expanded={hotelsExpanded} aria-controls={hotelsExpanded?'selected-map':undefined} onClick={()=>setSelected(hotelsExpanded?null:'hotels')}><img src="/images/essentials-hotels.svg" alt=""/><strong>Hotels</strong><small>Find your hotel</small></button>
    {renderTile(tiles[tiles.length-1])}

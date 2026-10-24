@@ -21,8 +21,7 @@ export default function InteractiveRouteMap({src,onOpenFlights}:{src:string;onOp
  const mapHref=(place:typeof places[number])=>preferredCityMap(place.mapId,items)||`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.query)}`;
  const [enlarged,setEnlarged]=useState(false);
  return <figure className="interactive-route-map">
-  <figcaption><h2>Your journey at a glance</h2><p>Tap an airplane for Flights or a place for Xav’s map, when available, or Google Maps. Enlarge the map for easier tapping.</p></figcaption>
-  <button type="button" className="route-map-size" aria-pressed={enlarged} onClick={()=>setEnlarged(!enlarged)}>{enlarged?'Fit map to screen':'Enlarge map'}</button>
+  <figcaption><div className="route-map-heading"><h2>Journey</h2><button type="button" className="route-map-size" aria-pressed={enlarged} onClick={()=>setEnlarged(!enlarged)}>{enlarged?'Fit map to screen':'Enlarge map'}</button></div><p>Tap an airplane for Flights or a place for Xav’s map, when available, or Google Maps. Enlarge the map for easier tapping.</p></figcaption>
   <div className="route-map-scroll" role="region" aria-label="Interactive journey route map" tabIndex={0}>
    <div className={`route-map-image${enlarged?' is-enlarged':''}`}>
     <img src={src} alt="Journey through Hanoi, Hue, Da Nang, Ho Chi Minh City, Siem Reap, Chiang Mai and Bangkok" width="700" height="700"/>

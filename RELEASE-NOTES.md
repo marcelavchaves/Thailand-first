@@ -1,3 +1,8 @@
+## Simplify Maps layout
+
+- Rename the route map heading to Journey and align the enlargement control to the right of the heading.
+- Remove duplicate city thumbnail tiles; retain map markers and the Map locations list, Hotels and Other maps.
+
 ## Preferred city maps and TD uploads
 
 - Journey map markers and city cards open revealed TD city maps first, then Xav’s existing Hanoi link, with Google Maps as the fallback.

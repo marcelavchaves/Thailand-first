@@ -242,3 +242,7 @@ html,body,.app-shell{background:#fff}
 .route-map-size { min-height:44px; padding:10px 16px; margin:0 0 12px; background:var(--brand-green); color:white; border:0; border-radius:5px; font:inherit; cursor:pointer; }
 .route-map-locations { margin-top:14px; }
 .route-map-locations summary { cursor:pointer; padding:12px 0; }
+
+.route-map-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.route-map-heading h2 { margin:0; }
+.route-map-heading .route-map-size { margin:0; flex-shrink:0; }
