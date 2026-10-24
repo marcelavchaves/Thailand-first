@@ -37,6 +37,7 @@ export default function JourneyMaps(){
  },[selected]);
  const hotelsExpanded=selected==='hotels'||!!selected?.startsWith('hotel-');
  const city=selected?.startsWith('city-')?destinations[Number(selected.slice(5))]:null;
+ const hasXavMap=city===destinations[0];
  const hotel=selected?.startsWith('hotel-')?confirmedHotels[Number(selected.slice(6))]:null;
  const query=city?`${city.name}, ${city.country}`:hotel?`${hotel.name}, ${hotel.city}`:'';
  const osm=city?`https://www.openstreetmap.org/?mlat=${city.lat}&mlon=${city.lon}#map=13/${city.lat}/${city.lon}`:'';
@@ -56,11 +57,15 @@ export default function JourneyMaps(){
    {hotelsExpanded&&<><div className="more-tile-grid" role="group" aria-label="Hotel maps">{tiles.filter(t=>t.key.startsWith('hotel-')).map(tile=>renderTile(tile))}</div><p>Hanoi hotel details will be added once confirmed.</p></>}
    {selected==='hotels'?null:selected==='shared'?<><p>Printable maps and local maps shared by your tour director.</p>{loaded&&!sharedMaps&&<p>No shared maps yet.</p>}<ResourceGroup group="maps"/></>:<div ref={hotelMap}>
     {hotel&&<h3>{hotel.name}</h3>}
-    {city===destinations[0]&&<a className="map-open-link map-xavier-link" href="https://maps.app.goo.gl/xYNpoB1qDGe6rfy76?g_st=i" target="_blank" rel="noopener noreferrer">Open Xav’s Hanoi map ↗</a>}
+    {hasXavMap?<>
+     <a className="map-xavier-primary" href="https://maps.app.goo.gl/xYNpoB1qDGe6rfy76?g_st=i" target="_blank" rel="noopener noreferrer" aria-label="Open Xav’s Hanoi map in Google Maps"><img src="/images/maps-hanoi.svg" alt=""/><span><strong>Xav’s Hanoi map</strong><span>Explore Hanoi with Xavier’s personal map</span><b>Open map ↗</b></span></a>
+     <a className="map-open-link" href={google(query)} target="_blank" rel="noopener noreferrer">Open the city’s map ↗</a>
+    </>:<>
     {city&&<div className="map-provider-switch" role="group" aria-label="Map provider"><button type="button" aria-pressed={provider==='google'} onClick={()=>setProvider('google')}>Google Maps</button><button type="button" aria-pressed={provider==='osm'} onClick={()=>setProvider('osm')}>OpenStreetMap</button></div>}
     <iframe key={`${selected}-${provider}`} title={`${city&&provider==='osm'?'OpenStreetMap':'Google Maps'}: ${query}`} src={city&&provider==='osm'?osmEmbed:`https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=${hotel?16:12}&output=embed`} loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade"/>
     <a className="map-open-link" href={city&&provider==='osm'?osm:google(query)} target="_blank" rel="noopener noreferrer">Open {city?.name??hotel?.name} in {city&&provider==='osm'?'OpenStreetMap':'Google Maps'} ↗</a>
     <p className="map-online-note">Interactive maps need an internet connection. If the map does not load, use the link above.</p>
+    </>}
    </div>}
   </section>}
  </section>;

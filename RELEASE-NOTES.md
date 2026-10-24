@@ -1,3 +1,7 @@
+## Prioritize Xavier’s Hanoi map
+
+- Make Xavier’s supplied Hanoi map the main map card, opening directly in Google Maps. Move the generic Hanoi map to a secondary “Open the city’s map” link.
+
 ## Distinct city map icons
 
 - Give all eight visited cities their own landmark illustration, keeping the green, gold and ivory tile style: Turtle Tower, Hue Imperial City, Dragon Bridge, Hoi An lanterns, Saigon Central Post Office, Angkor Wat, Doi Suthep and Wat Arun.
