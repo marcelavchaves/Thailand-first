@@ -1,3 +1,7 @@
+## Wondercase Photo Gallery
+
+- Add the supplied Wondercase Photo Gallery link to the Gallery tab. Open the gallery from its labeled button in a new tab, keeping bottom navigation within the app.
+
 ## Protect iPhone/iPad home-screen apps from speaking-practice freeze
 
 - Disable microphone speech recognition before accessing the native API in iOS/iPadOS home-screen mode, including iPads using a desktop user agent. Show a clear fallback while retaining Listen, written guides and the quiz.
