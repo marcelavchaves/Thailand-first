@@ -1,4 +1,4 @@
-const CACHE = "vietnam-cambodia-thailand-20261116-v2",
+const CACHE = "vietnam-cambodia-thailand-20261116-v3",
   ASSETS = [
     "/",
     "/manifest.webmanifest",

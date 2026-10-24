@@ -1,3 +1,8 @@
+## Protect iPhone/iPad home-screen apps from speaking-practice freeze
+
+- Disable microphone speech recognition before accessing the native API in iOS/iPadOS home-screen mode, including iPads using a desktop user agent. Show a clear fallback while retaining Listen, written guides and the quiz.
+- Keep speaking practice in other supported browsers, catch recognition constructor failures and refresh the service-worker cache for installed-app updates.
+
 ## Speaking practice
 
 - Add microphone practice to each local phrase using browser speech recognition with the lesson’s Vietnamese, Khmer or Thai locale. Give encouraging word-recognition feedback without a pronunciation score.
