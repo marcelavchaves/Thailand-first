@@ -14,15 +14,15 @@ const places=[
  {name:'Bangkok',mapId:'bangkok',query:'Bangkok, Thailand',x:34.59,y:57.14},
 ];
 /** City hotspots align with the clean 1269 × 1239 map. */
-export default function InteractiveRouteMap({src,onSelectCity}:{src:string;onSelectCity:(id:string)=>void}){
+export default function InteractiveRouteMap({src}:{src:string}){
  const {items}=useResources();
  const mapHref=(place:typeof places[number])=>preferredCityMap(place.mapId,items)||`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.query)}`;
  return <figure className="interactive-route-map">
   <div className="route-map-scroll" role="region" aria-label="Interactive journey route map" tabIndex={0}>
    <div className="route-map-image">
     <img src={src} alt="Journey through Hanoi, Hue, Da Nang, Ho Chi Minh City, Siem Reap, Chiang Mai and Bangkok" width="1269" height="1239"/>
-    {places.map(place=><a key={place.name} className="route-map-hotspot" style={{left:`${place.x}%`,top:`${place.y}%`}} href={mapHref(place)} target="_blank" rel="noopener noreferrer" onClick={event=>{if(!preferredCityMap(place.mapId,items)&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey){event.preventDefault();onSelectCity(place.mapId);}}} aria-label={`Open ${preferredCityMap(place.mapId,items)?"Xav’s ":""}${place.name} map`} title={`Open ${place.name} map`}/>)}
-    {places.map(place=>{const area=labelAreas[place.mapId];return <a key={`label-${place.mapId}`} className="route-map-label" style={{left:`${area.left}%`,top:`${area.top}%`,width:`${area.width}%`,height:`${area.height}%`}} href={mapHref(place)} target="_blank" rel="noopener noreferrer" aria-hidden="true" tabIndex={-1} title={`Open ${place.name} map`} onClick={event=>{if(!preferredCityMap(place.mapId,items)&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey){event.preventDefault();onSelectCity(place.mapId);}}}/>;})}
+    {places.map(place=><a key={place.name} className="route-map-hotspot" style={{left:`${place.x}%`,top:`${place.y}%`}} href={mapHref(place)} target="_blank" rel="noopener noreferrer" aria-label={`Open ${preferredCityMap(place.mapId,items)?"Xav’s ":""}${place.name} map`} title={`Open ${place.name} map`}/>)}
+    {places.map(place=>{const area=labelAreas[place.mapId];return <a key={`label-${place.mapId}`} className="route-map-label" style={{left:`${area.left}%`,top:`${area.top}%`,width:`${area.width}%`,height:`${area.height}%`}} href={mapHref(place)} target="_blank" rel="noopener noreferrer" aria-hidden="true" tabIndex={-1} title={`Open ${place.name} map`}/>;})}
    </div>
   </div>
  </figure>;

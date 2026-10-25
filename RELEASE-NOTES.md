@@ -1,3 +1,8 @@
+## Open locations directly in Google Maps
+
+- Let location links use Google Maps’ cross-platform app URLs directly, enabling the installed Google Maps app to handle taps with website fallback. Preserve Xavier’s shared links and map files.
+- Keep Maps to its title and interactive map, without an embedded secondary viewer.
+
 ## Maps tab: map and title only
 
 - Remove introductory copy, the Journey caption, Hotels and Other maps tiles. Show only Maps and the interactive map on arrival; preserve location links and the Google Maps fallback after selecting a place.
