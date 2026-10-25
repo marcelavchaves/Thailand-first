@@ -1,3 +1,8 @@
+## Confirm Hanoi hotel
+
+- Replace the unconfirmed Hanoi hotel with Sofitel Legend Metropole Hanoi, confirmed by the traveler and Tauck’s IC2026 hotel listing for nights 1–2. Update daily stay links and export data, add the hotel website and enable its Google Maps link.
+- Replace the Hanoi placeholder artwork with a hotel watercolor based on Tauck’s facade photograph.
+
 ## Remove visible tab page titles
 
 - Remove visible top-level page titles from the traveler tabs, retaining accessible headings, navigation labels and useful section headings. Remove empty title wrappers.

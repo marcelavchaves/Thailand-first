@@ -1,16 +1,16 @@
 [
   {
-    "name": "Hanoi hotel — to be confirmed",
+    "name": "Sofitel Legend Metropole Hanoi",
     "city": "Hanoi, Vietnam",
-    "image": "vct-hotel-watercolor-0.png",
+    "image": "vct-hotel-watercolor-metropole.png",
     "checkin": 5,
     "checkout": 7,
     "trip": "",
     "tauck": "1–2",
     "address": "",
     "phone": "",
-    "website": "",
-    "note": "The supplied itinerary names Le Beaulieu, Spice Garden and Le Club Bar, but does not explicitly name the Hanoi hotel. Confirmation pending."
+    "website": "https://www.sofitel-legend-metropole-hanoi.com/",
+    "note": "Historic hotel near Hanoi Opera House, welcoming guests since 1901. Our home for the first two nights, November 16–18, 2026. The itinerary features Le Beaulieu, Spice Garden and Le Club Bar."
   },
   {
     "name": "La Residence Hotel and Spa",

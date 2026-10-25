@@ -1930,7 +1930,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             {hotels.map((h, i) => (
               <article className="hotel-card" id={`hotel-${i}`} tabIndex={-1} key={h.name}>
                 <div className="hotel-image">
-                  <img src={`/images/${h.image}`} alt={i === 0 ? "Watercolor illustration of Hanoi; hotel to be confirmed" : `Watercolor illustration inspired by ${h.name}`} loading="lazy" width={1536} height={1024} />
+                  <img src={`/images/${h.image}`} alt={`Watercolor illustration inspired by ${h.name}`} loading="lazy" width={1536} height={1024} />
                   <span>0{i + 1}</span>
                   <i>
                     {h.checkout - h.checkin} NIGHT
@@ -1966,8 +1966,8 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
                     {h.website && <a href={h.website} target="_blank" rel="noreferrer">
                       WEBSITE ↗
                     </a>}
-                    {i > 0 && <a
-                      href={`https://maps.google.com/?q=${encodeURIComponent(h.name + " " + h.city)}`}
+                    {<a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(h.name + " " + h.city)}`}
                       target="_blank"
                       rel="noreferrer"
                     >
