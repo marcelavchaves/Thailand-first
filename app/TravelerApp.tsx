@@ -26,7 +26,7 @@ import { getJourneyStatus } from "./trip-clock";
 type LocalGuide = { name: string; destination: string; days: number[]; image: string; introduction: string };
 const localGuides: LocalGuide[] = [];
 
-const travelerAlbumUrl: string = "https://wondercase-memories.marcelavchaves.chatgpt.site/?g=e75efee5-af71-4080-8f06-f3558c864254be1313d7";
+const travelerAlbumUrl: string = "";
 const xavierPhoneDisplay = "+46 70 549 7222";
 const xavierPhoneUrl = "https://wa.me/46705497222";
 const xavierEmail = "xbrunelle@tauck.com";
@@ -1262,25 +1262,25 @@ function JourneyHotelResources({name}:{name:string}) {
 }
 
 function XavierContactCard({onSuitcase}:{onSuitcase:()=>void}) {
-  const [contactOpen, setContactOpen] = useState(true);
-  const {authenticated}=useTDSession();
+  const [contactOpen, setContactOpen] = useState(false);
   const portrait=useXavierPhoto();
   return <section className="director-simple">
-    <button type="button" className="director-toggle" aria-expanded={contactOpen} aria-controls="director-contact-details" onClick={()=>setContactOpen(open=>!open)}>
-      <img className="xavier-profile-portrait" src={portrait.photo || "/images/xavier-brunelle.jpeg"} alt="Xavier Brunelle" width={86} height={104}/>
-      <span><small>Your tour director</small><strong>Xavier Brunelle</strong></span><span className="director-expand" aria-hidden="true">{contactOpen?'−':'+'}</span>
-    </button>
+    <div className="director-profile-heading">
+      <button type="button" className="director-photo-access" aria-label="Open tour director workspace" onClick={onSuitcase}><img className="xavier-profile-portrait" src={portrait.photo || "/images/xavier-brunelle.jpeg"} alt="Xavier Brunelle" width={86} height={104}/></button>
+      <button type="button" className="director-toggle" aria-expanded={contactOpen} aria-controls="director-contact-details" onClick={()=>setContactOpen(open=>!open)}>
+        <span><small>Your tour director</small><strong>Xavier Brunelle</strong></span><span className="director-expand" aria-hidden="true">{contactOpen?'−':'+'}</span>
+      </button>
+    </div>
     {contactOpen && <div id="director-contact-details" className="director-contact-details">
       <div className="director-contact-links">
         <a href={xavierPhoneUrl} target="_blank" rel="noopener noreferrer"><small>WhatsApp</small><span>{xavierPhoneDisplay}</span></a>
         <a href={`mailto:${xavierEmail}`}><small>Email</small><span>{xavierEmail}</span></a>
       </div>
-      <details className="director-about" open><summary>About Xavier</summary>
+      <details className="director-about"><summary>About Xavier</summary>
         <p>Born in Montreal, Canada, Xavier has built an international career in tourism, hospitality and wellness. He began working in tourism in Mexico in 2001 and became a tour leader in 2006, guiding Spanish-speaking travelers through Canada. During those years, he divided his time between Canada and Indonesia, where he worked as a scuba diving instructor and later as a wellness and fitness coach at a retreat in Bali.</p>
         <p>Since 2017, Xavier has been a Tour Director with Tauck, leading journeys across Canada, Scandinavia, other parts of Europe, Cuba and Southeast Asia. After decades of living and working around the world, he now calls Palma de Mallorca home, where he lives with his Swedish wife and their two daughters.</p>
       </details>
     </div>}
-    <button type="button" className="director-signin" onClick={onSuitcase}>TD Suitcase · {authenticated ? "Open workspace" : "Sign in"}</button>
   </section>;
 }
 
@@ -2023,7 +2023,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         <details id="more-tauck" key={`tauck-${moreSection}`} hidden={moreSection!=='tauck'} open className="day-disclosure asia-journeys"><summary>More Tauck experiences</summary><div className="asia-journeys-list"><article className="asia-journey-card"><span className="asia-journey-duration">14 days</span><h2>Kingdoms &amp; Dragons: Singapore to Bali</h2><p>Journey from Singapore through Java, Bali and Flores, exploring Borobudur and Prambanan, Ubud and Komodo National Park, before ending in Jimbaran Bay.</p><a href="https://www.tauck.com/tours/kingdoms-dragons-singapore-bali-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Kingdoms &amp; Dragons: Singapore to Bali on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">16 days</span><h2>The Mekong, Vietnam, Laos &amp; Cambodia</h2><p>Ho Chi Minh City, Hanoi, Phnom Penh, Siem Reap and Luang Prabang.</p><a href="https://www.tauck.com/tours/indochina-vietnam-cambodia-laos-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View The Mekong, Vietnam, Laos &amp; Cambodia on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>A Portrait of India</h2><p>New Delhi, Agra, Jaipur, Udaipur, Mumbai, Kochi, Kumarakom and Varanasi.</p><a href="https://www.tauck.com/tours/portrait-of-india-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View A Portrait of India on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>Northern India &amp; Nepal</h2><p>New Delhi, Kathmandu, Dhulikhel, Mumbai, Bandhavgarh National Park and Chitwan National Park.</p><a href="https://www.tauck.com/tours/northern-india-and-nepal-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Northern India &amp; Nepal on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">13 days</span><h2>India’s Golden Triangle, Udaipur &amp; Mumbai</h2><p>New Delhi, Agra, Jaipur, Udaipur, Varanasi and Mumbai.</p><a href="https://www.tauck.com/tours/spotlight-on-india-guided-tour" target="_blank" rel="noopener noreferrer" aria-label="View India’s Golden Triangle, Udaipur &amp; Mumbai on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article></div></details>
         <details id="more-rating" key={`rating-${moreSection}`} hidden={moreSection!=='rating'} open className="day-disclosure feedback-disclosure"><summary>Help Wondercase Grow</summary><AppRatings /></details>
       </section>}
-      {tab === "gallery" && <section className="section gallery-page"><h1 className="tab-page-title">Gallery</h1><article className="album-invite"><span className="eyebrow">WONDERCASE</span><h2>Wondercase Photo Gallery</h2><p>View and share photos from our journey.</p>{travelerAlbumUrl?<a className="album-join-link" href={travelerAlbumUrl} target="_blank" rel="noopener noreferrer">Open Wondercase Photo Gallery <span aria-hidden="true">↗</span></a>:<p>The photo album is coming soon.</p>}<small>Opens in a new tab</small></article></section>}
+      {tab === "gallery" && <section className="section gallery-page"><h1 className="tab-page-title">Gallery</h1><article className="album-invite"><h2>Shared Photo Gallery coming soon</h2></article></section>}
       {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day}/>} groups={[{id:'handouts',title:'Handouts'},{id:'maps',title:'Maps'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
        {id:'guide-singapore',title:'Singapore Guide',group:'guides',content:<span/>},
        {id:'guide-java',title:'Java Guide',group:'guides',content:<XavierJavaGuide/>},

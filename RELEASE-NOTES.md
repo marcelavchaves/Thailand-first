@@ -1,3 +1,8 @@
+## Gallery placeholder and discreet TD access
+
+- Replace the active gallery link with “Shared Photo Gallery coming soon.”
+- Move TD Suitcase access to Xavier’s portrait and remove the visible sign-in button; authentication is unchanged. Keep contact details and biography collapsed when The Group opens.
+
 ## Confirm Hanoi hotel
 
 - Replace the unconfirmed Hanoi hotel with Sofitel Legend Metropole Hanoi, confirmed by the traveler and Tauck’s IC2026 hotel listing for nights 1–2. Update daily stay links and export data, add the hotel website and enable its Google Maps link.
