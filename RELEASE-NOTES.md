@@ -1,3 +1,7 @@
+## Keep director contact details visible
+
+- Show Xavier’s phone and email immediately on The Group tab. Only About Xavier expands for the biography; preserve the portrait shortcut to TD Suitcase.
+
 ## Gallery placeholder and discreet TD access
 
 - Replace the active gallery link with “Shared Photo Gallery coming soon.”

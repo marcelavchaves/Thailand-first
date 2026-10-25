@@ -1262,16 +1262,15 @@ function JourneyHotelResources({name}:{name:string}) {
 }
 
 function XavierContactCard({onSuitcase}:{onSuitcase:()=>void}) {
-  const [contactOpen, setContactOpen] = useState(false);
   const portrait=useXavierPhoto();
   return <section className="director-simple">
     <div className="director-profile-heading">
       <button type="button" className="director-photo-access" aria-label="Open tour director workspace" onClick={onSuitcase}><img className="xavier-profile-portrait" src={portrait.photo || "/images/xavier-brunelle.jpeg"} alt="Xavier Brunelle" width={86} height={104}/></button>
-      <button type="button" className="director-toggle" aria-expanded={contactOpen} aria-controls="director-contact-details" onClick={()=>setContactOpen(open=>!open)}>
-        <span><small>Your tour director</small><strong>Xavier Brunelle</strong></span><span className="director-expand" aria-hidden="true">{contactOpen?'−':'+'}</span>
-      </button>
+      <div className="director-toggle">
+        <span><small>Your tour director</small><strong>Xavier Brunelle</strong></span>
+      </div>
     </div>
-    {contactOpen && <div id="director-contact-details" className="director-contact-details">
+    <div id="director-contact-details" className="director-contact-details">
       <div className="director-contact-links">
         <a href={xavierPhoneUrl} target="_blank" rel="noopener noreferrer"><small>WhatsApp</small><span>{xavierPhoneDisplay}</span></a>
         <a href={`mailto:${xavierEmail}`}><small>Email</small><span>{xavierEmail}</span></a>
@@ -1280,7 +1279,7 @@ function XavierContactCard({onSuitcase}:{onSuitcase:()=>void}) {
         <p>Born in Montreal, Canada, Xavier has built an international career in tourism, hospitality and wellness. He began working in tourism in Mexico in 2001 and became a tour leader in 2006, guiding Spanish-speaking travelers through Canada. During those years, he divided his time between Canada and Indonesia, where he worked as a scuba diving instructor and later as a wellness and fitness coach at a retreat in Bali.</p>
         <p>Since 2017, Xavier has been a Tour Director with Tauck, leading journeys across Canada, Scandinavia, other parts of Europe, Cuba and Southeast Asia. After decades of living and working around the world, he now calls Palma de Mallorca home, where he lives with his Swedish wife and their two daughters.</p>
       </details>
-    </div>}
+    </div>
   </section>;
 }
 

@@ -290,3 +290,5 @@ html,body,.app-shell{background:#fff}
 .director-photo-access .xavier-profile-portrait { display:block; width:86px; height:104px; border-radius:6px; object-fit:cover; object-position:center 20%; }
 .director-photo-access:focus-visible { outline:2px solid var(--brand-gold); outline-offset:3px; }
 .director-profile-heading .director-toggle { flex:1; min-width:0; width:auto; }
+
+.director-profile-heading .director-toggle { cursor:default; }
