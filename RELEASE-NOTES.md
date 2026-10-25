@@ -1,3 +1,9 @@
+## Countdown, meals and city map fallback
+
+- Reduce the pre-trip countdown to one line on phones.
+- Remove “included” from daily meal summaries, notes and timeline descriptions; use “on your own” for excluded meals. Apply the same wording to saved timeline descriptions.
+- Make city names as well as markers clickable, and open an embedded Google Maps panel when no published Xavier map is available. Preserve direct access to Xavier’s maps.
+
 ## Simplify map, timeline and calendar controls
 
 - Use the new map without journey lines, realign city hotspots and remove map enlargement, location/flight lists and obsolete airplane hotspots.

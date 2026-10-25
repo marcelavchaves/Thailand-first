@@ -14,6 +14,7 @@ const destinations=[
  {name:'Siem Reap',icon:'siemreap',country:'Cambodia',lat:13.3633,lon:103.8564},
  {name:'Chiang Mai',icon:'chiangmai',country:'Thailand',lat:18.7883,lon:98.9853},
  {name:'Bangkok',icon:'bangkok',country:'Thailand',lat:13.7563,lon:100.5018},
+ {name:'Angkor Wat',icon:'angkorwat',country:'Cambodia',lat:13.4125,lon:103.8670},
 ];
 const google=(query:string)=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
@@ -49,7 +50,7 @@ export default function JourneyMaps(){
  const sharedMaps=Object.values(items).some(item=>item.group==='maps'&&item.visible&&!item.deleted);
  return <section className="page maps-page">
   <div className="intro"><h1>Maps</h1><p>Explore each city, find your hotel and discover Xavier’s local maps.</p></div>
-  <InteractiveRouteMap src="/images/southeast-asia-map-without-routes.png"/>
+  <InteractiveRouteMap src="/images/southeast-asia-map-without-routes.png" onSelectCity={id=>{const index=destinations.findIndex(d=>d.icon===id);if(index<0)return;const next=`city-${index}`;setProvider('google');setSelected(next);if(selected===next)panel.current?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});}}/>
   <div className="more-tile-grid" role="group" aria-label="More maps">
    <button type="button" className="more-tile" aria-expanded={hotelsExpanded} aria-controls={hotelsExpanded?'selected-map':undefined} onClick={()=>setSelected(hotelsExpanded?null:'hotels')}><img src="/images/essentials-hotels.svg" alt=""/><strong>Hotels</strong><small>Find your hotel</small></button>
    {renderTile(tiles[tiles.length-1])}

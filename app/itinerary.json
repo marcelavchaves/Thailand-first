@@ -21,7 +21,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Hanoi hotel — not named in supplied itinerary",
-    "meals": "Dinner included",
+    "meals": "Dinner",
     "mealNotes": "Welcome dinner at Le Beaulieu. Other meals are not specified in the supplied itinerary."
   },
   {
@@ -53,7 +53,7 @@
       ],
       [
         "17:15",
-        "Return to hotel. Dinner is not included tonight."
+        "Return to hotel. Dinner is on your own tonight."
       ],
       [
         "21:00",
@@ -62,8 +62,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Hanoi hotel — not named in supplied itinerary",
-    "meals": "Breakfast & lunch included",
-    "mealNotes": "Breakfast at Spice Garden / Le Club Bar; lunch at Ly Club. Dinner is not included."
+    "meals": "Breakfast & lunch",
+    "mealNotes": "Breakfast at Spice Garden / Le Club Bar; lunch at Ly Club. Dinner is on your own."
   },
   {
     "date": 7,
@@ -82,7 +82,7 @@
       ],
       [
         "12:45",
-        "Arrive at La Residence hotel and Spa in Hue for check in and lunch included."
+        "Arrive at La Residence hotel and Spa in Hue for check in and lunch."
       ],
       [
         "15:00",
@@ -90,12 +90,12 @@
       ],
       [
         "17:00",
-        "Return to hotel. Dinner tonight is included in Le Parfum restaurant from 18:30"
+        "Return to hotel. Dinner tonight is in Le Parfum restaurant from 18:30"
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "La Residence Hotel and Spa",
-    "meals": "Breakfast, lunch & dinner included",
+    "meals": "Breakfast, lunch & dinner",
     "mealNotes": "Early breakfast at Spice Garden; lunch at La Residence; dinner at Le Parfum."
   },
   {
@@ -123,7 +123,7 @@
       ],
       [
         "13:00",
-        "Included lunch at Horizon restaurant in Vedana Lagoon Resort."
+        "lunch at Horizon restaurant in Vedana Lagoon Resort."
       ],
       [
         "14:30",
@@ -131,12 +131,12 @@
       ],
       [
         "16:00",
-        "Arrival at Furama Resort. Located on China Beach. Dinner is included tonight in any of the Furama’s fine restaurants."
+        "Arrival at Furama Resort. Located on China Beach. Dinner is tonight in any of the Furama’s fine restaurants."
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Furama Resort",
-    "meals": "Breakfast, lunch & dinner included",
+    "meals": "Breakfast, lunch & dinner",
     "mealNotes": "Breakfast at Le Parfum; lunch at Horizon, Vedana Lagoon Resort; dinner at your choice of Furama restaurants."
   },
   {
@@ -156,7 +156,7 @@
       ],
       [
         "12:00",
-        "Time to explore the city. Lots of great choices for lunch (not included) and shopping."
+        "Time to explore the city. Lots of great choices for lunch (on your own) and shopping."
       ],
       [
         "13:30",
@@ -164,13 +164,13 @@
       ],
       [
         "15:30",
-        "Second departure for those who want more time to explore Hoi An. Dinner included at your choice of restaurant"
+        "Second departure for those who want more time to explore Hoi An. Dinner at your choice of restaurant"
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Furama Resort",
-    "meals": "Breakfast & dinner included",
-    "mealNotes": "Breakfast at Café Indochine; dinner at your choice of restaurant. Lunch in Hoi An is not included."
+    "meals": "Breakfast & dinner",
+    "mealNotes": "Breakfast at Café Indochine; dinner at your choice of restaurant. Lunch in Hoi An is on your own."
   },
   {
     "date": 10,
@@ -201,12 +201,12 @@
       ],
       [
         "17:00",
-        "Arrive at Park Hyatt Saigon. Dinner tonight is included at Square One Restaurant"
+        "Arrive at Park Hyatt Saigon. Dinner tonight is at Square One Restaurant"
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Park Hyatt Saigon",
-    "meals": "Breakfast, lunch & dinner included",
+    "meals": "Breakfast, lunch & dinner",
     "mealNotes": "Breakfast at Café Indochine; boxed lunch en route to Cu Chi; dinner at Square One."
   },
   {
@@ -226,17 +226,17 @@
       ],
       [
         "12:30",
-        "Included lunch at Opera restaurant in the hotel (lobby level). Free time for rest of the afternoon."
+        "lunch at Opera restaurant in the hotel (lobby level). Free time for rest of the afternoon."
       ],
       [
         "18:00",
-        "Included Foodie and nightlights tour of Saigon by VESPA, newest and best addition to the tour."
+        "Foodie and nightlights tour of Saigon by VESPA, newest and best addition to the tour."
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Park Hyatt Saigon",
-    "meals": "Breakfast, lunch & dinner included",
-    "mealNotes": "Breakfast at Café Opera; lunch at Opera; dinner as part of the included Vespa foodie tour."
+    "meals": "Breakfast, lunch & dinner",
+    "mealNotes": "Breakfast at Café Opera; lunch at Opera; dinner as part of the Vespa foodie tour."
   },
   {
     "date": 12,
@@ -275,12 +275,12 @@
       ],
       [
         "19:00",
-        "Included dinner and Cambodian dance performance at Apsara restaurant."
+        "dinner and Cambodian dance performance at Apsara restaurant."
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Raffles Grand Hotel",
-    "meals": "Breakfast & dinner included",
+    "meals": "Breakfast & dinner",
     "mealNotes": "Breakfast at Café Opera / Square One; dinner and Cambodian dance performance at Apsara. Lunch is not specified."
   },
   {
@@ -312,12 +312,12 @@
       ],
       [
         "18:00",
-        "Included A La Carte dinner at Cafe D’Angkor"
+        "A La Carte dinner at Cafe D’Angkor"
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Raffles Grand Hotel",
-    "meals": "Breakfast, lunch & dinner included",
+    "meals": "Breakfast, lunch & dinner",
     "mealNotes": "Breakfast at the hotel; lunch at Sokkhak River Side; à la carte dinner at Café D’Angkor."
   },
   {
@@ -345,7 +345,7 @@
       ],
       [
         "10:55",
-        "Arrival at Bangkok’s Suvarnbhumi international airport. We will clear Thai immigration here. Please have have Passport, e-visa, boarding pass from Siem Reap and boarding pass from Bangkok to Chiang Mai ready to present at immigration. After Thai immigration, we enter into the Domestic Side of the airport, where there are several restaurants and shops available. Lunch today is not included. Once you go through security, you’ll be in the Domestic side of the airport, and there are no food courts at the Domestic gates. Make sure you have lunch before going into the Domestic area."
+        "Arrival at Bangkok’s Suvarnbhumi international airport. We will clear Thai immigration here. Please have have Passport, e-visa, boarding pass from Siem Reap and boarding pass from Bangkok to Chiang Mai ready to present at immigration. After Thai immigration, we enter into the Domestic Side of the airport, where there are several restaurants and shops available. Lunch today is on your own. Once you go through security, you’ll be in the Domestic side of the airport, and there are no food courts at the Domestic gates. Make sure you have lunch before going into the Domestic area."
       ],
       [
         "13:30",
@@ -366,8 +366,8 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Intercontinental Chiang Mai",
-    "meals": "Breakfast & dinner included",
-    "mealNotes": "Breakfast at Café D’Angkor; Thai welcome dinner and show. Lunch at the airport is not included."
+    "meals": "Breakfast & dinner",
+    "mealNotes": "Breakfast at Café D’Angkor; Thai welcome dinner and show. Lunch at the airport is on your own."
   },
   {
     "date": 15,
@@ -390,12 +390,12 @@
       ],
       [
         "14:45",
-        "Return to hotel and rest of the day at leisure. Dinner included at your restaurant choice, Khao (local cuisine) or North (Western cuisine)"
+        "Return to hotel and rest of the day at leisure. Dinner at your restaurant choice, Khao (local cuisine) or North (Western cuisine)"
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Intercontinental Chiang Mai",
-    "meals": "Breakfast, lunch & dinner included",
+    "meals": "Breakfast, lunch & dinner",
     "mealNotes": "Breakfast at The Gad Lanna Terrace; lunch catered by Four Seasons at the elephant sanctuary; dinner at Khao or North."
   },
   {
@@ -415,13 +415,13 @@
       ],
       [
         "13:00",
-        "Return to hotel and rest of the day at leisure. Lunch today is not included. Dinner at hotel at your restaurant choice. Enjoy our last night in Chiang Mai!!"
+        "Return to hotel and rest of the day at leisure. Lunch today is on your own. Dinner at hotel at your restaurant choice. Enjoy our last night in Chiang Mai!!"
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Intercontinental Chiang Mai",
-    "meals": "Breakfast & dinner included",
-    "mealNotes": "Breakfast and dinner at the hotel, with your choice of restaurant for dinner. Lunch is not included."
+    "meals": "Breakfast & dinner",
+    "mealNotes": "Breakfast and dinner at the hotel, with your choice of restaurant for dinner. Lunch is on your own."
   },
   {
     "date": 17,
@@ -444,7 +444,7 @@
       ],
       [
         "12:45",
-        "Included lunch on arrival at Rosewood Hotel"
+        "lunch on arrival at Rosewood Hotel"
       ],
       [
         "15:00",
@@ -452,12 +452,12 @@
       ],
       [
         "17:00",
-        "Return to hotel and rest of the day at leisure. Dinner is included tonight at hotel’s Nan Bei restaurant (19th floor). Please, make your dinner reservation time at lunch today."
+        "Return to hotel and rest of the day at leisure. Dinner is tonight at hotel’s Nan Bei restaurant (19th floor). Please, make your dinner reservation time at lunch today."
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Rosewood Bangkok",
-    "meals": "Breakfast, lunch & dinner included",
+    "meals": "Breakfast, lunch & dinner",
     "mealNotes": "Breakfast at the hotel; lunch on arrival at Rosewood; dinner at Nan Bei. Reserve dinner at lunch."
   },
   {
@@ -485,17 +485,17 @@
       ],
       [
         "12:30",
-        "Included lunch at famous Sorndaeng restaurant (Michelin Star)"
+        "lunch at famous Sorndaeng restaurant (Michelin Star)"
       ],
       [
         "14:30",
-        "Return to Rosewood hotel and rest of the ay at leisure. Dinner tonight is not included, see suggestions sheet"
+        "Return to Rosewood hotel and rest of the ay at leisure. Dinner tonight is on your own, see suggestions sheet"
       ]
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Rosewood Bangkok",
-    "meals": "Breakfast & lunch included",
-    "mealNotes": "Breakfast at Lakorn; lunch at Sorndaeng. Dinner is not included."
+    "meals": "Breakfast & lunch",
+    "mealNotes": "Breakfast at Lakorn; lunch at Sorndaeng. Dinner is on your own."
   },
   {
     "date": 19,
@@ -539,7 +539,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Rosewood Bangkok",
-    "meals": "Breakfast & dinner included",
+    "meals": "Breakfast & dinner",
     "mealNotes": "Breakfast on the 7th floor; farewell reception at Lennon’s Bar and dinner in the Pavilion room. Lunch is not specified."
   },
   {

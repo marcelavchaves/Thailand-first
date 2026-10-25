@@ -104,7 +104,7 @@ html,body,.app-shell{background:#fff}
 
 /* Before departure, show today and emphasize the countdown. */
 .home-day-overview.before-trip .home-local-clock{margin-left:auto}
-.home-day-overview.before-trip .home-journey-countdown{font-size:clamp(20px,5vw,26px);line-height:1.35;color:var(--brand-green);padding-block:14px}
+.home-day-overview.before-trip .home-journey-countdown{font-size:clamp(12px,3.4vw,16px);line-height:1.5;white-space:nowrap;letter-spacing:0;color:var(--brand-green);padding-block:12px}
 
 /* Keep trivia readable on the shared light card in More and Journey. */
 .trivia-card>h3{color:var(--brand-green)}
@@ -276,3 +276,7 @@ html,body,.app-shell{background:#fff}
 .language-practice-feedback { display:grid; gap:6px; margin:6px 0 0; padding:10px; background:white; border-left:3px solid var(--brand-gold); font-size:13px; line-height:1.5; overflow-wrap:anywhere; }
 .language-practice-feedback strong { font-size:13px; font-weight:500; }
 .language-practice-feedback.success { border-color:var(--brand-green); }
+
+.route-map-label { position:absolute; display:block; border-radius:3px; }
+.route-map-label:hover,.route-map-label:focus-visible { outline:2px solid var(--brand-gold); background:rgba(201,169,98,.15); }
+#selected-map { scroll-margin-top:calc(var(--app-header-height,104px) + 12px); }

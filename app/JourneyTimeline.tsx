@@ -1,6 +1,7 @@
 "use client";
 import {useCallback,useEffect,useState} from 'react';
 import {useTDSession} from './TDSession';
+import {mealWording} from './meal-wording';
 import LoadingIndicator from './LoadingIndicator';
 type Event=[string,string];
 type Schedule={events:Event[];note:string;updatedAt?:string};
@@ -19,7 +20,7 @@ export default function JourneyTimeline({day,dateLabel,events,note,previewUnavai
   <div className="timeline-heading"><h2>Today’s journey</h2></div>
   {!loaded&&<LoadingIndicator label="Checking the latest schedule…"/>}
   {schedule.updatedAt&&<p className="timeline-updated">Updated by Xavier · {new Date(schedule.updatedAt).toLocaleString('en-US',{timeZone:'Asia/Singapore',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (Singapore / Bali time)</p>}
-  <div className="timeline">{schedule.events.map(([time,text],index)=><article className="timeline-entry" key={index}><span className="timeline-time-label">{time}</span><p>{text}</p></article>)}</div>
+  <div className="timeline">{schedule.events.map(([time,text],index)=><article className="timeline-entry" key={index}><span className="timeline-time-label">{time}</span><p>{mealWording(text)}</p></article>)}</div>
   {schedule.note&&<div className="note"><span className="eyebrow">A NOTE FOR TODAY</span><p>{schedule.note}</p></div>}
   <div data-pdf-exclude>
    {authenticated&&!editing&&<button className="timeline-edit-button" disabled={!loaded} onClick={()=>{setDraft({events:schedule.events.map(e=>[...e] as Event),note:schedule.note});setMessage('');setEditing(true);}}>Edit this day’s journey</button>}
