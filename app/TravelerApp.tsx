@@ -437,9 +437,8 @@ function CurrentTripDay({ date, now, onPrevious, onNext, onSelect }: { date: num
         <div className="home-day-switch"><button type="button" aria-label="Previous Home day" disabled={date === days[0].date} onClick={onPrevious}>‹</button><span className="journey-day-number">Day {tauck(date)}</span><button type="button" aria-label="Next Home day" disabled={date === days[days.length-1].date} onClick={onNext}>›</button></div>
         <div className="home-local-clock">{now && <time dateTime={now.toISOString()}>{now.toLocaleTimeString('en-US', {timeZone:'Asia/Bangkok',hour:'numeric',minute:'2-digit'})}</time>}<small>{day.region} time</small></div>
       </div>
-      <div className="home-overview-date"><h2>{longTripDate(date)}</h2><p>{day.region}</p></div>
+      <div className="home-overview-date"><div className="home-date-row"><h2>{longTripDate(date)}</h2><button type="button" className="home-calendar-toggle" aria-label="Toggle journey calendar" title="Calendar" aria-expanded={calendarOpen} aria-controls="home-trip-calendar" onClick={()=>setCalendarOpen(open=>!open)}><BrandIcon name="calendar"/></button></div><p>{day.region}</p></div>
       {statusDetail && <p className="home-journey-countdown">{statusDetail}</p>}
-      <button type="button" className="home-calendar-toggle" aria-expanded={calendarOpen} aria-controls="home-trip-calendar" onClick={()=>setCalendarOpen(open=>!open)}><BrandIcon name="calendar"/><span>Calendar</span><span aria-hidden="true">{calendarOpen?'▴':'▾'}</span></button>
     </div>
     <div id="home-trip-calendar" hidden={!calendarOpen}>{calendarOpen&&<TripCalendar selectedDate={date} onSelect={day=>{setCalendarOpen(false);onSelect(day);}}/>}</div>
   </section>;
@@ -1817,7 +1816,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     window.scrollTo({ top: 0, behavior: "instant" });
   }
   function startDaySwipe(event: React.TouchEvent<HTMLElement>) {
-    if (event.touches.length !== 1) {swipeStart.current=null;return;}
+    if ((window.visualViewport?.scale ?? 1) > 1.01 || event.touches.length !== 1) {swipeStart.current=null;return;}
     const target = event.target as HTMLElement;
     if (target.closest("button, a, input, textarea, select, summary, dialog, [contenteditable='true'], .resource-preview")) {
       swipeStart.current = null;
@@ -1831,7 +1830,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
   function finishDaySwipe(event: React.TouchEvent<HTMLElement>) {
     const start = swipeStart.current;
     swipeStart.current = null;
-    if (!start || !detail || event.changedTouches.length !== 1) return;
+    if ((window.visualViewport?.scale ?? 1) > 1.01 || !start || !detail || event.changedTouches.length !== 1) return;
     const deltaX = event.changedTouches[0].clientX - start.x;
     const deltaY = event.changedTouches[0].clientY - start.y;
     if (Math.abs(deltaX) < 70 || Math.abs(deltaX) < Math.abs(deltaY) * 1.35) return;
@@ -2005,7 +2004,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
 
         </section>
       )}
-      {tab === "map" && <JourneyMaps onOpenFlights={()=>{setHotelTarget(null);setEssentialsSection('flights');sectionScrollTarget.current='essentials-flights';setTab('hotels');}}/>}
+      {tab === "map" && <JourneyMaps/>}
       {tab === "info" && <section className="page info-page travelers-page"><XavierContactCard onSuitcase={()=>nav("td")}/><GuestProfiles/></section>}
       {tab === "more" && <section className="section more-page">
         <h1>More</h1>

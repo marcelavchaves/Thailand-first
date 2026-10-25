@@ -1,5 +1,5 @@
 "use client";
-import {useCallback,useEffect,useState,useRef} from 'react';
+import {useCallback,useEffect,useState} from 'react';
 import {useTDSession} from './TDSession';
 import LoadingIndicator from './LoadingIndicator';
 type Event=[string,string];
@@ -7,15 +7,7 @@ type Schedule={events:Event[];note:string;updatedAt?:string};
 export default function JourneyTimeline({day,dateLabel,events,note,previewUnavailable=false}:{day:number;dateLabel:string;events:Event[];note:string;previewUnavailable?:boolean}){
  const {authenticated,refresh}=useTDSession();
  const [schedule,setSchedule]=useState<Schedule>({events,note}),[revision,setRevision]=useState<string|null>(null);
- const [loaded,setLoaded]=useState(false),[editing,setEditing]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[zoom,setZoom]=useState(0);
- const [expandedEvent,setExpandedEvent]=useState<Event|null>(null);
- const timeDialog=useRef<HTMLDialogElement>(null);
- useEffect(()=>{
-  if(!expandedEvent||!timeDialog.current)return;
-  const element=timeDialog.current,previousOverflow=document.body.style.overflow;
-  element.showModal();document.body.style.overflow='hidden';
-  return()=>{element.close();document.body.style.overflow=previousOverflow;};
- },[expandedEvent]);
+ const [loaded,setLoaded]=useState(false),[editing,setEditing]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState('');
  const [draft,setDraft]=useState<Schedule>({events,note});
  const load=useCallback(async(signal?:AbortSignal)=>{try{const r=await fetch(`/api/journey-timeline?day=${day}`,{cache:'no-store',signal});if(!r.ok)throw Error();const d=await r.json();if(signal?.aborted)return;setSchedule(previewUnavailable && (!d.schedule?.events?.length || d.schedule.events[0][0]==='COMING SOON') ? {events,note} : d.schedule||{events,note});setRevision(d.revision);setLoaded(true);setMessage(m=>m.startsWith("Unable to check schedule updates")?"":m);}catch{if(!signal?.aborted)setMessage('Unable to check schedule updates. Please try again when connected.');}},[day,events,note,previewUnavailable]);
  useEffect(()=>{if(editing)return;const controller=new AbortController();void load(controller.signal);const check=()=>void load(controller.signal);window.addEventListener('focus',check);const timer=window.setInterval(check,60000);return()=>{controller.abort();window.removeEventListener('focus',check);clearInterval(timer);};},[load,editing]);
@@ -24,14 +16,10 @@ export default function JourneyTimeline({day,dateLabel,events,note,previewUnavai
  function move(index:number,delta:number){setDraft(d=>{const next=[...d.events];[next[index],next[index+delta]]=[next[index+delta],next[index]];return {...d,events:next};});}
  async function save(){setBusy(true);setMessage('');try{const r=await fetch('/api/journey-timeline',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({day,revision,events:draft.events,note:draft.note})});const d=await r.json();if(r.status===401){setEditing(false);await refresh();}if(!r.ok)throw Error(d.error||'Unable to save.');setSchedule(d.schedule);setRevision(d.revision);setEditing(false);setMessage(d.pdfReady?'Saved for this date. The interactive PDF is updated too.':'Schedule saved. The PDF will be regenerated when next opened.');}catch(e){setMessage(e instanceof Error?e.message:'Unable to save.');}finally{setBusy(false);}}
  return <section className="journey-timeline-panel" aria-label="Today’s journey timeline">
-  <div className="timeline-heading"><h2>Today’s journey</h2><div className="timeline-zoom-controls" aria-label="Timeline text size"><button type="button" onClick={()=>setZoom(z=>Math.max(0,z-1))} disabled={zoom===0} aria-label="Make timeline text smaller">A−</button><span>{zoom===0?'100%':zoom===1?'125%':'150%'}</span><button type="button" onClick={()=>setZoom(z=>Math.min(2,z+1))} disabled={zoom===2} aria-label="Make timeline text larger">A+</button></div></div>
+  <div className="timeline-heading"><h2>Today’s journey</h2></div>
   {!loaded&&<LoadingIndicator label="Checking the latest schedule…"/>}
   {schedule.updatedAt&&<p className="timeline-updated">Updated by Xavier · {new Date(schedule.updatedAt).toLocaleString('en-US',{timeZone:'Asia/Singapore',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (Singapore / Bali time)</p>}
-  <div className={`timeline timeline-zoom-${zoom}`}>{schedule.events.map(([time,text],index)=><article className="timeline-entry" key={index}><span className="timeline-time-label">{time}</span><p>{text}</p><button type="button" className="timeline-entry-zoom" aria-label={`Zoom itinerary entry at ${time}`} aria-haspopup="dialog" onClick={()=>setExpandedEvent([time,text])}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5.5 5.5M10 7v6M7 10h6"/></svg></button></article>)}</div>
-  <dialog ref={timeDialog} className="timeline-time-dialog" aria-labelledby="expanded-time-title" data-pdf-exclude onClose={()=>setExpandedEvent(null)} onClick={event=>{if(event.target===event.currentTarget)event.currentTarget.close();}}>
-   <button type="button" className="timeline-time-close" autoFocus onClick={()=>timeDialog.current?.close()}>Close ×</button>
-   {expandedEvent&&<div><p className="expanded-time-date">{dateLabel}</p><h2 id="expanded-time-title">{expandedEvent[0]}</h2><p className="expanded-time-activity">{expandedEvent[1]}</p></div>}
-  </dialog>
+  <div className="timeline">{schedule.events.map(([time,text],index)=><article className="timeline-entry" key={index}><span className="timeline-time-label">{time}</span><p>{text}</p></article>)}</div>
   {schedule.note&&<div className="note"><span className="eyebrow">A NOTE FOR TODAY</span><p>{schedule.note}</p></div>}
   <div data-pdf-exclude>
    {authenticated&&!editing&&<button className="timeline-edit-button" disabled={!loaded} onClick={()=>{setDraft({events:schedule.events.map(e=>[...e] as Event),note:schedule.note});setMessage('');setEditing(true);}}>Edit this day’s journey</button>}

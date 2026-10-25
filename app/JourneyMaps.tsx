@@ -24,7 +24,7 @@ const tiles=[
  {key:'shared',title:'Other maps',subtitle:'Shared by your tour director',image:'/images/maps-other.svg'},
 ];
 
-export default function JourneyMaps({onOpenFlights}:{onOpenFlights:()=>void}){
+export default function JourneyMaps(){
  const [selected,setSelected]=useState<string|null>(null),[provider,setProvider]=useState<'google'|'osm'>('google');
  const panel=useRef<HTMLElement>(null),hotelMap=useRef<HTMLDivElement>(null);
  useEffect(()=>{
@@ -49,7 +49,7 @@ export default function JourneyMaps({onOpenFlights}:{onOpenFlights:()=>void}){
  const sharedMaps=Object.values(items).some(item=>item.group==='maps'&&item.visible&&!item.deleted);
  return <section className="page maps-page">
   <div className="intro"><h1>Maps</h1><p>Explore each city, find your hotel and discover Xavier’s local maps.</p></div>
-  <InteractiveRouteMap src="/images/vct-route-map.jpg" onOpenFlights={onOpenFlights}/>
+  <InteractiveRouteMap src="/images/southeast-asia-map-without-routes.png"/>
   <div className="more-tile-grid" role="group" aria-label="More maps">
    <button type="button" className="more-tile" aria-expanded={hotelsExpanded} aria-controls={hotelsExpanded?'selected-map':undefined} onClick={()=>setSelected(hotelsExpanded?null:'hotels')}><img src="/images/essentials-hotels.svg" alt=""/><strong>Hotels</strong><small>Find your hotel</small></button>
    {renderTile(tiles[tiles.length-1])}

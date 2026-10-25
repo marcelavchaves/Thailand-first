@@ -1,3 +1,9 @@
+## Simplify map, timeline and calendar controls
+
+- Use the new map without journey lines, realign city hotspots and remove map enlargement, location/flight lists and obsolete airplane hotspots.
+- Remove timeline text-size controls and per-entry zoom dialogs; allow standard browser pinch zoom and avoid day navigation while the page is zoomed.
+- Move an icon-only calendar toggle to the right of the date, preserving the collapsible combined calendar.
+
 ## Wondercase Photo Gallery
 
 - Add the supplied Wondercase Photo Gallery link to the Gallery tab. Open the gallery from its labeled button in a new tab, keeping bottom navigation within the app.
