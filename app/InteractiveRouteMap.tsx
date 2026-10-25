@@ -18,7 +18,6 @@ export default function InteractiveRouteMap({src,onSelectCity}:{src:string;onSel
  const {items}=useResources();
  const mapHref=(place:typeof places[number])=>preferredCityMap(place.mapId,items)||`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.query)}`;
  return <figure className="interactive-route-map">
-  <figcaption><h2>Journey</h2><p>Tap a place for Xav’s map, when available, or Google Maps.</p></figcaption>
   <div className="route-map-scroll" role="region" aria-label="Interactive journey route map" tabIndex={0}>
    <div className="route-map-image">
     <img src={src} alt="Journey through Hanoi, Hue, Da Nang, Ho Chi Minh City, Siem Reap, Chiang Mai and Bangkok" width="1269" height="1239"/>

@@ -1,3 +1,7 @@
+## Maps tab: map and title only
+
+- Remove introductory copy, the Journey caption, Hotels and Other maps tiles. Show only Maps and the interactive map on arrival; preserve location links and the Google Maps fallback after selecting a place.
+
 ## Simple meals and compact pronunciation audio
 
 - Show only meal names in the Meals summary, separated by middle dots; remove restaurant and excluded-meal notes. Use a dash where the source itinerary specifies no meals.
