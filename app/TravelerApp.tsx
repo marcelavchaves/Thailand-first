@@ -48,7 +48,6 @@ type Day = {
   note: string;
   hotel: string;
   meals: string;
-  mealNotes?: string;
 };
 const days: Day[] = itinerary as Day[];
 const hotels = hotelList;
@@ -1886,7 +1885,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
               </div>
               <div>
                 <span className="eyebrow">MEALS</span>
-                <strong>{detail.meals}</strong>{detail.mealNotes&&<p className="daily-meal-notes">{detail.mealNotes}</p>}
+                <strong>{detail.meals}</strong>
               </div>
             </div>
             {detail.date === days[0].date && <><XavierWelcomePanel expanded /></>}

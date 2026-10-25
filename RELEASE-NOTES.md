@@ -1,3 +1,8 @@
+## Simple meals and compact pronunciation audio
+
+- Show only meal names in the Meals summary, separated by middle dots; remove restaurant and excluded-meal notes. Use a dash where the source itinerary specifies no meals.
+- Move pronunciation audio to a small speaker button to the right of each written sound guide.
+
 ## Defer speaking practice
 
 - Remove speaking-practice controls and availability messaging from this version. Keep Listen and written pronunciation guides, with microphone access blocked.

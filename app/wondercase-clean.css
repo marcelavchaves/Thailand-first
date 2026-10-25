@@ -258,8 +258,10 @@ html,body,.app-shell{background:#fff}
 .map-flight-list strong { font-size:14px; line-height:1.5; font-weight:500; }
 .map-flight-list small { font-size:12px; line-height:1.5; }
 .daily-meal-notes { font-size:13px; line-height:1.6; margin:8px 0 0; }
-.language-listen { display:flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:8px 12px; border:1px solid var(--brand-green); border-radius:5px; background:white; color:var(--brand-green); cursor:pointer; }
-.language-listen .brand-icon { width:20px; height:20px; }
+.language-pronunciation-row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.language-pronunciation-row .language-sound { flex:1; min-width:0; }
+.language-listen { display:grid; place-items:center; flex-shrink:0; width:36px; min-height:36px; padding:7px; border:1px solid var(--brand-green); border-radius:5px; background:white; color:var(--brand-green); cursor:pointer; }
+.language-listen .brand-icon { width:18px; height:18px; }
 .language-listen[aria-pressed=true] { background:var(--brand-green); color:white; }
 .language-quiz { padding:20px; margin:24px 0; border:1px solid var(--brand-gold); border-radius:6px; }
 .language-quiz fieldset { margin:18px 0; padding:14px; border:1px solid var(--line); min-width:0; }

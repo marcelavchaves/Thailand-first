@@ -21,8 +21,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Hanoi hotel — not named in supplied itinerary",
-    "meals": "Dinner",
-    "mealNotes": "Welcome dinner at Le Beaulieu. Other meals are not specified in the supplied itinerary."
+    "meals": "Dinner"
   },
   {
     "date": 6,
@@ -62,8 +61,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Hanoi hotel — not named in supplied itinerary",
-    "meals": "Breakfast & lunch",
-    "mealNotes": "Breakfast at Spice Garden / Le Club Bar; lunch at Ly Club. Dinner is on your own."
+    "meals": "Breakfast · Lunch"
   },
   {
     "date": 7,
@@ -95,8 +93,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "La Residence Hotel and Spa",
-    "meals": "Breakfast, lunch & dinner",
-    "mealNotes": "Early breakfast at Spice Garden; lunch at La Residence; dinner at Le Parfum."
+    "meals": "Breakfast · Lunch · Dinner"
   },
   {
     "date": 8,
@@ -136,8 +133,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Furama Resort",
-    "meals": "Breakfast, lunch & dinner",
-    "mealNotes": "Breakfast at Le Parfum; lunch at Horizon, Vedana Lagoon Resort; dinner at your choice of Furama restaurants."
+    "meals": "Breakfast · Lunch · Dinner"
   },
   {
     "date": 9,
@@ -169,8 +165,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Furama Resort",
-    "meals": "Breakfast & dinner",
-    "mealNotes": "Breakfast at Café Indochine; dinner at your choice of restaurant. Lunch in Hoi An is on your own."
+    "meals": "Breakfast · Dinner"
   },
   {
     "date": 10,
@@ -206,8 +201,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Park Hyatt Saigon",
-    "meals": "Breakfast, lunch & dinner",
-    "mealNotes": "Breakfast at Café Indochine; boxed lunch en route to Cu Chi; dinner at Square One."
+    "meals": "Breakfast · Lunch · Dinner"
   },
   {
     "date": 11,
@@ -235,8 +229,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Park Hyatt Saigon",
-    "meals": "Breakfast, lunch & dinner",
-    "mealNotes": "Breakfast at Café Opera; lunch at Opera; dinner as part of the Vespa foodie tour."
+    "meals": "Breakfast · Lunch · Dinner"
   },
   {
     "date": 12,
@@ -280,8 +273,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Raffles Grand Hotel",
-    "meals": "Breakfast & dinner",
-    "mealNotes": "Breakfast at Café Opera / Square One; dinner and Cambodian dance performance at Apsara. Lunch is not specified."
+    "meals": "Breakfast · Dinner"
   },
   {
     "date": 13,
@@ -317,8 +309,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Raffles Grand Hotel",
-    "meals": "Breakfast, lunch & dinner",
-    "mealNotes": "Breakfast at the hotel; lunch at Sokkhak River Side; à la carte dinner at Café D’Angkor."
+    "meals": "Breakfast · Lunch · Dinner"
   },
   {
     "date": 14,
@@ -366,8 +357,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Intercontinental Chiang Mai",
-    "meals": "Breakfast & dinner",
-    "mealNotes": "Breakfast at Café D’Angkor; Thai welcome dinner and show. Lunch at the airport is on your own."
+    "meals": "Breakfast · Dinner"
   },
   {
     "date": 15,
@@ -395,8 +385,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Intercontinental Chiang Mai",
-    "meals": "Breakfast, lunch & dinner",
-    "mealNotes": "Breakfast at The Gad Lanna Terrace; lunch catered by Four Seasons at the elephant sanctuary; dinner at Khao or North."
+    "meals": "Breakfast · Lunch · Dinner"
   },
   {
     "date": 16,
@@ -420,8 +409,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Intercontinental Chiang Mai",
-    "meals": "Breakfast & dinner",
-    "mealNotes": "Breakfast and dinner at the hotel, with your choice of restaurant for dinner. Lunch is on your own."
+    "meals": "Breakfast · Dinner"
   },
   {
     "date": 17,
@@ -457,8 +445,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Rosewood Bangkok",
-    "meals": "Breakfast, lunch & dinner",
-    "mealNotes": "Breakfast at the hotel; lunch on arrival at Rosewood; dinner at Nan Bei. Reserve dinner at lunch."
+    "meals": "Breakfast · Lunch · Dinner"
   },
   {
     "date": 18,
@@ -494,8 +481,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Rosewood Bangkok",
-    "meals": "Breakfast & lunch",
-    "mealNotes": "Breakfast at Lakorn; lunch at Sorndaeng. Dinner is on your own."
+    "meals": "Breakfast · Lunch"
   },
   {
     "date": 19,
@@ -539,8 +525,7 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "Rosewood Bangkok",
-    "meals": "Breakfast & dinner",
-    "mealNotes": "Breakfast on the 7th floor; farewell reception at Lennon’s Bar and dinner in the Pavilion room. Lunch is not specified."
+    "meals": "Breakfast · Dinner"
   },
   {
     "date": 20,
@@ -556,7 +541,6 @@
     ],
     "note": "Times and activities as provided in the supplied itinerary; subject to change.",
     "hotel": "",
-    "meals": "Meals not specified",
-    "mealNotes": "The supplied itinerary lists departure and farewell wishes without meal arrangements."
+    "meals": "—"
   }
 ]
