@@ -1,3 +1,7 @@
+## Defer speaking practice
+
+- Remove speaking-practice controls and availability messaging from this version. Keep Listen and written pronunciation guides, with microphone access blocked.
+
 ## Countdown, meals and city map fallback
 
 - Reduce the pre-trip countdown to one line on phones.
