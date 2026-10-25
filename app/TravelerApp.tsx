@@ -1869,7 +1869,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         >
           <CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}/>
           <div className="detail-body">
-            <h1>{detail.title}</h1>
+            <h1 className="tab-page-title">{detail.title}</h1>
             <XavierDailyNote date={detail.date} />
             {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/></section> : <ResourceSlot id={`schedule-${detail.date}`} title="Today’s schedule" group="schedules" icon="calendar"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
             <div className="detail-footer">
@@ -1916,7 +1916,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
       )}
       {tab === "hotels" && (
         <section className="page">
-          <div className="intro"><h1>Travel essentials</h1></div>
+          <h1 className="tab-page-title">Travel essentials</h1>
           <div className="more-tile-grid" role="group" aria-label="Travel essentials sections">{[
             {key:'handouts',title:'Handouts',image:'/images/more-reading.svg'},
             {key:'hotels',title:'Hotels',image:'/images/essentials-hotels.svg'},
@@ -2006,7 +2006,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
       {tab === "map" && <JourneyMaps/>}
       {tab === "info" && <section className="page info-page travelers-page"><XavierContactCard onSuitcase={()=>nav("td")}/><GuestProfiles/></section>}
       {tab === "more" && <section className="section more-page">
-        <h1>More</h1>
+        <h1 className="tab-page-title">More</h1>
 
         <div className="more-tile-grid">{[
           {key:'reading',title:'Recommended reading',icon:'book',image:'/images/more-reading.svg'},
@@ -2023,7 +2023,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         <details id="more-tauck" key={`tauck-${moreSection}`} hidden={moreSection!=='tauck'} open className="day-disclosure asia-journeys"><summary>More Tauck experiences</summary><div className="asia-journeys-list"><article className="asia-journey-card"><span className="asia-journey-duration">14 days</span><h2>Kingdoms &amp; Dragons: Singapore to Bali</h2><p>Journey from Singapore through Java, Bali and Flores, exploring Borobudur and Prambanan, Ubud and Komodo National Park, before ending in Jimbaran Bay.</p><a href="https://www.tauck.com/tours/kingdoms-dragons-singapore-bali-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Kingdoms &amp; Dragons: Singapore to Bali on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">16 days</span><h2>The Mekong, Vietnam, Laos &amp; Cambodia</h2><p>Ho Chi Minh City, Hanoi, Phnom Penh, Siem Reap and Luang Prabang.</p><a href="https://www.tauck.com/tours/indochina-vietnam-cambodia-laos-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View The Mekong, Vietnam, Laos &amp; Cambodia on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>A Portrait of India</h2><p>New Delhi, Agra, Jaipur, Udaipur, Mumbai, Kochi, Kumarakom and Varanasi.</p><a href="https://www.tauck.com/tours/portrait-of-india-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View A Portrait of India on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>Northern India &amp; Nepal</h2><p>New Delhi, Kathmandu, Dhulikhel, Mumbai, Bandhavgarh National Park and Chitwan National Park.</p><a href="https://www.tauck.com/tours/northern-india-and-nepal-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Northern India &amp; Nepal on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">13 days</span><h2>India’s Golden Triangle, Udaipur &amp; Mumbai</h2><p>New Delhi, Agra, Jaipur, Udaipur, Varanasi and Mumbai.</p><a href="https://www.tauck.com/tours/spotlight-on-india-guided-tour" target="_blank" rel="noopener noreferrer" aria-label="View India’s Golden Triangle, Udaipur &amp; Mumbai on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article></div></details>
         <details id="more-rating" key={`rating-${moreSection}`} hidden={moreSection!=='rating'} open className="day-disclosure feedback-disclosure"><summary>Help Wondercase Grow</summary><AppRatings /></details>
       </section>}
-      {tab === "gallery" && <section className="section gallery-page"><h1>Gallery</h1><article className="album-invite"><span className="eyebrow">WONDERCASE</span><h2>Wondercase Photo Gallery</h2><p>View and share photos from our journey.</p>{travelerAlbumUrl?<a className="album-join-link" href={travelerAlbumUrl} target="_blank" rel="noopener noreferrer">Open Wondercase Photo Gallery <span aria-hidden="true">↗</span></a>:<p>The photo album is coming soon.</p>}<small>Opens in a new tab</small></article></section>}
+      {tab === "gallery" && <section className="section gallery-page"><h1 className="tab-page-title">Gallery</h1><article className="album-invite"><span className="eyebrow">WONDERCASE</span><h2>Wondercase Photo Gallery</h2><p>View and share photos from our journey.</p>{travelerAlbumUrl?<a className="album-join-link" href={travelerAlbumUrl} target="_blank" rel="noopener noreferrer">Open Wondercase Photo Gallery <span aria-hidden="true">↗</span></a>:<p>The photo album is coming soon.</p>}<small>Opens in a new tab</small></article></section>}
       {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day}/>} groups={[{id:'handouts',title:'Handouts'},{id:'maps',title:'Maps'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
        {id:'guide-singapore',title:'Singapore Guide',group:'guides',content:<span/>},
        {id:'guide-java',title:'Java Guide',group:'guides',content:<XavierJavaGuide/>},

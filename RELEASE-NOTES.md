@@ -1,3 +1,7 @@
+## Remove visible tab page titles
+
+- Remove visible top-level page titles from the traveler tabs, retaining accessible headings, navigation labels and useful section headings. Remove empty title wrappers.
+
 ## Open locations directly in Google Maps
 
 - Let location links use Google Maps’ cross-platform app URLs directly, enabling the installed Google Maps app to handle taps with website fallback. Preserve Xavier’s shared links and map files.
