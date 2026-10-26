@@ -1,4 +1,5 @@
 "use client";
+import PasswordInput from './PasswordInput';
 import {createContext,useCallback,useContext,useEffect,useState,type ReactNode} from 'react';
 import LoadingIndicator from './LoadingIndicator';
 type Session={masterAdmin:boolean;authenticated:boolean;configured:boolean|null;refresh:()=>Promise<void>};
@@ -26,7 +27,7 @@ export function TDLogin({open,onClose,onSignedIn}:{open:boolean;onClose:()=>void
  {open&&!authenticated&&<form className="td-login-form" onSubmit={e=>{e.preventDefault();void action();}}>
  <p>Sign in once to manage announcements, schedules, guides and menus throughout the app.</p>
  {configured===false&&<p className="td-setup-note">No TD password is configured for this deployment. Your master admin can set one in Master admin → Reset tour director password.</p>}
- <label>TD password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} autoComplete="current-password" required maxLength={200}/></label>
+ <label>TD password<PasswordInput  value={password} onChange={e=>setPassword(e.target.value)} autoComplete="current-password" required maxLength={200}/></label>
  <div><button type="submit" disabled={busy||configured!==true}>{busy?<LoadingIndicator label="Signing in…"/>:'Sign in'}</button><button type="button" onClick={()=>{onClose();setPassword('');}}>Cancel</button></div>
  </form>}
  {message&&<p role="status">{message}</p>}

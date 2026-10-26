@@ -1,3 +1,7 @@
+## Show or hide passwords
+
+- Add eye buttons to admin and tour director sign-in and password update fields. Passwords start masked and each field can be toggled independently.
+
 ## Keep director contact details visible
 
 - Show Xavier’s phone and email immediately on The Group tab. Only About Xavier expands for the biography; preserve the portrait shortcut to TD Suitcase.
