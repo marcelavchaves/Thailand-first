@@ -1,3 +1,7 @@
+## Clean Home schedule layout
+
+- Use the cream day/date/time panel and white two-column schedule from the supplied reference. Preserve calendar, swap preference and full-day access.
+
 ## Home journey overview
 
 - Match the K&D 101 schedule card, retaining the calendar at the right of the date. Add a remembered announcement/schedule swap and a button opening the full selected day.
