@@ -1707,7 +1707,20 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     [selected, setSelected] = useState<number | null>(initialSelected);
   const [fullJourney,setFullJourney]=useState(false);
   const [scheduleFirst,setScheduleFirst]=useState(true);
-  useEffect(()=>{setScheduleFirst(localStorage.getItem("wondercase-schedule-first")!=="false");},[]);
+  const swapScrollPending=useRef(false);
+  useEffect(()=>{try{setScheduleFirst(localStorage.getItem("wondercase-schedule-first")!=="false");}catch{}},[]);
+  useLayoutEffect(()=>{
+    if(!swapScrollPending.current)return;
+    swapScrollPending.current=false;
+    const panel=document.querySelector('.home-journey-panels');
+    if(panel){const headerHeight=document.querySelector('.topbar')?.getBoundingClientRect().height??0;window.scrollTo({top:Math.max(0,window.scrollY+panel.getBoundingClientRect().top-headerHeight-8),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}
+  },[scheduleFirst]);
+  function swapHomePanels(){
+    const next=!scheduleFirst;
+    try{localStorage.setItem('wondercase-schedule-first',String(next));}catch{}
+    swapScrollPending.current=true;
+    setScheduleFirst(next);
+  }
   const [essentialsSection, setEssentialsSection] = useState<string | null>(null);
   const [moreSection, setMoreSection] = useState<string | null>(null);
   const [learnDay, setLearnDay] = useState(5);
@@ -1843,6 +1856,13 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
   }
   const detail = tab === "home" ? days.find((d) => d.date === (selected ?? currentDay)) : undefined;
   const previewFirstDay = (clock?.beforeTrip ?? true) && detail?.date === days[0].date;
+  const announcementPanel=detail?<div key="announcement" className="home-announcement"><XavierDailyNote date={detail.date}/></div>:null;
+  const schedulePanel=detail?<div key="schedule" className="home-schedule-card"><CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}>
+              <div className="home-schedule-content">
+            {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/></section> : <ResourceSlot id={`schedule-${detail.date}`} title="Schedule" group="schedules" icon="calendar"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
+
+              </div>
+            </CurrentTripDay></div>:null;
   return (
     <main className="app-shell">
       {process.env.NEXT_PUBLIC_APP_ENV === "pretour" && (
@@ -1873,16 +1893,10 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           }}
         >
           {!fullJourney&&<>
-          <div className={`home-journey-panels${scheduleFirst?' schedule-first':''}`}>
-            <div className="home-announcement"><XavierDailyNote date={detail.date}/></div>
-            <div className="home-schedule-card"><CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}>
-              <div className="home-schedule-content">
-            {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/></section> : <ResourceSlot id={`schedule-${detail.date}`} title="Schedule" group="schedules" icon="calendar"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
-
-              </div>
-            </CurrentTripDay></div>
+          <div id="home-journey-panels" className="home-journey-panels">
+            {scheduleFirst?[schedulePanel,announcementPanel]:[announcementPanel,schedulePanel]}
           </div>
-          <button className="home-swap-button" type="button" onClick={()=>setScheduleFirst(value=>{localStorage.setItem('wondercase-schedule-first',String(!value));return !value;})}>Swap Today’s Journey and announcements</button>
+          <button className="home-swap-button" type="button" onClick={swapHomePanels} aria-controls="home-journey-panels">Swap Today’s Journey and announcements</button>
           <button className="home-open-journey" type="button" aria-expanded={fullJourney} onClick={()=>{setFullJourney(value=>!value);if(!fullJourney)window.setTimeout(()=>document.getElementById('complete-day-journey')?.scrollIntoView({behavior:'smooth',block:'start'}),0);}}>{fullJourney?'CLOSE':`OPEN DAY ${tauck(detail.date)}`} JOURNEY <span aria-hidden="true">{fullJourney?'−':'→'}</span></button>
           </>}
           {fullJourney&&<div className="detail-body" id="complete-day-journey">

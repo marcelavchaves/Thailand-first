@@ -296,7 +296,7 @@ html,body,.app-shell{background:#fff}
 
 /* Clean home overview with a two-column daily schedule. */
 .home-journey-panels{display:flex;flex-direction:column;gap:20px}
-.home-journey-panels.schedule-first .home-schedule-card{order:-1}
+.home-journey-panels{overflow-anchor:none}
 .home-schedule-card{margin:14px 16px 0;background:white;border:0;border-radius:0;box-shadow:none}
 .home-schedule-card .current-day-card{margin:0;padding:0;background:white;border:0;border-radius:0}
 .home-schedule-card .home-day-overview{padding:16px;min-height:155px;background:#faf8f0}

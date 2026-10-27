@@ -1,3 +1,7 @@
+## Swap Home panels and show the result
+
+- Reorder schedule and TD announcements in the page itself, then scroll to the top panel. Keep swapping functional when browser storage is unavailable; remember the order when storage is available.
+
 ## Remove Today’s schedule wording
 
 - Remove the Home schedule heading and use “Schedule” for schedule release cards.
