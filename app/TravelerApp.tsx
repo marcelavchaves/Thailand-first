@@ -424,7 +424,7 @@ function TimeAtHome() {
   );
 }
 
-function CurrentTripDay({ date, now, onPrevious, onNext, onSelect }: { date: number; now: Date | null; onPrevious: () => void; onNext: () => void; onSelect:(date:number)=>void }) {
+function CurrentTripDay({ date, now, onPrevious, onNext, onSelect, children }: { date: number; now: Date | null; onPrevious: () => void; onNext: () => void; onSelect:(date:number)=>void; children?:React.ReactNode }) {
   const [calendarOpen,setCalendarOpen]=useState(false);
   const clock = now ? getJourneyStatus(now) : null;
   const day = days.find(d => d.date === date)!;
@@ -432,14 +432,16 @@ function CurrentTripDay({ date, now, onPrevious, onNext, onSelect }: { date: num
   const statusDetail = beforeTrip && date === days[0].date && clock ? `Your journey starts in ${clock.daysToGo} days` : clock?.afterTrip ? 'Until the next journey' : '';
   return <section className="current-day-card journey-today-card" aria-live="polite">
     <div className={`home-day-overview${beforeTrip ? ' before-trip' : ''}`}>
+      <span className="eyebrow home-explore-heading">EXPLORE THE JOURNEY</span>
       <div className="home-overview-top">
         <div className="home-day-switch"><button type="button" aria-label="Previous Home day" disabled={date === days[0].date} onClick={onPrevious}>‹</button><span className="journey-day-number">Day {tauck(date)}</span><button type="button" aria-label="Next Home day" disabled={date === days[days.length-1].date} onClick={onNext}>›</button></div>
-        <div className="home-local-clock">{now && <time dateTime={now.toISOString()}>{now.toLocaleTimeString('en-US', {timeZone:'Asia/Bangkok',hour:'numeric',minute:'2-digit'})}</time>}<small>{day.region} time</small></div>
+        <h3 className="home-day-title">{day.title}</h3>
       </div>
-      <div className="home-overview-date"><div className="home-date-row"><h2>{longTripDate(date)}</h2><button type="button" className="home-calendar-toggle" aria-label="Toggle journey calendar" title="Calendar" aria-expanded={calendarOpen} aria-controls="home-trip-calendar" onClick={()=>setCalendarOpen(open=>!open)}><BrandIcon name="calendar"/></button></div><p>{day.region}</p></div>
+      <div className="home-overview-date"><div className="home-date-row"><h2>{longTripDate(date)}</h2><div className="home-date-actions">{now&&<time>{now.toLocaleTimeString('en-US',{timeZone:day.region.includes('Vietnam')?'Asia/Ho_Chi_Minh':'Asia/Bangkok',hour:'numeric',minute:'2-digit'})}</time>}<button type="button" className="home-calendar-toggle" aria-label="Toggle journey calendar" title="Calendar" aria-expanded={calendarOpen} aria-controls="home-trip-calendar" onClick={()=>setCalendarOpen(open=>!open)}><BrandIcon name="calendar"/></button></div></div></div>
       {statusDetail && <p className="home-journey-countdown">{statusDetail}</p>}
     </div>
     <div id="home-trip-calendar" hidden={!calendarOpen}>{calendarOpen&&<TripCalendar selectedDate={date} onSelect={day=>{setCalendarOpen(false);onSelect(day);}}/>}</div>
+    {children}
   </section>;
 }
 
@@ -1703,6 +1705,9 @@ export const tripContent = { days, hotels, hotelResources, localGuides, storytel
 function TravelerHome({ initialTab = "home", initialSelected = null }: { initialTab?: Tab; initialSelected?: number | null }) {
   const [tab, setTab] = useState<Tab>(initialTab === "journey" ? "home" : initialTab),
     [selected, setSelected] = useState<number | null>(initialSelected);
+  const [fullJourney,setFullJourney]=useState(false);
+  const [scheduleFirst,setScheduleFirst]=useState(false);
+  useEffect(()=>{setScheduleFirst(localStorage.getItem("wondercase-schedule-first")==="true");},[]);
   const [essentialsSection, setEssentialsSection] = useState<string | null>(null);
   const [moreSection, setMoreSection] = useState<string | null>(null);
   const [learnDay, setLearnDay] = useState(5);
@@ -1803,6 +1808,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     return () => window.clearTimeout(timer);
   }, []);
   function nav(t: Tab) {
+    setFullJourney(false);
     setHotelTarget(null);
     setTab(t);
     setSelected(null);
@@ -1866,11 +1872,25 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             swipeStart.current = null;
           }}
         >
-          <CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}/>
-          <div className="detail-body">
-            <h1 className="tab-page-title">{detail.title}</h1>
-            <XavierDailyNote date={detail.date} />
+          {!fullJourney&&<>
+          <div className={`home-journey-panels${scheduleFirst?' schedule-first':''}`}>
+            <div className="home-announcement"><XavierDailyNote date={detail.date}/></div>
+            <div className="home-schedule-card"><CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}>
+              <div className="home-schedule-content">
             {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/></section> : <ResourceSlot id={`schedule-${detail.date}`} title="Today’s schedule" group="schedules" icon="calendar"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
+
+              </div>
+            </CurrentTripDay></div>
+          </div>
+          <button className="home-swap-button" type="button" onClick={()=>setScheduleFirst(value=>{localStorage.setItem('wondercase-schedule-first',String(!value));return !value;})}>Swap Today’s Journey and announcements</button>
+          <button className="home-open-journey" type="button" aria-expanded={fullJourney} onClick={()=>{setFullJourney(value=>!value);if(!fullJourney)window.setTimeout(()=>document.getElementById('complete-day-journey')?.scrollIntoView({behavior:'smooth',block:'start'}),0);}}>{fullJourney?'CLOSE':`OPEN DAY ${tauck(detail.date)}`} JOURNEY <span aria-hidden="true">{fullJourney?'−':'→'}</span></button>
+          </>}
+          {fullJourney&&<div className="detail-body" id="complete-day-journey">
+            <button className="journey-back-home" type="button" onClick={()=>{setFullJourney(false);window.scrollTo({top:0,behavior:"instant"});}}>← Back to Home</button>
+            <CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}/>
+            <h1>{detail.title}</h1>
+            <XavierDailyNote date={detail.date}/>
+            {previewFirstDay ? <JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/> : <ResourceSlot id={`schedule-${detail.date}`} title="Today’s schedule" group="schedules" icon="calendar"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
             <div className="detail-footer">
               <div>
                 <span className="eyebrow">TONIGHT’S STAY</span>
@@ -1910,7 +1930,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
               <DayPhoto date={detail.date} dateLabel={longTripDate(detail.date)} title={detail.title} events={detail.events} note={detail.note} flight={internalFlights.find(flight=>flight.date===detail.date)} hotel={detail.hotel} />
               <PdfDownload url={`/api/export-itinerary?section=days&day=${tauck(detail.date)}`} label="Download this day as PDF" />
             </div>
-          </div>
+          </div>}
         </section>
       )}
       {tab === "hotels" && (

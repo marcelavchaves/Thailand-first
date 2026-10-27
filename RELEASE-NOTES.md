@@ -1,3 +1,7 @@
+## Home journey overview
+
+- Match the K&D 101 schedule card, retaining the calendar at the right of the date. Add a remembered announcement/schedule swap and a button opening the full selected day.
+
 ## Show or hide passwords
 
 - Add eye buttons to admin and tour director sign-in and password update fields. Passwords start masked and each field can be toggled independently.
