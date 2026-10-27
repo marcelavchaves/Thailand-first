@@ -14,6 +14,7 @@ export function ResourceProvider({children}:{children:ReactNode}){
 }
 export function ResourceSlot({id,title,group='guides',children,icon='book',caption='Xavier will share this when it’s ready.'}:{id:string;title:string;group?:string;children?:ReactNode;icon?:string;caption?:string}){
  const {items,loaded,error,reload}=useResources();const {authenticated,refresh}=useTDSession();const item=items[id];
+ const displayTitle=(item?.title||title).replace(/^Today[’']s schedule$/, 'Schedule');
  const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[preview,setPreview]=useState(false),[editing,setEditing]=useState(false),[name,setName]=useState(title);
  async function change(action:string,file?:File){setBusy(true);setMessage('');try{
   let upload:undefined|{data:string;type:string};if(file){if(file.size>3*1024*1024)throw Error('Choose a PDF or image smaller than 3 MB.');const data=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=()=>reject(Error('Unable to read this file.'));reader.readAsDataURL(file);});upload={data,type:file.type};}
@@ -22,8 +23,8 @@ export function ResourceSlot({id,title,group='guides',children,icon='book',capti
  if(item?.deleted&&!authenticated)return null;
  const visible=loaded&&item?.visible&&!item.deleted;
  const content=item?.file?<a className="button" href={`/api/tour-resources?file=${encodeURIComponent(id)}`} target="_blank" rel="noreferrer">Open {item.title || title} ↗</a>:children;
- return <section className="release-card" aria-label={item?.title||title}>
- <div className="release-heading"><BrandIcon name={icon}/><div><h3>{item?.title||title}</h3>{!visible&&<p className="release-soon">{item?.deleted?'Removed':'Coming soon'}</p>}</div></div>
+ return <section className="release-card" aria-label={displayTitle}>
+ <div className="release-heading"><BrandIcon name={icon}/><div><h3>{displayTitle}</h3>{!visible&&<p className="release-soon">{item?.deleted?'Removed':'Coming soon'}</p>}</div></div>
  {!visible&&!authenticated&&<p className="release-caption">{error||caption}</p>}
  {visible&&content}
  {authenticated&&<div className="release-controls" data-pdf-exclude><p>{visible?'Visible to travelers':item?.deleted?'Deleted — hidden from travelers':'Hidden from travelers'}</p><fieldset disabled={busy||!loaded}>

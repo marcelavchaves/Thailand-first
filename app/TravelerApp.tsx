@@ -1877,7 +1877,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             <div className="home-announcement"><XavierDailyNote date={detail.date}/></div>
             <div className="home-schedule-card"><CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}>
               <div className="home-schedule-content">
-            {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><JourneyTimeline heading="Today’s schedule" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/></section> : <ResourceSlot id={`schedule-${detail.date}`} title="Today’s schedule" group="schedules" icon="calendar"><JourneyTimeline heading="Today’s schedule" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
+            {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/></section> : <ResourceSlot id={`schedule-${detail.date}`} title="Schedule" group="schedules" icon="calendar"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
 
               </div>
             </CurrentTripDay></div>
@@ -1890,7 +1890,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             <CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}/>
             <h1>{detail.title}</h1>
             <XavierDailyNote date={detail.date}/>
-            {previewFirstDay ? <JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/> : <ResourceSlot id={`schedule-${detail.date}`} title="Today’s schedule" group="schedules" icon="calendar"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
+            {previewFirstDay ? <JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/> : <ResourceSlot id={`schedule-${detail.date}`} title="Schedule" group="schedules" icon="calendar"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
             <div className="detail-footer">
               <div>
                 <span className="eyebrow">TONIGHT’S STAY</span>

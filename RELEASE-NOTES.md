@@ -1,3 +1,7 @@
+## Remove Today’s schedule wording
+
+- Remove the Home schedule heading and use “Schedule” for schedule release cards.
+
 ## Clean Home schedule layout
 
 - Use the cream day/date/time panel and white two-column schedule from the supplied reference. Preserve calendar, swap preference and full-day access.

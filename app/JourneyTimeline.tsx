@@ -17,7 +17,7 @@ export default function JourneyTimeline({day,dateLabel,events,note,previewUnavai
  function move(index:number,delta:number){setDraft(d=>{const next=[...d.events];[next[index],next[index+delta]]=[next[index+delta],next[index]];return {...d,events:next};});}
  async function save(){setBusy(true);setMessage('');try{const r=await fetch('/api/journey-timeline',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({day,revision,events:draft.events,note:draft.note})});const d=await r.json();if(r.status===401){setEditing(false);await refresh();}if(!r.ok)throw Error(d.error||'Unable to save.');setSchedule(d.schedule);setRevision(d.revision);setEditing(false);setMessage(d.pdfReady?'Saved for this date. The interactive PDF is updated too.':'Schedule saved. The PDF will be regenerated when next opened.');}catch(e){setMessage(e instanceof Error?e.message:'Unable to save.');}finally{setBusy(false);}}
  return <section className="journey-timeline-panel" aria-label="Today’s journey timeline">
-  <div className="timeline-heading"><h2>{heading||`Day ${day-4} schedule`}</h2></div>
+  {heading!==""&&<div className="timeline-heading"><h2>{heading??`Day ${day-4} schedule`}</h2></div>}
   {!loaded&&<LoadingIndicator label="Checking the latest schedule…"/>}
   {schedule.updatedAt&&<p className="timeline-updated">Updated by Xavier · {new Date(schedule.updatedAt).toLocaleString('en-US',{timeZone:'Asia/Singapore',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (Singapore / Bali time)</p>}
   <div className="timeline">{schedule.events.map(([time,text],index)=><article className="timeline-entry" key={index}><span className="timeline-time-label">{time}</span><p>{mealWording(text)}</p></article>)}</div>
