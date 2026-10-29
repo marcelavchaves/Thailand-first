@@ -291,3 +291,10 @@
 Validation: production build and TypeScript validation, roster regression tests, and desktop/mobile browser smoke tests passed. PDF content checks passed using a diagnostic checker with corrected route/image assumptions. Existing TD/Safe/Admin regression fixture failures and stock PDF-checker limitations remain.
 
 Publication: pending Netlify access and verification of the destination site. Deploy all configured functions using netlify.toml; do not use the legacy four-function publish script. No deploy ID has been created.
+
+## Prototype-only traveler meal choices
+
+- Isolate Netlify’s Thailand-first-prototype on the `prototype` branch. Add a Day 1 Dinner choices link for all five supplied menus (nine required courses), saved drafts, submitted choices and dietary/allergy notes.
+- Give the TD encrypted, retrievable eight-digit traveler PINs and private invitations. Use authenticated meal-only sessions, limit PIN attempts, and revoke old sessions when a PIN is replaced.
+- Enforce the November 16, 2026 18:30 Hanoi submission cutoff on the server; choices remain readable after the deadline. Show draft/missing/submitted statuses and export each restaurant or all menus as CSV, Excel, or PDF with submitted dish totals and dietary notes, never PINs.
+- Add an expiring, single-use prototype TD password setup flow independent of the live site.

@@ -20,6 +20,7 @@ import useXavierPhoto from "./useXavierPhoto";
 import GuestProfiles from "./GuestProfiles";
 import JourneyTimeline from "./JourneyTimeline";
 import welcomeLetter from "./xavier-welcome.json";
+import "./meal-choices.css";
 import DayPhoto from "./DayPhoto";
 import LocalLanguageLesson from "./LocalLanguageLesson";
 import LoadingIndicator from "./LoadingIndicator";
@@ -442,6 +443,7 @@ function CurrentTripDay({ date, now, onPrevious, onNext, onSelect, children }: {
       {statusDetail && <p className="home-journey-countdown">{statusDetail}</p>}
     </div>
     <div id="home-trip-calendar" hidden={!calendarOpen}>{calendarOpen&&<TripCalendar selectedDate={date} onSelect={day=>{setCalendarOpen(false);onSelect(day);}}/>}</div>
+    {process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&date===days[0].date&&<a className="home-meal-choice-button" href="/meal-choices">Dinner choices · select your five tour meals →</a>}
     {children}
   </section>;
 }

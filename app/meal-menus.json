@@ -1,0 +1,255 @@
+[
+  {
+    "id": "vedana",
+    "title": "Vedana lunch",
+    "restaurant": "Horizon Restaurant · Vedana Lagoon Resort",
+    "day": 4,
+    "document": "ic-vedana.pdf",
+    "courses": [
+      {
+        "id": "main",
+        "title": "Main course",
+        "options": [
+          {
+            "id": "main-1",
+            "name": "Grilled Fish",
+            "description": "Fish skewers or fish grilled in banana leaf"
+          },
+          {
+            "id": "main-2",
+            "name": "Stir-fried shrimp with garlic",
+            "description": ""
+          },
+          {
+            "id": "main-3",
+            "name": "Grilled beef & vegetable skewers",
+            "description": ""
+          },
+          {
+            "id": "main-4",
+            "name": "Sweet & sour pork",
+            "description": ""
+          },
+          {
+            "id": "main-5",
+            "name": "Grilled chicken with lime leaves",
+            "description": ""
+          },
+          {
+            "id": "main-6",
+            "name": "Vegetarian option",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cu-chi",
+    "title": "Cu Chi lunch box",
+    "restaurant": "Cu Chi · Lunch box",
+    "day": 6,
+    "document": "ic-cu-chi.pdf",
+    "courses": [
+      {
+        "id": "sandwich",
+        "title": "Sandwich",
+        "options": [
+          {
+            "id": "sandwich-1",
+            "name": "Chicken, avocado & bacon",
+            "description": "Mozzarella, arugula and garlic dressing on Texas toast"
+          },
+          {
+            "id": "sandwich-2",
+            "name": "Chicken & Ham",
+            "description": "Mozzarella, tomato, lettuce and sesame dressing on Texas toast"
+          },
+          {
+            "id": "sandwich-3",
+            "name": "Beef & horseradish",
+            "description": "Watercress and pickled beetroot on brioche"
+          },
+          {
+            "id": "sandwich-4",
+            "name": "Vegetable & hummus",
+            "description": "Lettuce, avocado, cucumber and carrot on sourdough toast"
+          },
+          {
+            "id": "sandwich-5",
+            "name": "Cheddar & tomato",
+            "description": "Dried oregano, basil, pepper and butter on Texas toast"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sokkhak",
+    "title": "Sokkhak Lunch",
+    "restaurant": "Sokkhak · Siem Reap",
+    "day": 9,
+    "document": "ic-sokkhak.pdf",
+    "courses": [
+      {
+        "id": "main",
+        "title": "Main course",
+        "options": [
+          {
+            "id": "main-1",
+            "name": "Stir-fried chicken with lemongrass",
+            "description": "Hot basil, onion, red bell pepper, oyster sauce, garlic and fish sauce"
+          },
+          {
+            "id": "main-2",
+            "name": "Beef Lok Lak",
+            "description": "Local free-range beef tenderloin marinated in oyster sauce, garlic and black pepper; egg, pepper-lime sauce, tomato, onion and lettuce."
+          },
+          {
+            "id": "main-3",
+            "name": "Green vegetable curry",
+            "description": "Long bean, eggplant, pineapple, sweet potato, basil, Khmer kroeung (fresh spices and aromatics) and coconut cream"
+          },
+          {
+            "id": "main-4",
+            "name": "Steamed bar fish",
+            "description": "White bass fillet with carrot, spring onion, enoki mushroom ginger-soy sauce and black mushroom"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lakorn",
+    "title": "Lakorn Lunch",
+    "restaurant": "Lakorn · Rosewood Bangkok",
+    "document": "ic-lakorn.pdf",
+    "courses": [
+      {
+        "id": "appetizer",
+        "title": "Appetizer",
+        "options": [
+          {
+            "id": "appetizer-1",
+            "name": "Tom Yum Goong",
+            "description": "Hot and sour prawn soup, Thai herbs, chili"
+          },
+          {
+            "id": "appetizer-2",
+            "name": "Tom Yum Hed",
+            "description": "Clear soup, Thai herbs, mushroom, tofu, chili"
+          },
+          {
+            "id": "appetizer-3",
+            "name": "Greek salad",
+            "description": "Feta cheese, tomato water, Italian basil"
+          }
+        ]
+      },
+      {
+        "id": "main",
+        "title": "Main course",
+        "options": [
+          {
+            "id": "main-1",
+            "name": "Khao Pad Pu",
+            "description": "Crab, fried rice, egg, spring onion"
+          },
+          {
+            "id": "main-2",
+            "name": "Gai Phad Med-Mamuang",
+            "description": "Chicken, cashew nut, capsicum, onion, dried chili"
+          },
+          {
+            "id": "main-3",
+            "name": "Black Angus sirloin",
+            "description": "Black trumpet coulis, crispy cauliflower, black truffle jus"
+          },
+          {
+            "id": "main-4",
+            "name": "Green spinach crepes · vegetarian",
+            "description": "Ricotta cheese, charred kale, bok choy, pumpkin seed oil"
+          }
+        ]
+      },
+      {
+        "id": "dessert",
+        "title": "Dessert",
+        "options": [
+          {
+            "id": "dessert-1",
+            "name": "Fresh seasonal fruits · vegetarian",
+            "description": ""
+          },
+          {
+            "id": "dessert-2",
+            "name": "Thai tea tiramisu",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "farewell",
+    "title": "Farewell Dinner",
+    "restaurant": "Rosewood Bangkok",
+    "day": 15,
+    "document": "ic-farewell.pdf",
+    "courses": [
+      {
+        "id": "soup",
+        "title": "Soup",
+        "options": [
+          {
+            "id": "soup-1",
+            "name": "Mushroom consommé",
+            "description": "Wilted spinach, morels, extra virgin olive oil"
+          },
+          {
+            "id": "soup-2",
+            "name": "Chestnut velouté",
+            "description": "Wilted spinach, morels, extra virgin olive oil"
+          }
+        ]
+      },
+      {
+        "id": "main",
+        "title": "Main course",
+        "options": [
+          {
+            "id": "main-1",
+            "name": "Organic chicken",
+            "description": "Truffle mashed potato, wholegrain mustard jus"
+          },
+          {
+            "id": "main-2",
+            "name": "Wagyu tenderloin",
+            "description": "Truffle mashed potato, red wine jus"
+          },
+          {
+            "id": "main-3",
+            "name": "Smoked salmon",
+            "description": "Champagne beurre blanc, Ossetra caviar"
+          }
+        ]
+      },
+      {
+        "id": "dessert",
+        "title": "Dessert",
+        "options": [
+          {
+            "id": "dessert-1",
+            "name": "Mango sticky rice",
+            "description": ""
+          },
+          {
+            "id": "dessert-2",
+            "name": "Yuzu chocolate cake",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  }
+]
