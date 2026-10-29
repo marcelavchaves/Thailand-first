@@ -137,6 +137,7 @@ export default async function handler(request:Request){
    return reply({error:'Unknown action.'},400);
   }
   const guest=await authenticatedGuest(request,guests);if(!guest)return reply({error:'Choose your name to open your meal choices.'},401);
+  if(body.guestId!==guest.id)return reply({error:'The selected traveler changed in another tab. Reload and choose your name before saving.'},409);
   if(body.action!=='save'&&body.action!=='submit')return reply({error:'Choose Save draft or Submit choices.'},400);
   if(!(body.revision===null||typeof body.revision==='string'))return reply({error:'Refresh your choices before saving.'},400);
   const requested=body.menuId||'all';

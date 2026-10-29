@@ -16,6 +16,12 @@ export default function MealChoices(){
   })().catch(e=>{setMessage(e.message);void load().catch(()=>{});});}
   const timer=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(timer);
  },[load]);
+ useEffect(()=>{
+  if(!data?.guest)return;
+  const refresh=async()=>{try{const r=await fetch('/api/meal-choices',{cache:'no-store'});if(!r.ok)return;const body=await r.json();setData(d=>d?{...d,deadlines:body.deadlines,lockedMeals:body.lockedMeals}:d);setOffset(Date.parse(body.serverNow)-Date.now());setNow(Date.now());}catch{}};
+  const timer=setInterval(()=>void refresh(),30000);window.addEventListener('focus',refresh);
+  return()=>{clearInterval(timer);window.removeEventListener('focus',refresh);};
+ },[data?.guest?.id]);
  useEffect(()=>{if(!dirty)return;const warn=(e:BeforeUnloadEvent)=>{e.preventDefault();e.returnValue='';};window.addEventListener('beforeunload',warn);return()=>window.removeEventListener('beforeunload',warn);},[dirty]);
  const deadlines=data?.deadlines||defaultMealDeadlines();
  const isLocked=(id:string)=>!!data&&(data.lockedMeals[id]||now+offset>=Date.parse(deadlines[id]));
@@ -23,7 +29,7 @@ export default function MealChoices(){
  async function openTraveler(e:React.FormEvent){e.preventDefault();setBusy(true);setMessage('');try{const r=await fetch('/api/meal-choices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',guestId})}),body=await r.json();if(!r.ok)throw Error(body.error);await load();}catch(e){setMessage(e instanceof Error?e.message:'Unable to open meal choices.');}finally{setBusy(false);}}
  async function save(submit:boolean,menuId='all'){
   setBusy(true);setMessage('');
-  try{const r=await fetch('/api/meal-choices',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:submit?'submit':'save',menuId,selections,dietary,revision:data?.revision})}),body=await r.json();
+  try{const r=await fetch('/api/meal-choices',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:submit?'submit':'save',guestId:data?.guest?.id,menuId,selections,dietary,revision:data?.revision})}),body=await r.json();
    if(!r.ok){if(body.lockedMeals)setData(d=>d?{...d,lockedMeals:body.lockedMeals,deadlines:body.deadlines}:d);throw Error(body.error);}
    setData(d=>d?{...d,submission:body.submission,revision:body.revision,lockedMeals:body.lockedMeals,deadlines:body.deadlines}:d);
    const remainingEdits=menus.some(m=>!body.lockedMeals[m.id]&&m.courses.some(c=>(selections[m.id]?.[c.id]||'')!==(body.submission.selections[m.id]?.[c.id]||'')));

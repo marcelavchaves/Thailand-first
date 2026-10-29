@@ -14,7 +14,7 @@ try{
  await build({stdin:{contents:'export {default as handler} from "./netlify/functions/meal-choices.mts";export {default as setup} from "./netlify/functions/prototype-td-setup.mts"; export {menus,MEAL_DEADLINE,mealReport} from "./lib/meal-choices";',resolveDir:root,loader:'ts'},outfile:join(temp,'bundle.mjs'),bundle:true,platform:'node',format:'esm',external:['pdfkit'],plugins:[{name:'test-storage',setup(b){b.onResolve({filter:/^@netlify\/blobs$|\/td-auth$/},a=>({path:a.path,namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},a=>({contents:a.path.endsWith('/td-auth')?'export async function hasTDSession(){return globalThis.mealTest.td} export function sameOrigin(r){return r.headers.get("origin")===new URL(r.url).origin} export async function tdPasswordConfigured(){return !!globalThis.mealTest.stores.get("td-credentials")?.get("password")} export async function passwordSessionCookie(){return "test-setup-cookie=1; Secure; HttpOnly"}':storage}));}}]});
  const {handler,setup,menus,MEAL_DEADLINE,mealReport}=await import(join(temp,'bundle.mjs'));
  const req=(method='GET',body=null,query='',cookie='',origin='https://prototype.test')=>new Request('https://prototype.test/api/meal-choices'+query,{method,headers:{origin,'Content-Type':'application/json','x-nf-client-connection-ip':'192.0.2.1',cookie},body:body?JSON.stringify(body):undefined});
- const call=async(method,body,query='',cookie='')=>handler(req(method,body,query,cookie));
+ const call=async(method,body,query='',cookie='')=>{if(method==='PUT'&&body&&!Object.hasOwn(body,'guestId')){const token=cookie.split('=')[1];const session=token?state.stores.get('meal-choices-v1')?.get('session/'+createHash('sha256').update(token).digest('hex'))?.data:null;body={...body,guestId:session?.guestId};}return handler(req(method,body,query,cookie));};
  const ok=async response=>{assert.equal(response.status,200,await response.clone().text());return response.json();};
  assert.equal(MEAL_DEADLINE,'2026-11-16T11:30:00.000Z');
  const initial=await ok(await call('GET'));assert.equal(initial.guests.length,16);assert.equal(initial.pinRequired,false);assert.equal(Object.keys(initial.deadlines).length,5);
@@ -41,7 +41,8 @@ try{
  assert.equal((await call('PUT',{action:'submit',menuId:'vedana',selections:{vedana:{main:'invented'}},dietary:'',revision:null},'',cookie)).status,400);
  assert.equal((await call('PUT',{action:'submit',menuId:'vedana',selections:{},dietary:'',revision:null},'',cookie)).status,400);
  // Individual submission is complete for just that meal and counts in its report even though others are unfinished.
- let saved=await ok(await call('PUT',{action:'submit',menuId:'vedana',selections:{vedana:selections.vedana},dietary:'Peanut allergy',revision:null,guestId:b.id},'',cookie));
+ assert.equal((await call('PUT',{action:'submit',menuId:'vedana',selections,dietary:'',revision:null,guestId:b.id},'',cookie)).status,409);
+ let saved=await ok(await call('PUT',{action:'submit',menuId:'vedana',selections:{vedana:selections.vedana},dietary:'Peanut allergy',revision:null},'',cookie));
  assert.equal(saved.submission.mealStates.vedana.status,'submitted');assert.equal(saved.submission.mealStates.farewell,undefined);assert.equal(saved.submission.status,'draft');
  assert.equal(state.stores.get('meal-choices-v1').has('choice/'+b.id),false);
  state.td=true;let report=await ok(await call('GET',null,'?action=td'));assert.equal(report.summary.find(t=>t.meal===menus[0].title&&t.choice===menus[0].courses[0].options[0].name).count,1);state.td=false;
