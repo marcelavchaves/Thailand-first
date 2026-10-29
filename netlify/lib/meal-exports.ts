@@ -2,9 +2,9 @@ import {createRequire} from 'node:module';
 import {join} from 'node:path';
 import {type mealReport} from '../../lib/meal-choices';
 type Report=ReturnType<typeof mealReport>;
-const headers=['Meal','Restaurant','Course','Traveler','Choice','Dietary restrictions or allergies','Status','Submitted at'];
+const headers=['Meal','Restaurant','Deadline (Hanoi time)','Course','Traveler','Choice','Dietary restrictions or allergies','Status','Submitted at'];
 function tables(report:Report){return [
- {name:'Traveler choices',rows:[headers,...report.rows.map(r=>[r.meal,r.restaurant,r.course,r.traveler,r.choice,r.dietary,r.status,r.submittedAt])]},
+ {name:'Traveler choices',rows:[headers,...report.rows.map(r=>[r.meal,r.restaurant,new Date(r.deadline).toLocaleString('en-US',{timeZone:'Asia/Ho_Chi_Minh'}),r.course,r.traveler,r.choice,r.dietary,r.status,r.submittedAt])]},
  {name:'Submitted dish totals',rows:[['Meal','Course','Choice','Count'],...report.totals.map(r=>[r.meal,r.course,r.choice,r.count])]}
 ];}
 function csvCell(value:string|number){let text=String(value);if(/^\s*[=+@\-\t\r]/.test(text))text="'"+text;return '"'+text.replace(/"/g,'""')+'"';}
@@ -21,7 +21,7 @@ function workbook(report:Report){const sheets=tables(report);return zip([
  {name:'xl/workbook.xml',data:`<?xml version="1.0"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s,i)=>`<sheet name="${xml(s.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('')}</sheets></workbook>`},
  {name:'xl/_rels/workbook.xml.rels',data:`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="styles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>${sheets.map((_,i)=>`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('')}</Relationships>`},
  {name:'xl/styles.xml',data:'<?xml version="1.0"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFEAF0E3"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'},
- ...sheets.map((s,i)=>({name:`xl/worksheets/sheet${i+1}.xml`,data:`<?xml version="1.0"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${(i===0?[25,35,18,25,45,55,18,25]:[25,18,45,12]).map((width,c)=>`<col min="${c+1}" max="${c+1}" width="${width}" customWidth="1"/>`).join('')}</cols><sheetData>${s.rows.map((row,n)=>`<row r="${n+1}">${row.map((v,c)=>`<c r="${String.fromCharCode(65+c)}${n+1}" s="${n===0?1:0}" t="${typeof v==='number'?'n':'inlineStr'}">${typeof v==='number'?`<v>${v}</v>`:`<is><t xml:space="preserve">${xml(v)}</t></is>`}</c>`).join('')}</row>`).join('')}</sheetData></worksheet>`}))
+ ...sheets.map((s,i)=>({name:`xl/worksheets/sheet${i+1}.xml`,data:`<?xml version="1.0"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${(i===0?[25,35,25,18,25,45,55,18,25]:[25,18,45,12]).map((width,c)=>`<col min="${c+1}" max="${c+1}" width="${width}" customWidth="1"/>`).join('')}</cols><sheetData>${s.rows.map((row,n)=>`<row r="${n+1}">${row.map((v,c)=>`<c r="${String.fromCharCode(65+c)}${n+1}" s="${n===0?1:0}" t="${typeof v==='number'?'n':'inlineStr'}">${typeof v==='number'?`<v>${v}</v>`:`<is><t xml:space="preserve">${xml(v)}</t></is>`}</c>`).join('')}</row>`).join('')}</sheetData></worksheet>`}))
 ]);}
 async function pdf(report:Report,meal:string){
  const require=createRequire(import.meta.url),PDFDocument=require('pdfkit');
@@ -29,9 +29,9 @@ async function pdf(report:Report,meal:string){
  const ready=new Promise<Buffer>((resolve,reject)=>{doc.on('data',(b:Buffer)=>chunks.push(b));doc.on('end',()=>resolve(Buffer.concat(chunks)));doc.on('error',reject);});
  doc.registerFont('Body',join(process.cwd(),'scripts/fonts/DejaVuSans.ttf'));doc.registerFont('Bold',join(process.cwd(),'scripts/fonts/DejaVuSans-Bold.ttf'));
  const line=(text:string,size=10,bold=false)=>{doc.font(bold?'Bold':'Body').fontSize(size).fillColor('#315c4f').text(text,{lineGap:3});doc.moveDown(.35);};
- line('WONDERCASE · Meal choices',20,true);line(meal==='all'?'All five menus':'Restaurant report',12);line('Submission deadline: November 16, 2026 · 6:30 PM Hanoi time',9);line('Dish totals count submitted choices only. Drafts and missing submissions are labeled below.',9);
+ line('WONDERCASE · Meal choices',20,true);line(meal==='all'?'All five menus':'Restaurant report',12);line('Each meal closes at its own deadline. Times below are Hanoi time.',9);line('Dish totals count submitted choices only. Drafts and missing submissions are labeled below.',9);
  for(const menu of [...new Set(report.rows.map(r=>r.meal))]){
-  doc.addPage();line(menu,18,true);line(report.rows.find(r=>r.meal===menu)?.restaurant||'',11);
+  doc.addPage();line(menu,18,true);line(report.rows.find(r=>r.meal===menu)?.restaurant||'',11);line('Deadline: '+new Date(report.rows.find(r=>r.meal===menu)!.deadline).toLocaleString('en-US',{timeZone:'Asia/Ho_Chi_Minh'})+' · Hanoi time',9);
   line('Submitted dish totals',13,true);
   for(const t of report.totals.filter(t=>t.meal===menu))line(`${t.course} · ${t.choice}: ${t.count}`);
   doc.moveDown();line('Traveler choices & dietary notes',13,true);

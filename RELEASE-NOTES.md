@@ -1,3 +1,9 @@
+## Prototype guest-list meal access and separate cutoffs
+
+- Add Meal choices beside My Safe on every traveler card, opening that person’s meal form directly. Pause meal PIN entry and generation; name selection is enough for prototype meal access.
+- Add TD-managed deadlines for each meal in Hanoi time. Allow individual or all-open-meal submission, preserve older submissions, and freeze each closed meal’s choices, status, and allergy notes independently. Closed deadlines cannot be reopened.
+- Include each meal’s own cutoff, status and dietary notes in restaurant reports and CSV, Excel and PDF exports.
+
 ## Xavier’s welcome letter and official IC 2026 itinerary
 
 - Load the supplied welcome letter in Day 1 and Essentials → Handouts, with both original PDFs available. Update Days 1–15 and flight details from the official itinerary; retain Day 16 because it is absent from the supplied PDF.
