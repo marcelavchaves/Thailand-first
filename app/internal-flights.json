@@ -3,29 +3,29 @@
     "date": 7,
     "route": "Hanoi → Da Nang",
     "airline": "Vietnam Airlines VN163",
-    "time": "07:45–09:05",
+    "time": "08:05–09:30",
     "detail": "Continue to Hue"
   },
   {
     "date": 10,
     "route": "Da Nang → Saigon",
-    "airline": "As provided in itinerary",
-    "time": "08:55–10:25",
+    "airline": "Vietnam Airlines VN113",
+    "time": "09:55–11:30",
     "detail": "Continue to Cu Chi Tunnels"
   },
   {
     "date": 12,
     "route": "Saigon → Siem Reap",
     "airline": "Air Cambodia K6825",
-    "time": "12:00–13:15",
+    "time": "13:00–14:20",
     "detail": "Cambodian immigration on arrival"
   },
   {
     "date": 14,
     "route": "Siem Reap → Bangkok → Chiang Mai",
-    "airline": "Thai Airways",
-    "time": "09:50; onward 13:30",
-    "detail": "Bangkok arrival 10:55; Chiang Mai arrival 14:45"
+    "airline": "Thai Airways TG1589 / TG110",
+    "time": "09:50–10:55; onward 13:25–14:40",
+    "detail": "Bangkok immigration: bring passport, Thai QR code and both boarding passes. The itinerary lists 13:30 for the departure activity but 13:25 for flight TG110; confirm with Xavier."
   },
   {
     "date": 17,

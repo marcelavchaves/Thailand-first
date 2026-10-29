@@ -1,3 +1,8 @@
+## Xavier’s welcome letter and official IC 2026 itinerary
+
+- Load the supplied welcome letter in Day 1 and Essentials → Handouts, with both original PDFs available. Update Days 1–15 and flight details from the official itinerary; retain Day 16 because it is absent from the supplied PDF.
+- Publish the new schedules over the previous imported schedule version. Subsequent TD edits and visibility changes remain in effect.
+
 ## Swap Home panels and show the result
 
 - Reorder schedule and TD announcements in the page itself, then scroll to the top panel. Keep swapping functional when browser storage is unavailable; remember the order when storage is available.

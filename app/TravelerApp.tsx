@@ -19,6 +19,7 @@ import {HelpAndTutorials} from './JourneyExtras';
 import useXavierPhoto from "./useXavierPhoto";
 import GuestProfiles from "./GuestProfiles";
 import JourneyTimeline from "./JourneyTimeline";
+import welcomeLetter from "./xavier-welcome.json";
 import DayPhoto from "./DayPhoto";
 import LocalLanguageLesson from "./LocalLanguageLesson";
 import LoadingIndicator from "./LoadingIndicator";
@@ -1285,7 +1286,7 @@ function XavierContactCard({onSuitcase}:{onSuitcase:()=>void}) {
   </section>;
 }
 
-function XavierWelcome() { return <article className="xavier-letter"><span className="eyebrow">YOUR TOUR DIRECTOR</span><h2>Xavier Brunelle</h2><p>Vietnam, Cambodia &amp; Thailand · xxx edition</p><p>Please follow the supplied itinerary for your hospitality desk, welcome reception and dinner details.</p></article>; }
+function XavierWelcome() { return <article className="xavier-letter"><h2>{welcomeLetter.greeting}</h2><p>{welcomeLetter.welcome}</p>{welcomeLetter.paragraphs.map((text,i)=><p key={i}>{text}</p>)}<p><a href={`mailto:${xavierEmail}`}>{xavierEmail}</a><br/><a href={xavierPhoneUrl}>WhatsApp: {xavierPhoneDisplay}</a></p><h3>Our First Meeting</h3><p>{welcomeLetter.meeting}</p><ol>{welcomeLetter.checklist.map(item=><li key={item}>{item}</li>)}</ol><h3>A Journey to Remember</h3>{welcomeLetter.journey.map((text,i)=><p key={i}>{text}</p>)}<p><strong>I look forward to traveling with you!</strong></p><p>Warmly,<br/>Xavier (X)<br/>Your Tauck Tour Director</p><p><a href="/documents/xavier-welcome-letter.pdf" target="_blank" rel="noopener noreferrer">Open Xavier’s original welcome letter (PDF) ↗</a></p><p><a href="https://maps.app.goo.gl/xYNpoB1qDGe6rfy76?g_st=i" target="_blank" rel="noopener noreferrer">Open Xavier’s Hanoi map ↗</a></p></article>; }
 
 function XavierJavaGuide() {
   const originalPages = ["IMG_8807.jpeg", "IMG_8808.jpeg", "IMG_8809.jpeg"];
@@ -1957,7 +1958,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             {key:'local-guides',title:'Local guides',image:'/images/essentials-local-guides.svg'},
           ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={activeEssentialsSection===item.key} aria-controls={`essentials-${item.key}`} onClick={()=>{const next=activeEssentialsSection===item.key?null:item.key;sectionScrollTarget.current=next?`essentials-${next}`:null;setEssentialsSection(next);setHotelTarget(null);}}><img src={item.image} alt=""/><strong>{item.title}</strong></button>)}</div>
           <section id="essentials-local-guides" hidden={activeEssentialsSection!=='local-guides'} aria-labelledby="local-guides-title"><h2 id="local-guides-title">Local guides</h2><ResourceGroup group="local-guides"/>{localGuides.map((guide,i)=><ResourceSlot key={guide.name} id={`local-${i}`} title={guide.name} group="local-guides" icon="people"><section className="local-guide-panel"><h3>{guide.name} · {guide.destination}</h3><img src={`/images/${guide.image}`} alt={guide.name}/><p>{guide.introduction}</p></section></ResourceSlot>)}</section>
-          <section className="essentials-handouts" id="essentials-handouts" hidden={activeEssentialsSection!=='handouts'} aria-labelledby="handouts-title"><h2 id="handouts-title">Handouts</h2><Handouts/>
+          <section className="essentials-handouts" id="essentials-handouts" hidden={activeEssentialsSection!=='handouts'} aria-labelledby="handouts-title"><h2 id="handouts-title">Handouts</h2><div className="official-trip-documents"><XavierWelcomePanel/><p><a href="/documents/ic-itinerary-2026-official.pdf" target="_blank" rel="noopener noreferrer">Official 2026 itinerary (PDF) ↗</a></p></div><Handouts/>
 </section><section id="essentials-hotels" hidden={activeEssentialsSection!=='hotels'} aria-labelledby="stays"><h2 id="stays">Hotels</h2><p>Overnight stays · November 16–December 1, 2026. Vedana Lagoon Resort is a lunch stop on November 19, not an overnight stay.</p>
           <div className="hotel-list">
             {hotels.map((h, i) => (
