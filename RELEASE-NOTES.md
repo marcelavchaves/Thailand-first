@@ -1,3 +1,7 @@
+## Shorten Safe label
+
+- Change My Safe to Safe on prototype guest cards and matching help text.
+
 ## Prototype guest-list meal access and separate cutoffs
 
 - Add Meal choices beside My Safe on every traveler card, opening that person’s meal form directly. Pause meal PIN entry and generation; name selection is enough for prototype meal access.

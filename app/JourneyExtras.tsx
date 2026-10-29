@@ -3,7 +3,7 @@ export function HelpAndTutorials(){
   <span className="eyebrow">A LITTLE GUIDANCE, WHENEVER YOU NEED IT</span>
   <h2>Help &amp; Tutorials</h2><p>Make yourself at home in Wondercase. Start with a question, or follow a quick guide.</p>
   <details open><summary>How do I…?</summary>
-   <details><summary>Open My Safe</summary><p>Go to Travelers, find your own guest card and tap <strong>Open My Safe</strong>. Enter your Safe password on the sign-in screen. If the guest list is still hidden or you need help with your password, ask Xavier.</p><a href="/?tab=info">Go to Travelers →</a></details>
+   <details><summary>Open Safe</summary><p>Go to Travelers, find your own guest card and tap <strong>Open Safe</strong>. Enter your Safe password on the sign-in screen. If the guest list is still hidden or you need help with your password, ask Xavier.</p><a href="/?tab=info">Go to Travelers →</a></details>
    <details><summary>Find today’s schedule</summary><p>Open Journey and choose your journey day. Look for the day’s activities and Xavier’s latest notes. Check back for updates as you travel.</p><a href="/?tab=journey">Open Journey →</a></details>
    <details><summary>Find trip documents</summary><p>Open your Safe for personal documents. Shared destination information and handouts are available in the journey’s resource sections.</p><a href="/?tab=journey">Explore journey resources →</a></details>
    <details><summary>Add Wondercase to my phone</summary><p>Follow the illustrated installation guide for iPhone or Android, then open Wondercase from your home screen.</p><a href="/installation-help/">Show me how →</a></details>
