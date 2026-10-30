@@ -1,3 +1,8 @@
+## Prototype traveler meal sharing
+
+- Let guests review and share saved choices for one meal or all five through the device share sheet, WhatsApp or email. Offer a PNG image with preview, download and supported native file sharing.
+- Label draft/missing submissions, optionally omit dietary notes, warn about unsaved edits and exclude PINs, private links and audit history. Sharing never submits or changes choices.
+
 ## Wider journey headers on phones
 
 - Expand the shared day/date/calendar panel to an 8px screen inset on phones, both on Home and the complete journey day. Keep schedule content and desktop spacing unchanged.
