@@ -17,13 +17,16 @@ async function deadlineSettings(){
 }
 function metadata(settings:{deadlines:MealDeadlines;revision:string|null}){
  const lockedMeals=mealLocks(settings.deadlines);
- return {menus,deadline:MEAL_DEADLINE,deadlines:settings.deadlines,settingsRevision:settings.revision,pinRequired:MEAL_PINS_REQUIRED,privateLinksRequired:true,welcomeDinnerAt:WELCOME_DINNER_AT,serverNow:new Date().toISOString(),lockedMeals,locked:Object.values(lockedMeals).every(Boolean)};
+ return {menus,deadline:MEAL_DEADLINE,deadlines:settings.deadlines,settingsRevision:settings.revision,pinRequired:MEAL_PINS_REQUIRED,privateLinksRequired:false,optionalPin:true,welcomeDinnerAt:WELCOME_DINNER_AT,serverNow:new Date().toISOString(),lockedMeals,locked:Object.values(lockedMeals).every(Boolean)};
 }
 const pinKey=()=>{const key=Netlify.env.get('MEAL_PIN_ENCRYPTION_KEY');if(!key||!/^[a-f0-9]{64}$/.test(key))throw Error('Meal PIN setup is not complete.');return Buffer.from(key,'hex');};
 function encryptPin(pin:string){const iv=randomBytes(12),cipher=createCipheriv('aes-256-gcm',pinKey(),iv);const bytes=Buffer.concat([cipher.update(pin,'utf8'),cipher.final()]);return {iv:iv.toString('hex'),tag:cipher.getAuthTag().toString('hex'),data:bytes.toString('hex')};}
 function decryptPin(v:Pick<Credential,'encrypted'>){const decipher=createDecipheriv('aes-256-gcm',pinKey(),Buffer.from(v.encrypted.iv,'hex'));decipher.setAuthTag(Buffer.from(v.encrypted.tag,'hex'));return Buffer.concat([decipher.update(Buffer.from(v.encrypted.data,'hex')),decipher.final()]).toString('utf8');}
 type Credential={salt:string;hash:string;version:string;encrypted:{iv:string;tag:string;data:string}};
-type Session={guestId:string;version:string;expires:number;channel?:'traveler-link'|'td'};
+type Session={guestId:string;version:string;expires:number;channel?:'traveler-link'|'td'|'public'|'pin'};
+type Protection={salt?:string;hash?:string;version:string;protected:boolean};
+const protection=async(id:string)=>await store().get('protection/'+id,{type:'json'}) as Protection|null;
+const validPin=(pin:unknown,p:Protection)=>typeof pin==='string'&&/^\d{4}$/.test(pin)&&!!p.salt&&!!p.hash&&timingSafeEqual(scryptSync(pin,p.salt,64),Buffer.from(p.hash,'hex'));
 type Access={hash:string;version:string;encrypted:Credential['encrypted']};
 function travelerSubmission(value:unknown){if(!value)return null;const {audit,...submission}=value as MealSubmission;return submission;}
 async function roster(){return rosterData(await getStore({name:'guest-profiles',consistency:'strong'}).get('roster',{type:'json'}) as RosterData|null);}
@@ -32,10 +35,14 @@ async function authenticatedGuest(request:Request,guests:{id:string;name:string}
  const session=await store().get('session/'+hash(token),{type:'json'}) as Session|null;
  if(!session||session.expires<=Date.now())return null;
  const guest=guests.find(g=>g.id===session.guestId);if(!guest)return null;
- if(session.channel==='td')return await hasTDSession(request)?{...guest,actor:{type:'td' as const,label:'TD Suitcase account'}}:null;
+ if(await hasTDSession(request))return {...guest,actor:{type:'td' as const,label:'TD Suitcase account'}};
+ if(session.channel==='td')return null;
+ const p=await protection(guest.id);
+ if(session.channel==='public')return !p?.protected&&session.version===(p?.version||'public')?{...guest,actor:{type:'public' as const,label:`Public edit for ${guest.name} · identity unverified`}}:null;
+ if(session.channel==='pin')return p?.protected&&p.version===session.version?{...guest,actor:{type:'pin' as const,label:`PIN-authorized edit for ${guest.name}`}}:null;
  if(session.channel!=='traveler-link')return null; // Revoke previous name-only sessions.
  const access=await store().get('access/'+guest.id,{type:'json'}) as Access|null;
- return access?.version===session.version?{...guest,actor:{type:'traveler-link' as const,label:`Private link for ${guest.name}`}}:null;
+ return !p?.protected&&access?.version===session.version?{...guest,actor:{type:'traveler-link' as const,label:`Private link for ${guest.name}`}}:null;
 }
 async function consumeAttempt(key:string,limit:number){
  for(let i=0;i<5;i++){
@@ -61,7 +68,7 @@ async function generateLink(id:string,replace=false){
  if(!saved.modified)throw Error('The private link changed in another window. Refresh before trying again.');return true;
 }
 async function report(guests:{id:string;name:string}[]):Promise<MealReportGuest[]>{
- return Promise.all(guests.map(async g=>({id:g.id,name:g.name,pinReady:false,accessReady:!!await store().get('access/'+g.id,{type:'json'}),submission:await store().get('choice/'+g.id,{type:'json'}) as MealSubmission|null})));
+ return Promise.all(guests.map(async g=>({id:g.id,name:g.name,pinReady:!!(await protection(g.id))?.protected,accessReady:!!await store().get('access/'+g.id,{type:'json'}),submission:await store().get('choice/'+g.id,{type:'json'}) as MealSubmission|null})));
 }
 export default async function handler(request:Request){
  try{
@@ -92,7 +99,7 @@ export default async function handler(request:Request){
    if(action!=='traveler')return reply({error:'Not found.'},404);
    const guest=await authenticatedGuest(request,guests);
    const choice=guest?await store().getWithMetadata('choice/'+guest.id,{type:'json'}):null;
-   return reply({...metadata(settings),td:await hasTDSession(request),guests:revealed?guests.map(g=>({id:g.id,name:g.name})):[],guest:guest?{id:guest.id,name:guest.name}:null,submission:travelerSubmission(choice?.data),revision:choice?.etag||null});
+   return reply({...metadata(settings),td:await hasTDSession(request),guests:revealed?await Promise.all(guests.map(async g=>({id:g.id,name:g.name,protected:!!(await protection(g.id))?.protected}))):[],guest:guest?{id:guest.id,name:guest.name,protected:!!(await protection(guest.id))?.protected}:null,submission:travelerSubmission(choice?.data),revision:choice?.etag||null});
   }
   if(request.method==='DELETE'){
    const token=tokenOf(request);if(token)await store().delete('session/'+hash(token));
@@ -108,13 +115,45 @@ export default async function handler(request:Request){
     let version='td',channel:Session['channel']='td';
     if(!await hasTDSession(request)){
      const access=await store().get('access/'+guest.id,{type:'json'}) as Access|null;
-     if(typeof body.accessToken!=='string'||!/^[a-f0-9]{64}$/.test(body.accessToken)||!access||!timingSafeEqual(Buffer.from(access.hash,'hex'),Buffer.from(hash(body.accessToken),'hex')))return reply({error:'Use the private meal link Xavier sends you to open your choices.'},403);
-     version=access.version;channel='traveler-link';
+     if(body.accessToken!==undefined){
+      if(typeof body.accessToken!=='string'||!/^[a-f0-9]{64}$/.test(body.accessToken)||!access||!timingSafeEqual(Buffer.from(access.hash,'hex'),Buffer.from(hash(body.accessToken),'hex')))return reply({error:'This private meal link is not valid.'},403);
+      const p=await protection(guest.id);
+      if(p?.protected)return reply({error:'These choices are PIN-protected. Select your name and enter your four-digit PIN.'},403);
+      version=access.version;channel='traveler-link';
+     }else{
+      if(!revealed)return reply({error:'The traveler list is not yet available.'},403);
+      const p=await protection(guest.id);
+      if(p?.protected){
+       const ip=request.headers.get('x-nf-client-connection-ip')||'unknown';
+       if(!await consumeAttempt('pin-ip:'+ip,25)||!await consumeAttempt('pin-guest:'+guest.id,10))return reply({error:'Too many PIN attempts. Please wait 15 minutes or contact Xavier.'},429);
+       if(!validPin(body.pin,p))return reply({error:'Enter this traveler’s four-digit PIN.'},403);
+       channel='pin';
+      }else channel='public';
+      version=p?.version||'public';
+     }
     }
     const old=tokenOf(request);if(old)await store().delete('session/'+hash(old));
     const token=randomBytes(32).toString('hex');
     await store().setJSON('session/'+hash(token),{guestId:guest.id,version,channel,expires:Date.now()+7*86400000});
     return reply({ok:true},200,{'Set-Cookie':`${cookieName}=${token}; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=604800`});
+   }
+   if(body.action==='set-protection'){
+    const guest=await authenticatedGuest(request,guests);if(!guest)return reply({error:'Open your choices before changing protection.'},401);
+    if(body.guestId!==guest.id)return reply({error:'Reload this traveler before continuing.'},409);
+    const current=await store().getWithMetadata('protection/'+guest.id,{type:'json'});
+    const old=current?.data as Protection|undefined;
+    if(typeof body.protected!=='boolean'||body.protected&&(typeof body.pin!=='string'||!/^\d{4}$/.test(body.pin)))return reply({error:'Choose a four-digit PIN.'},400);
+    if(old?.protected&&guest.actor.type!=='td'){
+     if(!await consumeAttempt('change-pin:'+guest.id,10))return reply({error:'Too many PIN attempts. Please wait 15 minutes.'},429);
+     if(!validPin(body.currentPin,old))return reply({error:'Enter your current PIN to change protection.'},403);
+    }
+    const salt=randomBytes(16).toString('hex'),version=randomBytes(16).toString('hex');
+    const value:Protection={protected:body.protected,version,...(body.protected?{salt,hash:scryptSync(body.pin,salt,64).toString('hex')}:{})};
+    const saved=await store().setJSON('protection/'+guest.id,value,current?{onlyIfMatch:current.etag}:{onlyIfNew:true});
+    if(!saved.modified)return reply({error:'Protection changed in another window. Reload before continuing.'},409);
+    const token=tokenOf(request)!;const session=await store().get('session/'+hash(token),{type:'json'}) as Session;
+    if(session.channel==='public'||session.channel==='pin')await store().setJSON('session/'+hash(token),{...session,version,channel:body.protected?'pin':'public'});
+    return reply({ok:true,message:body.protected?'Your choices are now PIN-protected.':'Your choices are now public. Anyone can edit them by selecting your name.'});
    }
    if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
    if(body.action==='generate-links'){

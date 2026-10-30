@@ -6,7 +6,7 @@ export const MEAL_DEADLINE=new Date(Date.parse(WELCOME_DINNER_AT)-30*60*1000).to
 export type Selections=Record<string,Record<string,string>>;
 export const MEAL_PINS_REQUIRED=false;
 export type MealState={status:'draft'|'submitted';dietary:string;updatedAt:string;submittedAt:string|null};
-export type MealAuditEntry={id:string;at:string;actor:{type:'traveler-link'|'td';label:string};action:'save'|'submit';meals:{menuId:string;before:{choices:Record<string,string>;state:MealState|null};after:{choices:Record<string,string>;state:MealState}}[]};
+export type MealAuditEntry={id:string;at:string;actor:{type:'traveler-link'|'td'|'public'|'pin';label:string};action:'save'|'submit';meals:{menuId:string;before:{choices:Record<string,string>;state:MealState|null};after:{choices:Record<string,string>;state:MealState}}[]};
 export type MealSubmission={selections:Selections;dietary:string;status:'draft'|'submitted';updatedAt:string;submittedAt:string|null;mealStates?:Record<string,MealState>;audit?:MealAuditEntry[]};
 export type MealDeadlines=Record<string,string>;
 export const defaultMealDeadlines=():MealDeadlines=>Object.fromEntries(menus.map(m=>[m.id,MEAL_DEADLINE]));

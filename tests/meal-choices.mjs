@@ -36,8 +36,24 @@ try{
  assert.equal(settings.deadlines.vedana,deadlines.vedana);
  assert.equal((await call('POST',{action:'update-deadlines',deadlines,revision:null})).status,409);
  state.td=false;
- // A name alone cannot open choices. Private links establish scoped sessions without PINs.
+ // Public access is explicit and PIN protection revokes existing public sessions.
+ let publicResponse=await call('POST',{action:'login',guestId:a.id});await ok(publicResponse);
+ const publicCookie=publicResponse.headers.get('set-cookie').split(';')[0];
+ let otherResponse=await call('POST',{action:'login',guestId:a.id});await ok(otherResponse);
+ const otherCookie=otherResponse.headers.get('set-cookie').split(';')[0];
+ await ok(await call('POST',{action:'set-protection',guestId:a.id,protected:true,pin:'0123'},'',publicCookie));
+ assert.equal((await ok(await call('GET',null,'',otherCookie))).guest,null);
  assert.equal((await call('POST',{action:'login',guestId:a.id})).status,403);
+ assert.equal((await call('POST',{action:'login',guestId:a.id,pin:'9999'})).status,403);
+ let pinResponse=await call('POST',{action:'login',guestId:a.id,pin:'0123'});await ok(pinResponse);
+ const pinCookie=pinResponse.headers.get('set-cookie').split(';')[0];
+ assert.equal((await ok(await call('GET',null,'',pinCookie))).guest.protected,true);
+ assert.equal((await call('POST',{action:'set-protection',guestId:a.id,protected:false,currentPin:'9999'},'',pinCookie)).status,403);
+ await ok(await call('POST',{action:'set-protection',guestId:a.id,protected:false,currentPin:'0123'},'',pinCookie));
+ assert.equal((await ok(await call('GET',null,'',publicCookie))).guest,null);
+ assert.equal((await call('POST',{action:'set-protection',guestId:b.id,protected:true,pin:'1234'},'',pinCookie)).status,409);
+ assert.equal((await call('POST',{action:'set-protection',guestId:a.id,protected:true,pin:'12345'},'',pinCookie)).status,400);
+
  assert.equal((await call('POST',{action:'login',guestId:b.id,accessToken:accessA})).status,403);
  assert.equal((await call('POST',{action:'reveal-link',guestId:a.id})).status,401);
  let response=await call('POST',{action:'login',guestId:a.id,accessToken:accessA});await ok(response);let cookie=response.headers.get('set-cookie').split(';')[0];assert(response.headers.get('set-cookie').includes('HttpOnly'));
@@ -48,6 +64,19 @@ try{
  assert.equal((await call('POST',{action:'login',guestId:'not-a-traveler'})).status,400);
  assert.equal((await call('PUT',{action:'submit',selections:{},dietary:'',revision:null})).status,401);
  const selections=Object.fromEntries(menus.map(m=>[m.id,Object.fromEntries(m.courses.map(c=>[c.id,c.options[0].id]))]));
+ let pubSaved=await ok(await call('PUT',{action:'save',menuId:'vedana',selections,dietary:'Public note',revision:null},'',pinCookie));
+ assert.equal(state.stores.get('meal-choices-v1').get('choice/'+a.id).data.audit[0].actor.type,'public');
+ await ok(await call('POST',{action:'set-protection',guestId:a.id,protected:true,pin:'0123'},'',pinCookie));
+ await ok(await call('PUT',{action:'save',menuId:'vedana',selections,dietary:'PIN note',revision:pubSaved.revision},'',pinCookie));
+ assert.equal(state.stores.get('meal-choices-v1').get('choice/'+a.id).data.audit.at(-1).actor.type,'pin');
+ assert.equal((await call('POST',{action:'login',guestId:a.id,accessToken:accessA})).status,403);
+ const protectedData=await ok(await call('GET',null,'',pinCookie));assert(!JSON.stringify(protectedData).includes('0123'));assert(!JSON.stringify(protectedData).includes('salt'));
+ // Public access to protected choices remains blocked even if a caller forges PUT data.
+ assert.equal((await call('PUT',{action:'save',guestId:a.id,selections,dietary:'Attack',revision:pubSaved.revision},'',otherCookie)).status,401);
+ await ok(await call('POST',{action:'set-protection',guestId:a.id,protected:false,currentPin:'0123'},'',pinCookie));
+ response=await call('POST',{action:'login',guestId:a.id,accessToken:accessA});await ok(response);cookie=response.headers.get('set-cookie').split(';')[0];
+ state.stores.get('meal-choices-v1').delete('choice/'+a.id);
+
  assert.equal((await call('PUT',{action:'submit',menuId:'vedana',selections:{vedana:{main:'invented'}},dietary:'',revision:null},'',cookie)).status,400);
  assert.equal((await call('PUT',{action:'submit',menuId:'vedana',selections:{},dietary:'',revision:null},'',cookie)).status,400);
  // Individual submission is complete for just that meal and counts in its report even though others are unfinished.

@@ -1,3 +1,9 @@
+## Prototype optional meal PINs
+
+- Let travelers select their name and leave choices public, or set a four-digit PIN. Explain that public choices and dietary notes are editable by anyone selecting that name.
+- Hash PINs, rate-limit guesses, revoke old sessions on protection changes and require the current PIN to change/remove it. TD Suitcase can help reset forgotten PINs. Private links cannot bypass PIN protection.
+- Preserve change history and label public edits as unverified, PIN-authorized edits and TD updates separately. Keep meal deadlines and exports unchanged.
+
 ## Prototype meal access and change history
 
 - Replace name-only meal access with private, revocable traveler links while keeping meal PINs off. Expire old unverified sessions; guest-card names alone cannot open another traveler’s choices.
