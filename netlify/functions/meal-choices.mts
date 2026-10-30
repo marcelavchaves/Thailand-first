@@ -68,7 +68,13 @@ export default async function handler(request:Request){
     if(action==='export'){
      const format=url.searchParams.get('format')||'csv',meal=url.searchParams.get('meal')||'all';
      if(!['csv','xlsx','pdf'].includes(format)||meal!=='all'&&!menus.some(m=>m.id===meal))return reply({error:'Choose an available export.'},400);
-     const exported=await exportMeals(mealReport(data,meal,settings.deadlines),format,meal);
+     let exported;
+     try{exported=await exportMeals(mealReport(data,meal,settings.deadlines),format,meal);}
+     catch(error){
+      const code=error&&typeof error==='object'&&'code' in error?String(error.code):'EXPORT_FAILED';
+      console.error('Meal report export failed',{format,code});
+      return reply({error:format==='pdf'?'The meal PDF could not be created. CSV and Excel exports are still available.':'The meal report could not be created. Please try again.'},503);
+     }
      return new Response(new Uint8Array(exported.bytes),{headers:{'Content-Type':exported.type,'Content-Disposition':`attachment; filename="meal-choices-${meal}.${format}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
     }
     return reply({...metadata(settings),guests:data,summary:mealReport(data,'all',settings.deadlines).totals});

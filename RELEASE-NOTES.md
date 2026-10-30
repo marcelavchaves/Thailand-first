@@ -1,3 +1,8 @@
+## Prototype meal PDF export repair
+
+- Make the PDF generator an explicit function dependency and initialize it with the bundled TrueType font, avoiding default-font asset lookups. Keep CSV and Excel export loading independent.
+- Remove the welcome-email draft link from Home.
+
 ## Private prototype TD password reset
 
 - Add an expiring, single-use private password reset link for the prototype owner. Reset only the prototype TD credential, revoke previous TD sessions, and preserve tour data.

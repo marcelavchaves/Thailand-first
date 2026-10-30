@@ -1896,7 +1896,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           }}
         >
           {!fullJourney&&<>
-          <a className="home-welcome-email-pdf" href="/documents/wondercase-welcome-email-for-xavier.pdf" target="_blank" rel="noopener noreferrer">Open welcome email draft (PDF) <span aria-hidden="true">↗</span></a>
           <div id="home-journey-panels" className="home-journey-panels">
             {scheduleFirst?[schedulePanel,announcementPanel]:[announcementPanel,schedulePanel]}
           </div>
