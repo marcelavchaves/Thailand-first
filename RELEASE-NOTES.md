@@ -1,3 +1,7 @@
+## Private prototype TD password reset
+
+- Add an expiring, single-use private password reset link for the prototype owner. Reset only the prototype TD credential, revoke previous TD sessions, and preserve tour data.
+
 ## Mobile welcome-email PDF
 
 - Publish the approved welcome-email review PDF on the prototype and add an Open welcome email draft (PDF) link at the top of Home.

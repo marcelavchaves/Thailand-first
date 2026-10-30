@@ -2,7 +2,7 @@ import type {Config} from '@netlify/functions';
 import {createHash,randomBytes,scryptSync,timingSafeEqual} from 'node:crypto';
 import {getStore} from '@netlify/blobs';
 import {PROTOTYPE_SITE_ID} from '../../lib/meal-choices';
-import {sameOrigin,tdPasswordConfigured,passwordSessionCookie} from '../lib/td-auth';
+import {sameOrigin,tdPasswordConfigured,passwordSessionCookie,resetTDPassword} from '../lib/td-auth';
 const reply=(body:unknown,status=200,headers:Record<string,string>={})=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...headers}});
 export default async function handler(request:Request){try{
  if((Netlify.env.get('SITE_ID')||process.env.SITE_ID)!==PROTOTYPE_SITE_ID)return reply({error:'Not found.'},404);
@@ -10,9 +10,18 @@ export default async function handler(request:Request){try{
  if(!sameOrigin(request))return reply({error:'Open setup from the prototype app.'},403);
  const raw=await request.text();if(raw.length>1200)return reply({error:'Invalid setup request.'},400);
  let body;try{body=JSON.parse(raw);}catch{return reply({error:'Invalid setup request.'},400);}
- const expected=Netlify.env.get('PROTOTYPE_TD_SETUP_HASH')||'',expires=Date.parse(Netlify.env.get('PROTOTYPE_TD_SETUP_EXPIRES')||'');
- if(!/^[a-f0-9]{64}$/.test(expected)||!Number.isFinite(expires)||expires<=Date.now()||typeof body?.token!=='string'||!/^[a-f0-9]{64}$/.test(body.token)||!timingSafeEqual(Buffer.from(expected,'hex'),createHash('sha256').update(body.token).digest()))return reply({error:'This private setup link is invalid or expired.'},403);
+ const resetting=body?.mode==='reset',prefix=resetting?'PROTOTYPE_TD_RESET':'PROTOTYPE_TD_SETUP';
+ const expected=Netlify.env.get(prefix+'_HASH')||'',expires=Date.parse(Netlify.env.get(prefix+'_EXPIRES')||'');
+ if(!/^[a-f0-9]{64}$/.test(expected)||!Number.isFinite(expires)||expires<=Date.now()||typeof body?.token!=='string'||!/^[a-f0-9]{64}$/.test(body.token)||!timingSafeEqual(Buffer.from(expected,'hex'),createHash('sha256').update(body.token).digest()))return reply({error:'This private link is invalid or expired.'},403);
  if(typeof body.password!=='string'||body.password.length<12||body.password.length>200)return reply({error:'Choose a password with 12–200 characters.'},400);
+ if(resetting){
+  const claims=getStore({name:'td-reset-links',consistency:'strong'});
+  const claim=await claims.setJSON(expected,{usedAt:new Date().toISOString()},{onlyIfNew:true});
+  if(!claim.modified)return reply({error:'This reset link has already been used. Sign in with your new password.'},409);
+  try{if(!await resetTDPassword(body.password)){await claims.delete(expected);return reply({error:'The password changed in another window. Please try again.'},409);}}
+  catch{await claims.delete(expected);throw Error('Unable to reset password.');}
+  return reply({ok:true},200,{'Set-Cookie':await passwordSessionCookie(request,true)});
+ }
  if(await tdPasswordConfigured())return reply({error:'The prototype TD password is already set. Use TD Suitcase to sign in.'},409);
  const salt=randomBytes(32).toString('hex'),hash=scryptSync(body.password,salt,64).toString('hex');
  const saved=await getStore({name:'td-credentials',consistency:'strong'}).setJSON('password',{salt,hash,version:randomBytes(32).toString('hex')},{onlyIfNew:true});
