@@ -1,3 +1,9 @@
+## Prototype meal access and change history
+
+- Replace name-only meal access with private, revocable traveler links while keeping meal PINs off. Expire old unverified sessions; guest-card names alone cannot open another traveler’s choices.
+- Add TD-only creation, retrieval, and replacement of private links. Replacement revokes the previous link and its sessions without deleting saved choices.
+- Append server-authored before/after choice, dietary-note, and submission-status history with timestamp and access source. TD Suitcase displays each traveler’s history; old changes are not retrospectively attributed. Restaurant reports omit audit/access credentials.
+
 ## Prototype meal PDF export repair
 
 - Make the PDF generator an explicit function dependency and initialize it with the bundled TrueType font, avoiding default-font asset lookups. Keep CSV and Excel export loading independent.

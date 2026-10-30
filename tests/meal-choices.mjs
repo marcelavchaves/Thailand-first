@@ -24,6 +24,11 @@ try{
  const deadlines={...initial.deadlines,vedana:'2026-11-16T10:30:00.000Z',farewell:'2026-11-17T12:00:00.000Z'};
  assert.equal((await call('POST',{action:'update-deadlines',deadlines,revision:null})).status,401);
  state.td=true;
+ await ok(await call('POST',{action:'generate-links'}));
+ const linkA=(await ok(await call('POST',{action:'reveal-link',guestId:a.id}))).url,linkB=(await ok(await call('POST',{action:'reveal-link',guestId:b.id}))).url;
+ const accessA=new URL(linkA).hash.slice(8).split('.')[1],accessB=new URL(linkB).hash.slice(8).split('.')[1];
+ assert.match(accessA,/^[a-f0-9]{64}$/);
+ assert(!JSON.stringify(await ok(await call('GET',null,'?action=td'))).includes(accessA));
  assert.equal((await call('POST',{action:'generate-missing'})).status,409);
  assert.equal((await call('POST',{action:'update-deadlines',deadlines:{...deadlines,vedana:'invalid'},revision:null})).status,400);
  assert.equal((await call('POST',{action:'update-deadlines',deadlines:{...deadlines,vedana:'2026-11-16T09:00:00Z'},revision:null})).status,400);
@@ -31,10 +36,15 @@ try{
  assert.equal(settings.deadlines.vedana,deadlines.vedana);
  assert.equal((await call('POST',{action:'update-deadlines',deadlines,revision:null})).status,409);
  state.td=false;
- // A traveler selection establishes an opaque session without a PIN.
- let response=await call('POST',{action:'login',guestId:a.id});await ok(response);const cookie=response.headers.get('set-cookie').split(';')[0];assert(response.headers.get('set-cookie').includes('HttpOnly'));
+ // A name alone cannot open choices. Private links establish scoped sessions without PINs.
+ assert.equal((await call('POST',{action:'login',guestId:a.id})).status,403);
+ assert.equal((await call('POST',{action:'login',guestId:b.id,accessToken:accessA})).status,403);
+ assert.equal((await call('POST',{action:'reveal-link',guestId:a.id})).status,401);
+ let response=await call('POST',{action:'login',guestId:a.id,accessToken:accessA});await ok(response);let cookie=response.headers.get('set-cookie').split(';')[0];assert(response.headers.get('set-cookie').includes('HttpOnly'));
  assert.equal((await ok(await call('GET',null,'',cookie))).guest.id,a.id);
  assert.equal(state.stores.get('meal-choices-v1').has('pin/'+a.id),false);
+ const unverified='f'.repeat(64);state.stores.get('meal-choices-v1').set('session/'+createHash('sha256').update(unverified).digest('hex'),{data:{guestId:a.id,version:'open-v2',expires:state.now+1000000},etag:'unverified'});
+ assert.equal((await ok(await call('GET',null,'','__Host-wondercase_meals='+unverified))).guest,null);
  assert.equal((await call('POST',{action:'login',guestId:'not-a-traveler'})).status,400);
  assert.equal((await call('PUT',{action:'submit',selections:{},dietary:'',revision:null})).status,401);
  const selections=Object.fromEntries(menus.map(m=>[m.id,Object.fromEntries(m.courses.map(c=>[c.id,c.options[0].id]))]));
@@ -42,10 +52,10 @@ try{
  assert.equal((await call('PUT',{action:'submit',menuId:'vedana',selections:{},dietary:'',revision:null},'',cookie)).status,400);
  // Individual submission is complete for just that meal and counts in its report even though others are unfinished.
  assert.equal((await call('PUT',{action:'submit',menuId:'vedana',selections,dietary:'',revision:null,guestId:b.id},'',cookie)).status,409);
- let saved=await ok(await call('PUT',{action:'submit',menuId:'vedana',selections:{vedana:selections.vedana},dietary:'Peanut allergy',revision:null},'',cookie));
+ let saved=await ok(await call('PUT',{action:'submit',menuId:'vedana',selections:{vedana:selections.vedana},dietary:'Peanut allergy',revision:null,audit:[],actor:{label:'Forged actor'}},'',cookie));
  assert.equal(saved.submission.mealStates.vedana.status,'submitted');assert.equal(saved.submission.mealStates.farewell,undefined);assert.equal(saved.submission.status,'draft');
  assert.equal(state.stores.get('meal-choices-v1').has('choice/'+b.id),false);
- state.td=true;let report=await ok(await call('GET',null,'?action=td'));assert.equal(report.summary.find(t=>t.meal===menus[0].title&&t.choice===menus[0].courses[0].options[0].name).count,1);state.td=false;
+ state.td=true;let report=await ok(await call('GET',null,'?action=td'));const history=report.guests.find(g=>g.id===a.id).submission.audit;assert.equal(history.length,1);assert.equal(history[0].actor.label,'Private link for '+a.name);assert.equal(history[0].meals[0].before.state,null);assert.equal(history[0].meals[0].after.state.dietary,'Peanut allergy');assert.equal(saved.submission.audit,undefined);assert.equal(report.summary.find(t=>t.meal===menus[0].title&&t.choice===menus[0].courses[0].options[0].name).count,1);state.td=false;
  assert.equal((await call('PUT',{action:'submit',selections,dietary:'',revision:null},'',cookie)).status,409);
  assert.equal((await handler(req('PUT',{action:'submit',selections,dietary:'',revision:saved.revision},'',cookie,'https://evil.test'))).status,403);
  // At the exact first cutoff, only Vedana closes. Its selections AND allergy notes remain frozen.
@@ -62,13 +72,24 @@ try{
  response=await call('GET',null,'?action=export&format=csv&meal=vedana');assert.equal(response.status,200);const csv=await response.text();assert(csv.includes(a.name));assert(csv.includes('Peanut allergy'));assert(!csv.includes('New dietary note'));assert(!csv.includes('Lakorn'));assert(csv.includes('Deadline (Hanoi time)'));
  response=await call('GET',null,'?action=export&format=csv&meal=farewell');assert((await response.text()).includes("'=HYPERLINK"));
  for(const format of ['xlsx','pdf']){response=await call('GET',null,'?action=export&format='+format+'&meal=vedana');assert.equal(response.status,200);const bytes=Buffer.from(await response.arrayBuffer());assert(bytes.subarray(0,4).equals(Buffer.from(format==='pdf'?'%PDF':'PK\x03\x04')));await writeFile('/tmp/meal-test-export.'+format,bytes);}
- state.td=false;
+ const historyCount=state.stores.get('meal-choices-v1').get('choice/'+a.id).data.audit.length;
+ await ok(await call('POST',{action:'replace-link',guestId:a.id}));state.td=false;
+ assert.equal((await ok(await call('GET',null,'',cookie))).guest,null);
+ assert.equal((await call('POST',{action:'login',guestId:a.id,accessToken:accessA})).status,403);
+ state.td=true;const replacement=(await ok(await call('POST',{action:'reveal-link',guestId:a.id}))).url;state.td=false;
+ response=await call('POST',{action:'login',guestId:a.id,accessToken:new URL(replacement).hash.slice(8).split('.')[1]});await ok(response);cookie=response.headers.get('set-cookie').split(';')[0];
+ assert.equal(state.stores.get('meal-choices-v1').get('choice/'+a.id).data.audit.length,historyCount);
  // Old all-meal submissions migrate without losing closed selections or dietary snapshots.
  state.stores.get('meal-choices-v1').set('choice/'+b.id,{etag:'legacy',data:{selections,dietary:'Legacy allergy',status:'submitted',updatedAt:new Date().toISOString(),submittedAt:new Date().toISOString()}});
- response=await call('POST',{action:'login',guestId:b.id});await ok(response);const bCookie=response.headers.get('set-cookie').split(';')[0];
+ response=await call('POST',{action:'login',guestId:b.id,accessToken:accessB});await ok(response);const bCookie=response.headers.get('set-cookie').split(';')[0];
  let legacy=await ok(await call('GET',null,'',bCookie));assert.equal(legacy.submission.dietary,'Legacy allergy');
  let migrated=await ok(await call('PUT',{action:'save',menuId:'farewell',selections,dietary:'New farewell allergy',revision:'legacy'},'',bCookie));
  assert.equal(migrated.submission.mealStates.vedana.dietary,'Legacy allergy');assert.equal(migrated.submission.mealStates.vedana.status,'submitted');assert.equal(migrated.submission.mealStates.farewell.status,'draft');
+ state.td=true;response=await call('POST',{action:'login',guestId:b.id});await ok(response);const tdCookie=response.headers.get('set-cookie').split(';')[0];
+ await ok(await call('PUT',{action:'submit',menuId:'farewell',selections,dietary:'TD updated note',revision:migrated.revision},'',tdCookie));
+ const tdHistory=(await ok(await call('GET',null,'?action=td'))).guests.find(g=>g.id===b.id).submission.audit;
+ assert.equal(tdHistory.length,2);assert.equal(tdHistory.at(-1).actor.type,'td');assert.equal(tdHistory.at(-1).actor.label,'TD Suitcase account');
+ state.td=false;assert.equal((await ok(await call('GET',null,'',tdCookie))).guest,null);
  // Every meal eventually becomes read-only; arbitrary timestamps and TD permissions cannot override it.
  state.now=RealDate.parse(later.farewell);read=await ok(await call('GET',null,'',cookie));assert.equal(read.locked,true);assert.equal(read.submission.mealStates.vedana.status,'submitted');
  assert.equal((await call('PUT',{action:'submit',selections,dietary:'After all deadlines',revision:saved.revision},'',cookie)).status,423);
@@ -87,5 +108,5 @@ try{
  state.now=RealDate.parse('2026-12-02T00:00:00Z');
  assert.equal((await setup(req('POST',{mode:'reset',token:'c'.repeat(64),password:'New long password'}))).status,403);
  assert.equal((await setup(req('POST',{token:'b'.repeat(64),password:'Some long test password'}))).status,403);
- console.log('PASS real handler: prototype isolation, name-only entry, TD-only deadline management/exports, per-meal submission and exact cutoff, closed selections/allergies preserved, legacy migration, stale-write protection, CSRF, CSV/XLSX/PDF and one-time TD setup.');
+ console.log('PASS real handler: prototype isolation, private-link scope/rotation, revoked name-only sessions, server-authored change history, TD-only deadline management/exports, per-meal submission and exact cutoff, closed selections/allergies preserved, legacy migration, stale-write protection, CSRF, CSV/XLSX/PDF and one-time TD setup.');
 }finally{globalThis.Date=RealDate;await rm(temp,{recursive:true,force:true});}

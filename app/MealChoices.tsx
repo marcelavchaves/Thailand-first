@@ -2,19 +2,35 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {menus,MEAL_DEADLINE,defaultMealDeadlines,mealState,type MealDeadlines,type Selections,type MealSubmission} from '../lib/meal-choices';
 import './meal-choices.css';
-type Data={guest:{id:string;name:string}|null;guests:{id:string;name:string}[];submission:MealSubmission|null;revision:string|null;deadlines:MealDeadlines;serverNow:string;lockedMeals:Record<string,boolean>;locked:boolean};
+type Data={guest:{id:string;name:string}|null;guests:{id:string;name:string}[];submission:MealSubmission|null;revision:string|null;deadlines:MealDeadlines;serverNow:string;lockedMeals:Record<string,boolean>;locked:boolean;td:boolean};
 export const mealDeadlineLabel=(deadline=MEAL_DEADLINE)=>new Date(deadline).toLocaleString('en-US',{timeZone:'Asia/Ho_Chi_Minh',month:'long',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' · Hanoi time';
 export default function MealChoices(){
  const [data,setData]=useState<Data|null>(null),[guestId,setGuestId]=useState(''),[selections,setSelections]=useState<Selections>({}),[dietary,setDietary]=useState(''),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[dirty,setDirty]=useState(false),[offset,setOffset]=useState(0),[now,setNow]=useState(0);
  const started=useRef(false);
- const load=useCallback(async()=>{const r=await fetch('/api/meal-choices',{cache:'no-store'}),body=await r.json();if(!r.ok)throw Error(body.error||'Unable to load meal choices.');setData(body);setSelections(body.submission?.selections||{});setDietary(body.submission?.dietary||'');setDirty(false);setOffset(Date.parse(body.serverNow)-Date.now());setNow(Date.now());},[]);
+ const load=useCallback(async()=>{const r=await fetch('/api/meal-choices',{cache:'no-store'}),body=await r.json();if(!r.ok)throw Error(body.error||'Unable to load meal choices.');setData(body);setSelections(body.submission?.selections||{});setDietary(body.submission?.dietary||'');setDirty(false);setOffset(Date.parse(body.serverNow)-Date.now());setNow(Date.now());return body;},[]);
  useEffect(()=>{
-  if(!started.current){started.current=true;void(async()=>{
+  const enter=async()=>{
+   setMessage('');
+   const params=new URLSearchParams(window.location.hash.slice(1)),access=params.get('access');
    const requested=new URLSearchParams(window.location.search).get('guest');
-   if(requested){const r=await fetch('/api/meal-choices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',guestId:requested})}),body=await r.json();if(!r.ok)throw Error(body.error||'Choose a current traveler.');history.replaceState(null,'',window.location.pathname);}
-   await load();
-  })().catch(e=>{setMessage(e.message);void load().catch(()=>{});});}
-  const timer=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(timer);
+   history.replaceState(null,'',window.location.pathname);
+   if(access){
+    const [id,token]=access.split('.');
+    const r=await fetch('/api/meal-choices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',guestId:id,accessToken:token})}),body=await r.json();if(!r.ok)throw Error(body.error||'This private meal link is not valid.');
+    await load();
+   }else{
+    const body=await load();
+    if(requested&&body.guest?.id!==requested){
+     if(body.td){const r=await fetch('/api/meal-choices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',guestId:requested})});if(!r.ok)throw Error('Unable to open this traveler.');await load();}
+     else{setData(d=>d?{...d,guest:null,submission:null,revision:null}:d);setMessage('Use this traveler’s private link from Xavier. A guest-card link alone does not grant access.');}
+    }
+   }
+  };
+  const attempt=()=>void enter().catch(e=>{setMessage(e.message);void load().catch(()=>{});});
+  if(!started.current){started.current=true;attempt();}
+  const changed=()=>{if(new URLSearchParams(window.location.hash.slice(1)).has('access'))attempt();};
+  window.addEventListener('hashchange',changed);
+  const timer=setInterval(()=>setNow(Date.now()),1000);return()=>{clearInterval(timer);window.removeEventListener('hashchange',changed);};
  },[load]);
  useEffect(()=>{
   if(!data?.guest)return;
@@ -41,8 +57,8 @@ export default function MealChoices(){
  const status=(id:string)=>mealState(data?.submission,id)?.status==='submitted'?'Submitted':mealState(data?.submission,id)?'Draft · not submitted':'Not submitted';
  return <main className="meal-page"><a href="/">← Back to Home</a><header><span className="eyebrow">WONDERCASE · YOUR TABLE AWAITS</span><h1>Your meal choices</h1><p>Choose your meals for all five menus, and let Xavier know about dietary restrictions or allergies.</p></header>
  <aside className={`meal-deadline${allLocked?' is-locked':''}`}><strong>{allLocked?'All meal choices are read-only':'Each meal has its own deadline'}</strong><p>Check the cutoff shown on each menu. Times are in Hanoi time (UTC+7).</p><small>{allLocked?'All deadlines have passed. Your saved choices remain available below.':'Submit one meal at a time, or submit all open meals together. Each meal becomes read-only at its own cutoff.'}</small></aside>
- {!data?<><p role="status">{message||'Loading meal choices…'}</p><button onClick={()=>void load().catch(e=>setMessage(e.message))}>Try again</button></>:!data.guest?<form className="meal-login" onSubmit={openTraveler}><h2>Find your place at the table</h2><p>Select your own name to open your meal choices.</p><fieldset disabled={busy}><label>Your name<select required value={guestId} onChange={e=>setGuestId(e.target.value)}><option value="">Choose your name</option>{data.guests.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}</select></label>{!data.guests.length&&<p>Xavier will make the traveler list available here.</p>}<button type="submit">{busy?'Opening…':'Open my choices'}</button></fieldset><p role="status">{message}</p></form>:<>
- <div className="meal-traveler"><h2>{data.guest.name}</h2><button disabled={busy} onClick={()=>void changeTraveler()}>Change traveler</button></div>
+ {!data?<><p role="status">{message||'Loading meal choices…'}</p><button onClick={()=>void load().catch(e=>setMessage(e.message))}>Try again</button></>:!data.guest?<form className="meal-login" onSubmit={openTraveler}>{data.td?<><h2>Open a traveler’s choices</h2><p>Changes made here will be recorded as TD Suitcase updates.</p><fieldset disabled={busy}><label>Your name<select required value={guestId} onChange={e=>setGuestId(e.target.value)}><option value="">Choose your name</option>{data.guests.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}</select></label>{!data.guests.length&&<p>Xavier will make the traveler list available here.</p>}<button type="submit">{busy?'Opening…':'Open traveler choices'}</button></fieldset></>:<><h2>Open your private meal link</h2><p>Please use the personal meal link Xavier sends you. It opens only your meal choices, without a PIN.</p><p>Choosing a name on the guest list does not grant access. If you need a new link, contact Xavier.</p></>}<p role="status">{message}</p></form>:<>
+ <div className="meal-traveler"><h2>{data.guest.name}</h2><button disabled={busy} onClick={()=>void changeTraveler()}>{data.td?'Change traveler':'Close my choices'}</button></div>
  <p className="meal-status" role="status">{submittedCount} of {menus.length} meals submitted{dirty?' · You have unsaved changes':''}</p>
  <form onSubmit={e=>{e.preventDefault();void save(true);}}>
  {!allLocked&&<><label className="meal-dietary-label">Dietary restrictions or allergies<textarea rows={5} maxLength={2000} value={dietary} disabled={busy} onChange={e=>{setDietary(e.target.value);setDirty(true);setMessage('');}} placeholder="List any allergies, intolerances, or dietary requirements. Leave blank if none."/></label><p className="meal-help">These notes are included with each meal you save or submit. Closed meals retain their saved notes. If you have a serious food allergy, please also speak directly with Xavier.</p></>}

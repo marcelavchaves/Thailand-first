@@ -6,7 +6,8 @@ export const MEAL_DEADLINE=new Date(Date.parse(WELCOME_DINNER_AT)-30*60*1000).to
 export type Selections=Record<string,Record<string,string>>;
 export const MEAL_PINS_REQUIRED=false;
 export type MealState={status:'draft'|'submitted';dietary:string;updatedAt:string;submittedAt:string|null};
-export type MealSubmission={selections:Selections;dietary:string;status:'draft'|'submitted';updatedAt:string;submittedAt:string|null;mealStates?:Record<string,MealState>};
+export type MealAuditEntry={id:string;at:string;actor:{type:'traveler-link'|'td';label:string};action:'save'|'submit';meals:{menuId:string;before:{choices:Record<string,string>;state:MealState|null};after:{choices:Record<string,string>;state:MealState}}[]};
+export type MealSubmission={selections:Selections;dietary:string;status:'draft'|'submitted';updatedAt:string;submittedAt:string|null;mealStates?:Record<string,MealState>;audit?:MealAuditEntry[]};
 export type MealDeadlines=Record<string,string>;
 export const defaultMealDeadlines=():MealDeadlines=>Object.fromEntries(menus.map(m=>[m.id,MEAL_DEADLINE]));
 export function mealState(submission:MealSubmission|null|undefined,id:string):MealState|null{
@@ -33,7 +34,7 @@ export function validateSubmission(value:unknown,complete:boolean,targets:string
  }
  return {selections,dietary:v.dietary.trim()};
 }
-export type MealReportGuest={id:string;name:string;pinReady:boolean;submission:MealSubmission|null};
+export type MealReportGuest={id:string;name:string;pinReady:boolean;accessReady?:boolean;submission:MealSubmission|null};
 export function mealReport(guests:MealReportGuest[],menuId='all',deadlines:MealDeadlines=defaultMealDeadlines()){
  if(menuId!=='all'&&!menus.some(m=>m.id===menuId))throw Error('Choose an available meal.');
  const selected=menus.filter(m=>menuId==='all'||m.id===menuId);
