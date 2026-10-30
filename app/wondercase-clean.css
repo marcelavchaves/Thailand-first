@@ -332,3 +332,10 @@ html,body,.app-shell{background:#fff}
 @media(max-width:350px){.home-schedule-card .home-day-overview{padding:12px}.home-schedule-card .home-local-clock time{font-size:18px}.home-schedule-card .home-local-clock small{max-width:130px}.home-schedule-card .home-day-switch{gap:3px}.home-schedule-content .timeline article.timeline-entry{grid-template-columns:65px minmax(0,1fr);gap:9px}}
 
 .home-schedule-content .journey-timeline-panel>.timeline:first-of-type{margin-top:20px!important}
+
+/* Give the shared day header more room on phones, including the full journey view. */
+@media(max-width:600px){
+  .home-schedule-card .home-day-overview{margin-inline:-8px}
+  #complete-day-journey>.current-day-card{margin-inline:-12px;padding:0;border:0;border-radius:0}
+  #complete-day-journey>.current-day-card>.home-day-overview{padding-inline:16px}
+}

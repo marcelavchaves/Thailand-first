@@ -1,3 +1,7 @@
+## Wider journey headers on phones
+
+- Expand the shared day/date/calendar panel to an 8px screen inset on phones, both on Home and the complete journey day. Keep schedule content and desktop spacing unchanged.
+
 ## Prototype optional meal PINs
 
 - Let travelers select their name and leave choices public, or set a four-digit PIN. Explain that public choices and dietary notes are editable by anyone selecting that name.
