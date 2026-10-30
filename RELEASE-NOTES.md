@@ -1,3 +1,7 @@
+## Mobile welcome-email PDF
+
+- Publish the approved welcome-email review PDF on the prototype and add an Open welcome email draft (PDF) link at the top of Home.
+
 ## Shorten Safe label
 
 - Change My Safe to Safe on prototype guest cards and matching help text.
