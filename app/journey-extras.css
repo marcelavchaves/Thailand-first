@@ -9,7 +9,7 @@
 .shop-preview-note{padding:10px 14px;background:#eef3ed;border-radius:5px;font-size:13px;color:var(--brand-green)}
 .journey-shop-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:22px}
 .journey-shop-card{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:white;padding:0 16px 16px}
-.shop-card-art{margin:0 -16px 20px;display:grid;place-items:center;height:140px;background:linear-gradient(135deg,#f0f3e9,#e5ede5);color:#315c4f}
+.shop-card-art{margin:0 -16px 20px;display:grid;place-items:center;height:140px;background:linear-gradient(135deg,#f0f3e9,#e5ede5);color:var(--brand-green)}
 .shop-card-art svg{width:90px;height:90px}
 .journey-shop-card:nth-child(even) .shop-card-art{background:linear-gradient(135deg,#f7f0df,#ede5cd)}
 .journey-shop-card h3{font-size:20px;line-height:1.4;margin:10px 0}

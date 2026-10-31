@@ -1,3 +1,7 @@
+## Prototype harmonious olive palette
+
+- Pair Tauck lime with deep olive (#3B4727) for the dark brand color, including headings, suitcase mark, icons, form controls and button labels. Warm the sage/muted tones to match and keep cream/gold accents.
+
 ## Prototype lime action buttons
 
 - Replace dark green filled action buttons throughout the app with Tauck-style lime (#9bc12f), including Home, Safe, TD controls, exports, maps and lessons. Keep dark readable labels and preserve the existing text, panel and outline-button colors.

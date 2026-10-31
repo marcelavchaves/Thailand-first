@@ -318,13 +318,13 @@ html,body,.app-shell{background:#fff}
 .home-schedule-content .release-card{border:0;background:transparent;margin:0;padding:0}
 .home-schedule-content .journey-timeline-panel{padding:0;background:white}
 .home-schedule-content .timeline-heading{justify-content:flex-start;gap:14px;border-bottom:1px solid #d9ded5;padding:20px 0 16px;margin:0 0 20px}
-.home-schedule-content .timeline-heading::before{content:'';width:22px;height:25px;flex-shrink:0;background:currentColor;color:#315c4f;mask:url('/images/home-schedule-calendar.svg') center/contain no-repeat}
-.home-schedule-content .timeline-heading h2{font:400 19px/1.4 var(--font-heading);margin:0;color:#315c4f}
+.home-schedule-content .timeline-heading::before{content:'';width:22px;height:25px;flex-shrink:0;background:currentColor;color:var(--brand-green);mask:url('/images/home-schedule-calendar.svg') center/contain no-repeat}
+.home-schedule-content .timeline-heading h2{font:400 19px/1.4 var(--font-heading);margin:0;color:var(--brand-green)}
 .home-schedule-content .timeline{border:0!important;background:white;margin:0!important;padding:0!important}
 .home-schedule-content .timeline article.timeline-entry{display:grid!important;grid-template-columns:76px minmax(0,1fr);gap:12px;padding:6px 0 20px!important;margin:0!important;position:static}
 .home-schedule-content .timeline article.timeline-entry::before{display:none!important}
-.home-schedule-content .timeline article>.timeline-time-label{font:700 13px/1.65 var(--font-heading);color:#315c4f;letter-spacing:0;margin:0}
-.home-schedule-content .timeline article>p{font:400 15px/1.65 var(--font-heading);color:#68756b;margin:0!important}
+.home-schedule-content .timeline article>.timeline-time-label{font:700 13px/1.65 var(--font-heading);color:var(--brand-green);letter-spacing:0;margin:0}
+.home-schedule-content .timeline article>p{font:400 15px/1.65 var(--font-heading);color:#6b705e;margin:0!important}
 .home-announcement{margin:0 20px}.home-announcement .xavier-daily-note{margin:0}
 .home-swap-button,.home-open-journey{display:block;background:#315b42;color:#f0d58f;border:1px solid #b99b58;border-radius:12px;font:700 14px/1.4 Arial,sans-serif;padding:14px 16px;cursor:pointer}
 .home-swap-button{margin:20px auto;max-width:calc(100% - 60px)}.home-open-journey{margin:0 20px 22px;width:calc(100% - 40px);text-align:left;letter-spacing:1.5px;padding:20px 16px}.home-open-journey span{float:right;font-size:24px;line-height:20px}
