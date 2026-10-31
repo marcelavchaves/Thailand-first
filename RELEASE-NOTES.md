@@ -1,3 +1,8 @@
+## Prototype meal page controls
+
+- Move optional PIN protection and sharing below meal choices and save/reload actions, next to the bottom deadline guidance.
+- Use matching ivory backgrounds, green lettering, gold borders, corner radii and typography for traveler buttons, sharing links and option toggles. Keep menu tiles square.
+
 ## Prototype meal menu tiles
 
 - Move general deadline instructions to the bottom of the traveler meal page. Keep each menu’s specific deadline visible with its choices.
