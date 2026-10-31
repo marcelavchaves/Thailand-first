@@ -1,7 +1,7 @@
 /* Filled actions match the original live Wondercase green. */
 :root{--action-green:var(--brand-green);--action-green-hover:#284d42;--action-ink:var(--brand-ivory)}
 :is(
- .home-announcement-move,.home-bottom-journey,.home-swap-button,.home-open-journey,.journey-action,
+ .day-save-format>summary,.home-announcement-move,.home-bottom-journey,.home-swap-button,.home-open-journey,.journey-action,
  .pdf-export-button,.home-meal-choice-button,.journey-safe-button,
  .timeline-editor-actions button[type=submit],.app-ratings button,.home-customize-button,.updates-bell,
  .done,.journal-add,.journal-actions button+button,.comment-form button,

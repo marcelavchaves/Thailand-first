@@ -1,3 +1,8 @@
+## Prototype direct guest meals and day save formats
+
+- Combine journey-day photo/PDF actions under one “Save this day” format chooser.
+- Open public meal choices directly from the guest card. Protected guest links show that traveler’s PIN entry without the name dropdown, while retaining server authorization.
+
 ## Prototype restore original green and matched Home actions
 
 - Restore the live app’s original #315C4F brand green and sage palette, including the main suitcase mark and filled buttons. Use the same green for the announcement move arrow.

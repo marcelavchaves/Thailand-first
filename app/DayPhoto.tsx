@@ -1,11 +1,11 @@
 'use client';
 import {useState} from 'react';
 type Flight={route:string;airline:string;time:string;detail:string;duration?:string};
-type Props={date:number;dateLabel:string;title:string;events:[string,string][];note:string;flight?:Flight;hotel:string};
+type Props={label?:string;date:number;dateLabel:string;title:string;events:[string,string][];note:string;flight?:Flight;hotel:string};
 function element<K extends keyof HTMLElementTagNameMap>(tag:K,className='',text=''){
  const node=document.createElement(tag);node.className=className;node.textContent=text;return node;
 }
-export default function DayPhoto({date,dateLabel,title,events,note,flight,hotel}:Props){
+export default function DayPhoto({label="Save this day as a photo",date,dateLabel,title,events,note,flight,hotel}:Props){
  const [busy,setBusy]=useState(false),[error,setError]=useState('');
  async function save(){
   setBusy(true);setError('');let sheet:HTMLElement|null=null;
@@ -47,5 +47,5 @@ export default function DayPhoto({date,dateLabel,title,events,note,flight,hotel}
   }catch(e){setError(e instanceof Error?e.message:'Could not create the photo.');}
   finally{sheet?.remove();setBusy(false);}
  }
- return <div className="day-photo-control"><button type="button" disabled={busy} onClick={save}>{busy?'Preparing your photo…':'Save this day as a photo'}</button>{error&&<p role="alert">{error}</p>}</div>;
+ return <div className="day-photo-control"><button type="button" disabled={busy} onClick={save}>{busy?'Preparing your photo…':label}</button>{error&&<p role="alert">{error}</p>}</div>;
 }

@@ -1942,10 +1942,10 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             </div>
             <details className="day-disclosure" key={`language-${detail.date}`}><summary>A little language lesson</summary><LocalLanguageLesson region={detail.region} /></details>
               <details className="day-disclosure" key={`trivia-${detail.date}`}><summary>How about some trivia?</summary><DailyTrivia date={detail.date} /></details>
-            <div className="day-save-actions">
-              <DayPhoto date={detail.date} dateLabel={longTripDate(detail.date)} title={detail.title} events={detail.events} note={detail.note} flight={internalFlights.find(flight=>flight.date===detail.date)} hotel={detail.hotel} />
-              <PdfDownload url={`/api/export-itinerary?section=days&day=${tauck(detail.date)}`} label="Download this day as PDF" />
-            </div>
+            <details className="day-save-format"><summary><BrandIcon name="book"/><span>Save this day</span><span aria-hidden="true">⌄</span></summary><p>Choose your format:</p><div className="day-save-actions">
+              <DayPhoto label="Photo (PNG)" date={detail.date} dateLabel={longTripDate(detail.date)} title={detail.title} events={detail.events} note={detail.note} flight={internalFlights.find(flight=>flight.date===detail.date)} hotel={detail.hotel} />
+              <PdfDownload url={`/api/export-itinerary?section=days&day=${tauck(detail.date)}`} label="PDF document" />
+            </div></details>
           </div>}
           {process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&detail.date===days[0].date&&<a className="home-meal-choice-button home-meal-choice-footer" href="/meal-choices"><BrandIcon name="food"/><span className="home-action-label">Meal choices – select your meals</span><span className="home-action-arrow" aria-hidden="true">→</span></a>}
         </section>

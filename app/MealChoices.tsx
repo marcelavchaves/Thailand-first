@@ -9,6 +9,7 @@ export const mealDeadlineLabel=(deadline=MEAL_DEADLINE)=>new Date(deadline).toLo
 export default function MealChoices(){
  const [data,setData]=useState<Data|null>(null),[guestId,setGuestId]=useState(''),[selections,setSelections]=useState<Selections>({}),[dietary,setDietary]=useState(''),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[dirty,setDirty]=useState(false),[offset,setOffset]=useState(0),[now,setNow]=useState(0);
  const [pin,setPin]=useState(''),[newPin,setNewPin]=useState(''),[confirmPin,setConfirmPin]=useState(''),[currentPin,setCurrentPin]=useState(''),[showPin,setShowPin]=useState(false);
+ const [directGuest,setDirectGuest]=useState<{id:string;name:string;protected:boolean}|null>(null);
  const [selectedMeal,setSelectedMeal]=useState<string|null>(null);
  const started=useRef(false);
  const load=useCallback(async()=>{const r=await fetch('/api/meal-choices',{cache:'no-store'}),body=await r.json();if(!r.ok)throw Error(body.error||'Unable to load meal choices.');setData(body);setSelections(body.submission?.selections||{});setDietary(body.submission?.dietary||'');setDirty(false);setOffset(Date.parse(body.serverNow)-Date.now());setNow(Date.now());return body;},[]);
@@ -25,8 +26,13 @@ export default function MealChoices(){
    }else{
     const body=await load();
     if(requested&&body.guest?.id!==requested){
-     if(body.td){const r=await fetch('/api/meal-choices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',guestId:requested})});if(!r.ok)throw Error('Unable to open this traveler.');await load();}
-     else{setGuestId(requested);setData(d=>d?{...d,guest:null,submission:null,revision:null}:d);}
+     const traveler=body.guests.find((g:{id:string})=>g.id===requested);
+     setGuestId(requested);setDirectGuest(traveler||null);
+     setData(d=>d?{...d,guest:null,submission:null,revision:null}:d);
+     if(traveler?.protected&&!body.td)return;
+     const r=await fetch('/api/meal-choices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',guestId:requested})}),result=await r.json();
+     if(!r.ok){setMessage(result.error||'Unable to open this traveler.');return;}
+     await load();
     }
    }
   };
@@ -56,7 +62,7 @@ export default function MealChoices(){
    setDirty(remainingEdits);setMessage(submit?(menuId==='all'?'All open meals have been submitted.':'This meal has been submitted. Other meals keep their own status.'):'Draft saved. Submit this meal before its deadline.');
   }catch(e){setMessage(e instanceof Error?e.message:'Unable to save your choices.');}finally{setBusy(false);}
  }
- async function changeTraveler(){if(dirty&&!confirm('Leave without saving your changes?'))return;setBusy(true);setMessage('');try{const r=await fetch('/api/meal-choices',{method:'DELETE'});if(!r.ok)throw Error();setGuestId('');await load();}catch{setMessage('Unable to change traveler. Please try again.');}finally{setBusy(false);}}
+ async function changeTraveler(){if(dirty&&!confirm('Leave without saving your changes?'))return;setBusy(true);setMessage('');try{const r=await fetch('/api/meal-choices',{method:'DELETE'});if(!r.ok)throw Error();setGuestId('');setDirectGuest(null);await load();}catch{setMessage('Unable to change traveler. Please try again.');}finally{setBusy(false);}}
  async function protect(protectedValue:boolean){
   if(protectedValue&&(newPin!==confirmPin||!/^\d{4}$/.test(newPin))){setMessage('Enter and confirm the same four-digit PIN.');return;}
   if(!protectedValue&&!confirm('Make your meal choices public? Anyone selecting your name can view and edit your choices and dietary notes.'))return;
@@ -66,7 +72,7 @@ export default function MealChoices(){
  const status=(id:string)=>mealState(data?.submission,id)?.status==='submitted'?'Submitted':mealState(data?.submission,id)?'Draft · not submitted':'Not submitted';
  return <main className="meal-page"><a href="/">← Back to Home</a><header><span className="eyebrow">WONDERCASE · YOUR TABLE AWAITS</span><h1>Your meal choices</h1><p>Choose your meals for all five menus, and let Xavier know about dietary restrictions or allergies.</p></header>
 
- {!data?<><p role="status">{message||'Loading meal choices…'}</p><button onClick={()=>void load().catch(e=>setMessage(e.message))}>Try again</button></>:!data.guest?<form className="meal-login" onSubmit={openTraveler}><h2>Open your meal choices</h2><p>{data.td?'TD updates are recorded in the change history.':'Select your name. Public choices open directly; protected choices require your four-digit PIN.'}</p><fieldset disabled={busy}><label>Traveler<select required value={guestId} onChange={e=>{setGuestId(e.target.value);setPin('');}}><option value="">Choose your name</option>{data.guests.map(g=><option key={g.id} value={g.id}>{g.name}{g.protected?' · PIN-protected':' · Public'}</option>)}</select></label>{!data.guests.length&&<p>Xavier will make the traveler list available here.</p>}{!data.td&&data.guests.find(g=>g.id===guestId)?.protected&&<label>Four-digit PIN<input type={showPin?'text':'password'} inputMode="numeric" pattern="[0-9]{4}" maxLength={4} required autoComplete="off" value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,''))}/><button type="button" className="meal-secondary" onClick={()=>setShowPin(v=>!v)} aria-label={showPin?'Hide PIN':'Show PIN'}>{showPin?'Hide PIN':'Show PIN'}</button></label>}<button type="submit">{busy?'Opening…':'Open meal choices'}</button></fieldset><p role="status">{message}</p></form>:<>
+ {!data?<><p role="status">{message||'Loading meal choices…'}</p><button onClick={()=>void load().catch(e=>setMessage(e.message))}>Try again</button></>:!data.guest?<form className="meal-login" onSubmit={openTraveler}><h2>{directGuest?`${directGuest.name}’s meal choices`:'Open your meal choices'}</h2><p>{directGuest?'Enter your four-digit PIN to open your protected choices.':data.td?'TD updates are recorded in the change history.':'Select your name. Public choices open directly; protected choices require your four-digit PIN.'}</p><fieldset disabled={busy}>{!directGuest&&<label>Traveler<select required value={guestId} onChange={e=>{setGuestId(e.target.value);setPin('');}}><option value="">Choose your name</option>{data.guests.map(g=><option key={g.id} value={g.id}>{g.name}{g.protected?' · PIN-protected':' · Public'}</option>)}</select></label>}{!data.guests.length&&<p>Xavier will make the traveler list available here.</p>}{!data.td&&data.guests.find(g=>g.id===guestId)?.protected&&<label>Four-digit PIN<input type={showPin?'text':'password'} inputMode="numeric" pattern="[0-9]{4}" maxLength={4} required autoComplete="off" value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,''))}/><button type="button" className="meal-secondary" onClick={()=>setShowPin(v=>!v)} aria-label={showPin?'Hide PIN':'Show PIN'}>{showPin?'Hide PIN':'Show PIN'}</button></label>}<button type="submit">{busy?'Opening…':'Open meal choices'}</button></fieldset><p role="status">{message}</p></form>:<>
  <div className="meal-traveler"><h2>{data.guest.name}</h2><button disabled={busy} onClick={()=>void changeTraveler()}>{data.td?'Change traveler':'Close my choices'}</button></div>
  <p className="meal-status" role="status">{submittedCount} of {menus.length} meals submitted{dirty?' · You have unsaved changes':''}</p>
  <div className="meal-tile-grid" role="group" aria-label="Choose a meal menu">{menus.map(menu=><button type="button" key={menu.id} className="meal-tile" aria-expanded={selectedMeal===menu.id} aria-controls="selected-meal-menu" onClick={()=>{const next=selectedMeal===menu.id?null:menu.id;setSelectedMeal(next);if(next)window.setTimeout(()=>document.getElementById('selected-meal-menu')?.scrollIntoView({behavior:'smooth',block:'start'}),0);}}><BrandIcon name={menu.id==='farewell'?'star':menu.id==='cu-chi'?'food':menu.id==='vedana'?'spa':menu.id==='lakorn'?'hotel':'food'}/><strong>{menu.title}</strong><small>{status(menu.id)}{isLocked(menu.id)?' · Read-only':''}</small></button>)}</div>
