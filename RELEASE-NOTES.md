@@ -1,3 +1,7 @@
+## Prototype lime action buttons
+
+- Replace dark green filled action buttons throughout the app with Tauck-style lime (#9bc12f), including Home, Safe, TD controls, exports, maps and lessons. Keep dark readable labels and preserve the existing text, panel and outline-button colors.
+
 ## Prototype meal page controls
 
 - Move optional PIN protection and sharing below meal choices and save/reload actions, next to the bottom deadline guidance.
