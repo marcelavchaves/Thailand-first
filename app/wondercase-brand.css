@@ -7,7 +7,7 @@
 @font-face{font-family:Cinzel;src:url('/fonts/cinzel-500.ttf') format('truetype');font-weight:500;font-display:swap}
 @font-face{font-family:Cinzel;src:url('/fonts/cinzel-600.ttf') format('truetype');font-weight:600;font-display:swap}
 :root{
-  --brand-green:#3B4727;--brand-gold:#C9A962;--brand-ivory:#F9F6EC;--brand-sage:#87936D;
+  --brand-green:#58663D;--brand-gold:#C9A962;--brand-ivory:#F9F6EC;--brand-sage:#87936D;
   --font-heading:Montserrat,'Avenir Next',sans-serif;
   --font-body:'Avenir Next',Montserrat,sans-serif;
   --font-accent:Cinzel,Georgia,serif;
@@ -36,7 +36,7 @@ a,button{touch-action:manipulation}
 .intro h1,.more-page h1,.gallery-page h1,.detail-body h1{font-family:var(--font-heading);font-weight:500;font-size:32px;letter-spacing:-.035em}
 .eyebrow,.date,.pdf-eyebrow{color:var(--brand-gold-text);font-family:var(--font-heading);font-weight:600}
 .eyebrow.light{color:var(--brand-gold)}
-.bottom-nav{background:var(--brand-ivory);border-top:1px solid var(--brand-gold);box-shadow:0 -3px 18px #3b472709}
+.bottom-nav{background:var(--brand-ivory);border-top:1px solid var(--brand-gold);box-shadow:0 -3px 18px #58663d09}
 .bottom-nav button{color:var(--muted);border-radius:10px;gap:5px}
 .bottom-nav button span{font-family:var(--font-heading);font-size:9px;font-weight:500}
 .bottom-nav button.active{background:var(--brand-soft);color:var(--brand-green)}

@@ -1,3 +1,8 @@
+## Prototype lighter olive and compact Home controls
+
+- Lighten the brand olive to #58663D, retaining deeper text on lime actions for readability.
+- Replace the large Home swap action with a small directional arrow in the announcement header. Preserve saved panel order. Move the Day 1 Dinner choices link to the bottom of Home/full-day content.
+
 ## Prototype harmonious olive palette
 
 - Pair Tauck lime with deep olive (#3B4727) for the dark brand color, including headings, suitcase mark, icons, form controls and button labels. Warm the sage/muted tones to match and keep cream/gold accents.

@@ -443,7 +443,6 @@ function CurrentTripDay({ date, now, onPrevious, onNext, onSelect, children }: {
       {statusDetail && <p className="home-journey-countdown">{statusDetail}</p>}
     </div>
     <div id="home-trip-calendar" hidden={!calendarOpen}>{calendarOpen&&<TripCalendar selectedDate={date} onSelect={day=>{setCalendarOpen(false);onSelect(day);}}/>}</div>
-    {process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&date===days[0].date&&<a className="home-meal-choice-button" href="/meal-choices">Dinner choices · select your five tour meals →</a>}
     {children}
   </section>;
 }
@@ -645,7 +644,7 @@ function XavierWelcomePanel({ expanded = false }: { expanded?: boolean }) {
   </details>;
 }
 
-function XavierDailyNote({ date, home = false, currentDay = false }: { date: number; home?: boolean; currentDay?: boolean }) {
+function XavierDailyNote({ date, home = false, currentDay = false, headerAction }: { date: number; home?: boolean; currentDay?: boolean; headerAction?:React.ReactNode }) {
   const { authenticated, configured, refresh: refreshTD } = useTDSession();
   const legacyMode = configured === false;
   const [note, setNote] = useState<XavierNote | null>(null);
@@ -757,6 +756,7 @@ function XavierDailyNote({ date, home = false, currentDay = false }: { date: num
         <div>
           <h2>Your TD’s announcement</h2>
         </div>
+        {headerAction}
 
       </div>
       {visibleNote ? (
@@ -1859,7 +1859,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
   }
   const detail = tab === "home" ? days.find((d) => d.date === (selected ?? currentDay)) : undefined;
   const previewFirstDay = (clock?.beforeTrip ?? true) && detail?.date === days[0].date;
-  const announcementPanel=detail?<div key="announcement" className="home-announcement"><XavierDailyNote date={detail.date}/></div>:null;
+  const announcementPanel=detail?<div key="announcement" className="home-announcement"><XavierDailyNote date={detail.date} headerAction={<button className="home-announcement-move" type="button" onClick={swapHomePanels} aria-label={scheduleFirst?"Move announcement up":"Move announcement down"} title={scheduleFirst?"Move announcement up":"Move announcement down"} aria-controls="home-journey-panels"><span aria-hidden="true">{scheduleFirst?"↑":"↓"}</span></button>}/></div>:null;
   const schedulePanel=detail?<div key="schedule" className="home-schedule-card"><CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}>
               <div className="home-schedule-content">
             {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/></section> : <ResourceSlot id={`schedule-${detail.date}`} title="Schedule" group="schedules" icon="calendar"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
@@ -1899,7 +1899,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           <div id="home-journey-panels" className="home-journey-panels">
             {scheduleFirst?[schedulePanel,announcementPanel]:[announcementPanel,schedulePanel]}
           </div>
-          <button className="home-swap-button" type="button" onClick={swapHomePanels} aria-controls="home-journey-panels">Swap Today’s Journey and announcements</button>
           <button className="home-open-journey" type="button" aria-expanded={fullJourney} onClick={()=>{setFullJourney(value=>!value);if(!fullJourney)window.setTimeout(()=>document.getElementById('complete-day-journey')?.scrollIntoView({behavior:'smooth',block:'start'}),0);}}>{fullJourney?'CLOSE':`OPEN DAY ${tauck(detail.date)}`} JOURNEY <span aria-hidden="true">{fullJourney?'−':'→'}</span></button>
           </>}
           {fullJourney&&<div className="detail-body" id="complete-day-journey">
@@ -1948,6 +1947,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
               <PdfDownload url={`/api/export-itinerary?section=days&day=${tauck(detail.date)}`} label="Download this day as PDF" />
             </div>
           </div>}
+          {process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&detail.date===days[0].date&&<a className="home-meal-choice-button home-meal-choice-footer" href="/meal-choices">Dinner choices · select your five tour meals →</a>}
         </section>
       )}
       {tab === "hotels" && (

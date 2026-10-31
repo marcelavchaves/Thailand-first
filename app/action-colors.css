@@ -1,5 +1,5 @@
 /* Tauck-style lime for filled actions; paired with a warm, deep olive for labels. */
-:root{--action-green:#9bc12f;--action-green-hover:#a4c93a;--action-ink:var(--brand-green)}
+:root{--action-green:#9bc12f;--action-green-hover:#a4c93a;--action-ink:#344021}
 :is(
  .home-bottom-journey,.home-swap-button,.home-open-journey,.journey-action,
  .pdf-export-button,.home-meal-choice-button,.journey-safe-button,

@@ -339,3 +339,5 @@ html,body,.app-shell{background:#fff}
   #complete-day-journey>.current-day-card{margin-inline:-12px;padding:0;border:0;border-radius:0}
   #complete-day-journey>.current-day-card>.home-day-overview{padding-inline:16px}
 }
+
+.home-announcement .xavier-note-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;text-align:left}.home-announcement .xavier-note-heading>div{flex:1;min-width:0}.home-announcement .xavier-note-heading h2{margin:0 0 16px}.home-announcement-move{display:inline-grid;place-items:center;flex:0 0 36px;width:36px;min-height:36px;padding:0;border:1px solid var(--brand-green);border-radius:7px;background:var(--brand-ivory);color:var(--brand-green);font-size:24px;line-height:1;cursor:pointer}.home-announcement-move:focus-visible{outline:3px solid var(--brand-gold);outline-offset:3px}.home-meal-choice-footer{margin:20px 20px 24px}
