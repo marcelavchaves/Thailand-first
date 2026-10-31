@@ -1,3 +1,8 @@
+## Prototype restore original green and matched Home actions
+
+- Restore the live app’s original #315C4F brand green and sage palette, including the main suitcase mark and filled buttons. Use the same green for the announcement move arrow.
+- Match Home Journey and Meal choices actions in width, minimum height, padding and corner radius.
+
 ## Prototype Home action labels
 
 - Rename the day action to “Journey Day N” and the meal link to “Meal choices – select your meals.” Add compass and cutlery icons on the left, with matching spacing.

@@ -31,7 +31,7 @@ async function summaryImage(text:string):Promise<Blob>{
   lines.push(line);
  }
  canvas.height=100+lines.length*35;ctx.fillStyle='#faf8f0';ctx.fillRect(0,0,canvas.width,canvas.height);
- ctx.fillStyle='#58663d';ctx.font='24px Arial';ctx.textBaseline='top';
+ ctx.fillStyle='#315c4f';ctx.font='24px Arial';ctx.textBaseline='top';
  lines.forEach((line,i)=>ctx.fillText(line,48,48+i*35));
  return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Unable to create the image.')),'image/png'));
 }
