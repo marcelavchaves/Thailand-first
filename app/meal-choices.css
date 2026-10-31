@@ -19,3 +19,5 @@
 .meal-tools>details>summary::-webkit-details-marker{display:none}
 .meal-tools>details>summary::after{content:'+';font-size:22px;line-height:1;flex-shrink:0}
 .meal-tools>details[open]>summary::after{content:'−'}
+
+.meal-page .meal-tools{grid-template-columns:minmax(0,1fr);width:100%;min-width:0}.meal-page .meal-tools>details{box-sizing:border-box;width:100%;min-width:0;max-width:100%;margin-inline:0}.meal-page .meal-tools>details>summary{box-sizing:border-box;width:100%;min-height:54px}

@@ -1,3 +1,7 @@
+## Prototype meal option cleanup
+
+- Remove the traveler “Close my choices” action; retain the TD-only traveler switch. Label unprotected PIN options “Add an optional PIN,” with “Manage your PIN” once protected. Match the PIN and sharing controls to full page-content width.
+
 ## Prototype direct guest meals and day save formats
 
 - Combine journey-day photo/PDF actions under one “Save this day” format chooser.
