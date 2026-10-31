@@ -1,3 +1,7 @@
+## Prototype equal-width meal actions
+
+- Stack save and submit actions at full available width, matching the full-width reload button. Preserve existing save, submission and reload behavior.
+
 ## Prototype meal option cleanup
 
 - Remove the traveler “Close my choices” action; retain the TD-only traveler switch. Label unprotected PIN options “Add an optional PIN,” with “Manage your PIN” once protected. Match the PIN and sharing controls to full page-content width.

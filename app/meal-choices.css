@@ -21,3 +21,5 @@
 .meal-tools>details[open]>summary::after{content:'−'}
 
 .meal-page .meal-tools{grid-template-columns:minmax(0,1fr);width:100%;min-width:0}.meal-page .meal-tools>details{box-sizing:border-box;width:100%;min-width:0;max-width:100%;margin-inline:0}.meal-page .meal-tools>details>summary{box-sizing:border-box;width:100%;min-height:54px}
+
+.meal-page>form .meal-actions{display:grid;grid-template-columns:minmax(0,1fr);width:100%;gap:12px}.meal-page>form .meal-actions>button,.meal-page .meal-reload{box-sizing:border-box;width:100%;min-height:54px}
