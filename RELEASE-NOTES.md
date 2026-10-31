@@ -1,3 +1,8 @@
+## Prototype meal menu tiles
+
+- Move general deadline instructions to the bottom of the traveler meal page. Keep each menu’s specific deadline visible with its choices.
+- Show five square menu tiles in two columns on phones, with icons and submission/read-only status. Selecting a tile opens and scrolls to that menu while retaining unsaved selections.
+
 ## Prototype traveler meal sharing
 
 - Let guests review and share saved choices for one meal or all five through the device share sheet, WhatsApp or email. Offer a PNG image with preview, download and supported native file sharing.

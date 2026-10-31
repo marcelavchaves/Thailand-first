@@ -33,3 +33,7 @@ Every successful meal save/submit appends server-authored audit data to the same
 ## Traveler sharing
 
 Expand “Share your meal choices” after opening a traveler’s choices. Select one menu or all five, review the saved summary, and optionally exclude dietary/allergy notes. Share opens the device share sheet (or copies text when unavailable); WhatsApp and Email open a composed message for the traveler to send. Create image prepares a PNG preview with Save image and native file sharing when supported. On iPhone/iPad, Share image → Save Image or touch and hold the preview. Sharing is manual, sends saved data only, and does not submit choices or include credentials, private URLs or audit history. Unsaved edits are called out; closed meals retain their saved dietary snapshots.
+
+## Menu layout
+
+The traveler page shows square menu tiles in two columns on phones (three on wider screens). A tile opens its full menu below and scrolls to it; unsaved choices stay in shared form state when switching menus. Tiles show draft/submission/read-only status. General deadline guidance is at the bottom; individual deadlines remain beside the meal choices.
