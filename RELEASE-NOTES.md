@@ -1,3 +1,7 @@
+## Prototype Home action labels
+
+- Rename the day action to “Journey Day N” and the meal link to “Meal choices – select your meals.” Add compass and cutlery icons on the left, with matching spacing.
+
 ## Prototype lighter olive and compact Home controls
 
 - Lighten the brand olive to #58663D, retaining deeper text on lime actions for readability.

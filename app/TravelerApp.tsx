@@ -1899,7 +1899,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           <div id="home-journey-panels" className="home-journey-panels">
             {scheduleFirst?[schedulePanel,announcementPanel]:[announcementPanel,schedulePanel]}
           </div>
-          <button className="home-open-journey" type="button" aria-expanded={fullJourney} onClick={()=>{setFullJourney(value=>!value);if(!fullJourney)window.setTimeout(()=>document.getElementById('complete-day-journey')?.scrollIntoView({behavior:'smooth',block:'start'}),0);}}>{fullJourney?'CLOSE':`OPEN DAY ${tauck(detail.date)}`} JOURNEY <span aria-hidden="true">{fullJourney?'−':'→'}</span></button>
+          <button className="home-open-journey" type="button" aria-expanded={fullJourney} onClick={()=>{setFullJourney(value=>!value);if(!fullJourney)window.setTimeout(()=>document.getElementById('complete-day-journey')?.scrollIntoView({behavior:'smooth',block:'start'}),0);}}><BrandIcon name="compass"/><span className="home-action-label">Journey Day {tauck(detail.date)}</span><span className="home-action-arrow" aria-hidden="true">→</span></button>
           </>}
           {fullJourney&&<div className="detail-body" id="complete-day-journey">
             <button className="journey-back-home" type="button" onClick={()=>{setFullJourney(false);window.scrollTo({top:0,behavior:"instant"});}}>← Back to Home</button>
@@ -1947,7 +1947,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
               <PdfDownload url={`/api/export-itinerary?section=days&day=${tauck(detail.date)}`} label="Download this day as PDF" />
             </div>
           </div>}
-          {process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&detail.date===days[0].date&&<a className="home-meal-choice-button home-meal-choice-footer" href="/meal-choices">Dinner choices · select your five tour meals →</a>}
+          {process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&detail.date===days[0].date&&<a className="home-meal-choice-button home-meal-choice-footer" href="/meal-choices"><BrandIcon name="food"/><span className="home-action-label">Meal choices – select your meals</span><span className="home-action-arrow" aria-hidden="true">→</span></a>}
         </section>
       )}
       {tab === "hotels" && (
