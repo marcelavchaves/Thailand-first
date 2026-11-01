@@ -1,3 +1,9 @@
+## Prototype paper meal-choice import
+
+- Add TD-only camera/multiple-photo entry with layout splitting and drag-to-select sheet regions. Recognize each crop on-device and keep separate review entries per paper.
+- Require review of the traveler, selected meals and dietary/allergy notes before each submission. Show current saved choices and preserve unselected meals.
+- Respect per-meal deadlines, stale-write protection and TD permissions. Record confirmed imports as “TD paper-form entry” in change history. Photos remain local and are not retained by the server.
+
 ## Prototype equal-width meal actions
 
 - Stack save and submit actions at full available width, matching the full-width reload button. Preserve existing save, submission and reload behavior.

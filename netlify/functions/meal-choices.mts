@@ -96,6 +96,12 @@ export default async function handler(request:Request){
     }
     return reply({...metadata(settings),guests:data,summary:mealReport(data,'all',settings.deadlines).totals});
    }
+   if(action==='paper-review'){
+    if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
+    const guest=guests.find(g=>g.id===url.searchParams.get('guestId'));if(!guest)return reply({error:'Choose a current traveler.'},400);
+    const choice=await store().getWithMetadata('choice/'+guest.id,{type:'json'});
+    return reply({...metadata(settings),guest,submission:travelerSubmission(choice?.data),revision:choice?.etag||null});
+   }
    if(action!=='traveler')return reply({error:'Not found.'},404);
    const guest=await authenticatedGuest(request,guests);
    const choice=guest?await store().getWithMetadata('choice/'+guest.id,{type:'json'}):null;
@@ -108,7 +114,14 @@ export default async function handler(request:Request){
   const raw=await request.text();if(raw.length>12000)return reply({error:'Meal form is too large.'},413);
   let body:any;try{body=JSON.parse(raw);}catch{return reply({error:'Check your meal form.'},400);}
   if(!body||typeof body!=='object'||Array.isArray(body))return reply({error:'Check your meal form.'},400);
-  if(request.method==='POST'){
+  const paperImport=request.method==='POST'&&body.action==='paper-import';
+  if(paperImport){
+   if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
+   if(body.reviewed!==true)return reply({error:'Review and confirm the traveler, meal selections and dietary notes before importing.'},400);
+   if(!Array.isArray(body.menuIds)||!body.menuIds.length||body.menuIds.length>menus.length||new Set(body.menuIds).size!==body.menuIds.length||body.menuIds.some((id:unknown)=>typeof id!=='string'||!menus.some(m=>m.id===id)))return reply({error:'Choose the meals on this paper form.'},400);
+   body.action='submit';
+  }
+  if(request.method==='POST'&&!paperImport){
    if(body.action==='login'){
     const guest=guests.find(g=>g.id===body.guestId);
     if(!guest)return reply({error:'Choose a current traveler from the guest list.'},400);
@@ -198,14 +211,17 @@ export default async function handler(request:Request){
    }
    return reply({error:'Unknown action.'},400);
   }
-  const guest=await authenticatedGuest(request,guests);if(!guest)return reply({error:'Open your private meal link to continue.'},401);
+  const paperGuest=paperImport?guests.find(g=>g.id===body.guestId):null;
+  const guest=paperImport?(paperGuest?{...paperGuest,actor:{type:'td-paper' as const,label:'TD paper-form entry'}}:null):await authenticatedGuest(request,guests);
+  if(!guest)return reply({error:paperImport?'Choose a current traveler.':'Open your private meal link to continue.'},paperImport?400:401);
   if(body.guestId!==guest.id)return reply({error:'The selected traveler changed in another tab. Reload and choose your name before saving.'},409);
   if(body.action!=='save'&&body.action!=='submit')return reply({error:'Choose Save draft or Submit choices.'},400);
   if(!(body.revision===null||typeof body.revision==='string'))return reply({error:'Refresh your choices before saving.'},400);
   const requested=body.menuId||'all';
   if(requested!=='all'&&!menus.some(m=>m.id===requested))return reply({error:'Choose an available meal.'},400);
   let locks=mealLocks(settings.deadlines);
-  const targets=menus.filter(m=>(requested==='all'||m.id===requested)&&!locks[m.id]).map(m=>m.id);
+  if(paperImport&&body.menuIds.some((id:string)=>locks[id]))return reply({error:'A selected meal deadline has passed. Closed meals cannot be imported.',...metadata(settings)},423);
+  const targets=menus.filter(m=>(paperImport?body.menuIds.includes(m.id):requested==='all'||m.id===requested)&&!locks[m.id]).map(m=>m.id);
   if(!targets.length)return reply({error:'The deadline has passed for this meal. Its choices are read-only.',...metadata(settings)},423);
   let clean;try{clean=validateSubmission(body,body.action==='submit',targets);}catch(e){return reply({error:e instanceof Error?e.message:'Check your choices.'},400);}
   const previous=await store().getWithMetadata('choice/'+guest.id,{type:'json'});

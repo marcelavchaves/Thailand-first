@@ -123,6 +123,26 @@ try{
  state.now=RealDate.parse(later.farewell);read=await ok(await call('GET',null,'',cookie));assert.equal(read.locked,true);assert.equal(read.submission.mealStates.vedana.status,'submitted');
  assert.equal((await call('PUT',{action:'submit',selections,dietary:'After all deadlines',revision:saved.revision},'',cookie)).status,423);
  state.td=true;assert.equal((await call('PUT',{action:'submit',menuId:'vedana',selections,dietary:'TD override',revision:saved.revision},'',cookie)).status,423);state.td=false;
+ // Paper imports require TD auth, explicit review, valid complete choices and current revision.
+ assert.equal((await call('GET',null,'?action=paper-review&guestId='+a.id)).status,401);
+ const paper={action:'paper-import',guestId:a.id,menuIds:['farewell'],selections,dietary:'Paper allergy note',reviewed:true,revision:null};
+ assert.equal((await call('POST',paper)).status,401);
+ state.td=true;
+ let review=await ok(await call('GET',null,'?action=paper-review&guestId='+a.id));paper.revision=review.revision;
+ assert.equal((await call('POST',paper)).status,423); // TD cannot reopen a closed meal.
+ state.now=RealDate.parse('2026-11-16T10:00:00Z');
+ assert.equal((await call('POST',{...paper,reviewed:false})).status,400);
+ assert.equal((await call('POST',{...paper,menuIds:[]})).status,400);
+ assert.equal((await call('POST',{...paper,menuIds:['farewell','farewell']})).status,400);
+ assert.equal((await call('POST',{...paper,selections:{}})).status,400);
+ assert.equal((await call('POST',{...paper,revision:'stale'})).status,409);
+ const oldVedana=structuredClone(review.submission.mealStates.vedana),oldHistory=state.stores.get('meal-choices-v1').get('choice/'+a.id).data.audit.length;
+ await ok(await call('POST',{...paper,actor:{type:'public',label:'forged'}}));
+ const imported=state.stores.get('meal-choices-v1').get('choice/'+a.id).data;
+ assert.equal(imported.audit.length,oldHistory+1);assert.equal(imported.audit.at(-1).actor.type,'td-paper');assert.equal(imported.audit.at(-1).actor.label,'TD paper-form entry');assert.equal(imported.audit.at(-1).meals.length,1);assert.equal(imported.mealStates.farewell.dietary,'Paper allergy note');assert.deepEqual(imported.mealStates.vedana,oldVedana);
+ assert.equal((await call('POST',paper)).status,409); // Duplicate/stale review never overwrites a new import.
+ assert.equal((await handler(req('POST',paper,'','','https://evil.test'))).status,403);
+ state.td=false;
  state.site='2207afda-0a2b-4b67-a708-91c325bd214a';assert.equal((await call('GET')).status,404);
  state.site='c1f3ce92-834f-4a1e-a84b-1551409ddb7b';
  assert.equal((await setup(req('POST',{token:'c'.repeat(64),password:'Some long test password'}))).status,403);
@@ -137,5 +157,5 @@ try{
  state.now=RealDate.parse('2026-12-02T00:00:00Z');
  assert.equal((await setup(req('POST',{mode:'reset',token:'c'.repeat(64),password:'New long password'}))).status,403);
  assert.equal((await setup(req('POST',{token:'b'.repeat(64),password:'Some long test password'}))).status,403);
- console.log('PASS real handler: prototype isolation, private-link scope/rotation, revoked name-only sessions, server-authored change history, TD-only deadline management/exports, per-meal submission and exact cutoff, closed selections/allergies preserved, legacy migration, stale-write protection, CSRF, CSV/XLSX/PDF and one-time TD setup.');
+ console.log('PASS real handler: prototype isolation, private-link scope/rotation, revoked name-only sessions, server-authored change history, TD-only deadline management/exports, per-meal submission and exact cutoff, closed selections/allergies preserved, legacy migration, stale-write protection, CSRF, CSV/XLSX/PDF, TD-only reviewed paper import with history/cutoff/CAS, and one-time TD setup.');
 }finally{globalThis.Date=RealDate;await rm(temp,{recursive:true,force:true});}

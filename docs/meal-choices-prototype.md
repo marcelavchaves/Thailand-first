@@ -37,3 +37,15 @@ Expand “Share your meal choices” after opening a traveler’s choices. Selec
 ## Menu layout
 
 The traveler page shows square menu tiles in two columns on phones (three on wider screens). A tile opens its full menu below and scrolls to it; unsaved choices stay in shared form state when switching menus. Tiles show draft/submission/read-only status. General deadline guidance is at the bottom; individual deadlines remain beside the meal choices.
+
+## Paper-form import (TD only)
+
+Open TD Suitcase → Meal choices → Scan paper meal choices. Use Take a photo or Upload photos (up to 10 images, 15 MB each). Select a photo. For several sheets in one photo, choose two/three side by side or two top/bottom; for uneven placement, drag a rectangle tightly around a single sheet. Read the selected sheet(s), then choose another photo or region as needed. Each completed crop becomes an independent review entry.
+
+Text recognition runs in a Tesseract web worker using the existing same-site scanner assets. Photos and cropped previews remain only in memory on the device; they are not uploaded to Netlify or an external OCR service. Refreshing/clearing the page discards the photos and unsaved review work. Clear photos and reviews removes local previews without deleting submitted choices. First use needs network access to load the scanner. JPEG/PNG are recommended; device formats need to be decodable by the browser.
+
+Select the traveler and the meals actually shown on each paper. Review each dish against the photo, transcribe allergies/dietary notes (including confirming blank notes), and check the final confirmation before submitting. Unique printed traveler names and explicit Selected/Choice/checkmarked text may suggest fields; a printed list of dishes never selects all of them. Handwriting and marked boxes are not reliably recognized and may require manual entry. Recognition never infers allergy absence. Existing saved choices/notes are shown for comparison; a confirmed import replaces only the selected meals and their dietary snapshots. Other meals are preserved. Each sheet is submitted individually; there is no automatic bulk approval.
+
+The TD-only `paper-review` endpoint fetches the current record/revision. `paper-import` requires an active TD session, same-origin request, explicit review, valid complete choices, selected menus and an exact revision. Server deadlines still apply, including a second cutoff check before the conditional write. Closed meals cannot be imported. Stale/duplicate revisions fail rather than overwriting newer choices; reload current choices, inspect them and confirm again. Imports append the server-authored “TD paper-form entry” actor to existing change history in the same write. No guest PIN or session is changed.
+
+Validation: `node tests/meal-paper.mjs` and `node tests/meal-choices.mjs`. Browser verification used a real two-form image and real locally served OCR assets, with backend APIs mocked; it checked separate crops/text, explicit confirmation, corrected choices/dietary submission and phone layout.
