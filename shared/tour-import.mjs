@@ -1,6 +1,6 @@
 // Publish Xavier’s supplied official Vietnam, Cambodia & Thailand schedules.
 // TD edits/hides saved with this version take precedence after the import.
-export const GUEST_IMPORT_VERSION="thailand-cute-guests-v1";
+export const GUEST_IMPORT_VERSION="ic2026-official-guests-2026-11-01-v1";
 export const TOUR_IMPORT_VERSION='vct-ic2026-official-2026-10-28-v1';
 /** @param {Record<string, any>} entries @returns {Record<string, any>} */
 export function importedReleaseEntries(entries={}){

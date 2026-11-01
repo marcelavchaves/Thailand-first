@@ -39,4 +39,4 @@ export function ResourceGroup({group}:{group:string}){
  return <>{Object.values(items).filter(x=>x.group===group&&x.id.startsWith('custom-')).map(x=><ResourceSlot key={x.id} id={x.id} title={x.title} group={group}/>)}{authenticated&&<><button className="add-resource" onClick={()=>setNewId('custom-'+crypto.randomUUID())}>＋ Add a document</button>{newId&&!items[newId]&&<ResourceSlot id={newId} title="New document" group={group}/>}</>}</>;
 }
 
-export function Handouts(){const {items,loaded,error}=useResources();const {authenticated}=useTDSession();const entries=Object.values(items).filter(x=>x.group==='handouts'&&!x.deleted&&(authenticated||x.visible));return <>{loaded&&!entries.length&&<p>No handouts yet. Your tour director will add them as needed.</p>}{!loaded&&<p>{error||'Checking handouts…'}</p>}<ResourceGroup group="handouts"/></>;}
+export function Handouts(){const {items,loaded,error}=useResources();const {authenticated}=useTDSession();const entries=Object.values(items).filter(x=>x.group==='handouts'&&!x.deleted&&(authenticated||x.visible));return <>{!loaded&&<p>{error||'Checking handouts…'}</p>}<ResourceGroup group="handouts"/></>;}

@@ -19,7 +19,6 @@ export default function RecommendedReading({visible}:{visible:boolean}) {
     {guide.series.map(series=><article className="resource-card" key={series.title}><h3>{series.title}</h3><p className="resource-byline">{series.episodes}</p><p>{series.description}</p></article>)}
    </div></details>
    <p className="resource-byline">Viewing platforms and episode details are listed as provided in the guide. Availability may vary by region and change over time.</p>
-   <details className="resource-category"><summary>4-week pre-departure plan</summary><div className="resource-list">{guide.weeks.map(week=><p key={week}>{week}</p>)}</div></details>
   </div>
  </details>;
 }
