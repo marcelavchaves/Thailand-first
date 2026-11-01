@@ -1,3 +1,8 @@
+## TD-controlled optional day content
+
+- Default each day’s announcement, memories, trivia and language lessons to hidden, with per-day TD Suitcase controls. Saved announcements stay drafts until revealed; hidden announcements are omitted from public API responses and update notifications.
+- Use the compact announcement up/down control on both sites. Remove Home clock location, schedule headings and daily-note panels from traveler journey pages.
+
 ## Xavier’s welcome letter and official IC 2026 itinerary
 
 - Load the supplied welcome letter in Day 1 and Essentials → Handouts, with both original PDFs available. Update Days 1–15 and flight details from the official itinerary; retain Day 16 because it is absent from the supplied PDF.

@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import {build} from 'esbuild';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {join} from 'node:path';
+const dir=await mkdtemp(join(process.cwd(),'.day-feature-test-'));
+const state={td:false,stores:new Map(),sequence:0,announcements:[]};globalThis.visibilityTest=state;
+const storage=`export function getStore({name}){const s=globalThis.visibilityTest;if(!s.stores.has(name))s.stores.set(name,new Map());const map=s.stores.get(name);return {get:async k=>structuredClone(map.get(k)?.data??null),getWithMetadata:async k=>structuredClone(map.get(k)??null),setJSON:async(k,data,options={})=>{const old=map.get(k);if(options.onlyIfNew&&old||options.onlyIfMatch&&options.onlyIfMatch!==old?.etag)return {modified:false};const etag=String(++s.sequence);map.set(k,{data:structuredClone(data),etag});return {modified:true,etag}},delete:async k=>map.delete(k)}}`;
+try{
+ await build({stdin:{contents:'export {default as features} from "./netlify/functions/day-features.mts";export {default as notes} from "./netlify/functions/xavier-notes.mts";',resolveDir:process.cwd(),loader:'ts'},outfile:join(dir,'test.mjs'),bundle:true,platform:'node',format:'esm',plugins:[{name:'mocks',setup(b){b.onResolve({filter:/^@netlify\/blobs$|\/td-auth$|\/updates$/},a=>({path:a.path,namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},a=>({contents:a.path.endsWith('/td-auth')?'export async function hasTDSession(){return globalThis.visibilityTest.td} export async function canEditAnnouncements(){return false} export function sameOrigin(r){return r.headers.get("origin")===new URL(r.url).origin}':a.path.endsWith('/updates')?'export async function announce(message){globalThis.visibilityTest.announcements.push(message)}':storage}));}}]});
+ const {features,notes}=await import(join(dir,'test.mjs'));
+ const req=(method='GET',body,query='',origin='https://test.local')=>new Request('https://test.local/api/test'+query,{method,headers:{origin,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+ const ok=async r=>{assert.equal(r.status,200,await r.clone().text());return r.json();};
+ let data=await ok(await features(req()));assert.equal(Object.keys(data.days).length,16);assert(Object.values(data.days).every(d=>Object.values(d.features).every(v=>v===false)));
+ const hidden={announcement:false,memories:false,trivia:false,language:false};
+ assert.equal((await features(req('PUT',{day:5,features:hidden,revision:null}))).status,401);
+ state.td=true;
+ assert.equal((await features(req('PUT',{day:5,features:{...hidden,announcement:true},revision:null}))).status,400);
+ await ok(await notes(req('PUT',{day:5,text:'Private draft note'}),{}));assert.equal(state.announcements.length,0);
+ state.td=false;assert.equal((await ok(await notes(req('GET',null,'?day=5'),{}))).note,null);
+ state.td=true;assert.equal((await ok(await notes(req('GET',null,'?day=5'),{}))).note.text,'Private draft note');
+ let saved=await ok(await features(req('PUT',{day:5,features:{...hidden,announcement:true,trivia:true},revision:null})));
+ assert.equal((await features(req('PUT',{day:5,features:hidden,revision:null}))).status,409);
+ assert.equal((await features(req('PUT',{day:4,features:hidden,revision:null}))).status,400);
+ assert.equal((await features(req('PUT',{day:5,features:{...hidden,foo:true},revision:saved.revision}))).status,400);
+ assert.equal((await features(req('PUT',{day:5,features:hidden,revision:saved.revision},'','https://evil.test'))).status,403);
+ state.td=false;assert.equal((await ok(await notes(req('GET',null,'?day=5'),{}))).note.text,'Private draft note');
+ data=await ok(await features(req()));assert.equal(data.days[5].features.trivia,true);assert.equal(data.days[6].features.trivia,false);assert.equal(data.days[5].features.memories,false);
+ state.td=true;await ok(await notes(req('PUT',{day:5,text:'Visible edit'}),{}));assert.equal(state.announcements.length,1);
+ await ok(await features(req('PUT',{day:5,features:{...hidden,trivia:true},revision:saved.revision})));
+ await ok(await notes(req('PUT',{day:5,text:'Hidden edited draft'}),{}));assert.equal(state.announcements.length,1);
+ state.td=false;assert.equal((await ok(await notes(req('GET',null,'?day=5'),{}))).note,null);
+ state.td=true;data=await ok(await features(req()));await ok(await features(req('PUT',{day:5,features:{...hidden,announcement:true,trivia:true},revision:data.days[5].revision})));
+ await ok(await notes(req('DELETE',{day:5}),{}));data=await ok(await features(req()));assert.equal(data.days[5].features.announcement,false);assert.equal(data.days[5].features.trivia,true);
+ console.log('PASS per-day optional content: hidden defaults, TD-only controls, CAS/CSRF/day isolation, drafts private and silent, release/hide, deleting announcement hides it without altering other options.');
+}finally{delete globalThis.visibilityTest;await rm(dir,{recursive:true,force:true});}

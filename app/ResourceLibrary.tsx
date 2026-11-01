@@ -24,7 +24,7 @@ export function ResourceSlot({id,title,group='guides',children,icon='book',capti
  const visible=loaded&&item?.visible&&!item.deleted;
  const content=item?.file?<a className="button" href={`/api/tour-resources?file=${encodeURIComponent(id)}`} target="_blank" rel="noreferrer">Open {item.title || title} ↗</a>:children;
  return <section className="release-card" aria-label={displayTitle}>
- <div className="release-heading"><BrandIcon name={icon}/><div><h3>{displayTitle}</h3>{!visible&&<p className="release-soon">{item?.deleted?'Removed':'Coming soon'}</p>}</div></div>
+ {group!=='schedules'&&<div className="release-heading"><BrandIcon name={icon}/><div><h3>{displayTitle}</h3>{!visible&&<p className="release-soon">{item?.deleted?'Removed':'Coming soon'}</p>}</div></div>}
  {!visible&&!authenticated&&<p className="release-caption">{error||caption}</p>}
  {visible&&content}
  {authenticated&&<div className="release-controls" data-pdf-exclude><p>{visible?'Visible to travelers':item?.deleted?'Deleted — hidden from travelers':'Hidden from travelers'}</p><fieldset disabled={busy||!loaded}>

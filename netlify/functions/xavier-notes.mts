@@ -1,4 +1,5 @@
 import { announce } from "../lib/updates";
+import {dayFeatures,hideAnnouncement} from "../lib/day-features";
 import { canEditAnnouncements, hasTDSession, sameOrigin } from "../lib/td-auth";
 import { getStore } from "@netlify/blobs";
 import type { Config, Context } from "@netlify/functions";
@@ -35,6 +36,7 @@ const handler = async (request: Request, _context: Context) => {
     if (request.method === "GET") {
       const day = validDay(url.searchParams.get("day"));
       if (!day) return response({ error: "Choose a valid journey day." }, 400);
+      if(!await hasTDSession(request)&&!(await dayFeatures(day)).announcement)return response({note:null});
       const note = (await store.get(`day/${day}`, { type: "json" })) as XavierNote | null;
       return response({ note });
     }
@@ -50,7 +52,7 @@ const handler = async (request: Request, _context: Context) => {
       const note: XavierNote = { tripDate: day, text, updatedAt: new Date().toISOString() };
       const previous = await store.get(`day/${day}`, { type: "json" });
       await store.setJSON(`day/${day}`, note);
-      await announce({ action: `${previous ? "Edited" : "Posted"} the Day ${day-4} announcement: ${text.slice(0, 110)}${text.length > 110 ? "…" : ""}`, section: "Home · Journey", day, url: `/?tab=journey&day=${day-4}` }, _context);
+      if((await dayFeatures(day)).announcement)await announce({ action: `${previous ? "Edited" : "Posted"} the Day ${day-4} announcement: ${text.slice(0, 110)}${text.length > 110 ? "…" : ""}`, section: "Home · Journey", day, url: `/?tab=journey&day=${day-4}` }, _context);
       return response({ note });
     }
 
@@ -62,8 +64,10 @@ const handler = async (request: Request, _context: Context) => {
       if (!(await hasTDSession(request) || await canEditAnnouncements(password))) return response({ error: "Please sign in using TD Suitcase." }, 401);
       if (!day) return response({ error: "Choose a valid journey day." }, 400);
       const previous = await store.get(`day/${day}`, { type: "json" });
+      const wasVisible=(await dayFeatures(day)).announcement;
+      await hideAnnouncement(day);
       await store.delete(`day/${day}`);
-      if (previous) await announce({ action: `Removed the Day ${day-4} announcement`, section: "Home · Journey", day, url: `/?tab=journey&day=${day-4}` }, _context);
+      if (previous&&wasVisible) await announce({ action: `Removed the Day ${day-4} announcement`, section: "Home · Journey", day, url: `/?tab=journey&day=${day-4}` }, _context);
       return response({ ok: true });
     }
 
