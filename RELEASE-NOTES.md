@@ -1,3 +1,7 @@
+## Private live TD password reset
+
+- Add an expiring, single-use live-site reset link. Saving replaces only the TD password, revokes old password sessions and signs in the new session. No credentials or reset tokens are bundled in the page.
+
 ## Official guest list and marked-section cleanup
 
 - Import the supplied 19-person November 16 IC guest list, in the supplied column order, with names and hometowns only. Use distinct guest IDs so sample guests’ meal/private records are not assigned to real travelers; retain prior Safe assignments without recycling them.
