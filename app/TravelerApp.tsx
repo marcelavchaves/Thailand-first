@@ -3,7 +3,6 @@ import {Handouts} from './ResourceLibrary';
 import {ResourceProvider, ResourceSlot, ResourceGroup, useResources} from "./ResourceLibrary";
 import BrandIcon from "./BrandIcon";
 import TDSuitcase from "./TDSuitcase";
-import SafePlans from "./SafePlans";
 import WondercaseMark from "./WondercaseMark";
 import PdfDownload from "./PdfDownload";
 import MemoryAttachments, {prepareMemoryFile} from './MemoryAttachments';
@@ -1928,7 +1927,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             </div>
             {detail.date === days[0].date && <><XavierWelcomePanel expanded /></>}
             <JourneyHotelResources name={detail.hotel}/>
-            <SafePlans key={`personal-${detail.date}`} date={tripDate(detail.date).toISOString().slice(0,10)} embedded/>
               {localGuides.filter(guide => guide.days.includes(detail.date)).map(guide => <ResourceSlot id={`local-${localGuides.indexOf(guide)}`} title="Meet your local guide" group="local-guides" icon="people" key={guide.name}><section className="local-guide-panel" aria-label="Meet your local guide"><span className="eyebrow">MEET YOUR LOCAL GUIDE</span><h2>{guide.name} <small>· {guide.destination}</small></h2><a href={`/images/${guide.image}`} target="_blank" rel="noreferrer" aria-label={`Open ${guide.name}’s guide card at full size`}><img src={`/images/${guide.image}`} alt={`${guide.name}, your local guide in ${guide.destination}`} /></a><p>{guide.introduction}</p></section></ResourceSlot>)}
             
             {internalFlights.filter(flight => flight.date === detail.date).map(flight => <section className="day-flight-panel" key={flight.date} aria-label="Today’s internal flight">
@@ -1963,8 +1961,8 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             {key:'local-guides',title:'Local guides',image:'/images/essentials-local-guides.svg'},
           ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={activeEssentialsSection===item.key} aria-controls={`essentials-${item.key}`} onClick={()=>{const next=activeEssentialsSection===item.key?null:item.key;sectionScrollTarget.current=next?`essentials-${next}`:null;setEssentialsSection(next);setHotelTarget(null);}}><img src={item.image} alt=""/><strong>{item.title}</strong></button>)}</div>
           <section id="essentials-local-guides" hidden={activeEssentialsSection!=='local-guides'} aria-labelledby="local-guides-title"><h2 id="local-guides-title">Local guides</h2><ResourceGroup group="local-guides"/>{localGuides.map((guide,i)=><ResourceSlot key={guide.name} id={`local-${i}`} title={guide.name} group="local-guides" icon="people"><section className="local-guide-panel"><h3>{guide.name} · {guide.destination}</h3><img src={`/images/${guide.image}`} alt={guide.name}/><p>{guide.introduction}</p></section></ResourceSlot>)}</section>
-          <section className="essentials-handouts" id="essentials-handouts" hidden={activeEssentialsSection!=='handouts'} aria-labelledby="handouts-title"><h2 id="handouts-title">Handouts</h2><div className="official-trip-documents"><XavierWelcomePanel/><p><a href="/documents/ic-itinerary-2026-official.pdf" target="_blank" rel="noopener noreferrer">Official 2026 itinerary (PDF) ↗</a></p></div><Handouts/>
-</section><section id="essentials-hotels" hidden={activeEssentialsSection!=='hotels'} aria-labelledby="stays"><h2 id="stays">Hotels</h2><p>Overnight stays · November 16–December 1, 2026. Vedana Lagoon Resort is a lunch stop on November 19, not an overnight stay.</p>
+          <section className="essentials-handouts" id="essentials-handouts" hidden={activeEssentialsSection!=='handouts'} aria-labelledby="handouts-title"><h2 id="handouts-title">Handouts</h2><Handouts/>
+</section><section id="essentials-hotels" hidden={activeEssentialsSection!=='hotels'} aria-labelledby="stays"><h2 id="stays">Hotels</h2><p>Overnight stays · November 16–December 1, 2026.</p>
           <div className="hotel-list">
             {hotels.map((h, i) => (
               <article className="hotel-card" id={`hotel-${i}`} tabIndex={-1} key={h.name}>
@@ -2072,9 +2070,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
        ...storytelling.map(r=>({id:`story-${r.id}`,title:r.title,group:r.hotelIndex>=0?`hotel-${r.hotelIndex}`:'stories',content:<a href={`/storytelling.html?story=${r.id}`} target="_blank" rel="noreferrer">Open {r.title} ↗</a>})),
        ...localGuides.map((r,i)=>({id:`local-${i}`,title:r.name,group:'local-guides',content:<img src={`/images/${r.image}`} alt={r.name}/>}))
       ]}/>}
-      <footer className="footer">
-        Vietnam, Cambodia &amp; Thailand · xxx edition · 2026
-      </footer>
       <nav className="bottom-nav" aria-label="Main navigation">
         {(
           [

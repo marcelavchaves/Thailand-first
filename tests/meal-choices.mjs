@@ -17,7 +17,7 @@ try{
  const call=async(method,body,query='',cookie='')=>{if(method==='PUT'&&body&&!Object.hasOwn(body,'guestId')){const token=cookie.split('=')[1];const session=token?state.stores.get('meal-choices-v1')?.get('session/'+createHash('sha256').update(token).digest('hex'))?.data:null;body={...body,guestId:session?.guestId};}return handler(req(method,body,query,cookie));};
  const ok=async response=>{assert.equal(response.status,200,await response.clone().text());return response.json();};
  assert.equal(MEAL_DEADLINE,'2026-11-16T11:30:00.000Z');
- const initial=await ok(await call('GET'));assert.equal(initial.guests.length,16);assert.equal(initial.pinRequired,false);assert.equal(Object.keys(initial.deadlines).length,5);
+ const initial=await ok(await call('GET'));assert.equal(initial.guests.length,19);assert.equal(initial.pinRequired,false);assert.equal(Object.keys(initial.deadlines).length,5);
  const [a,b]=initial.guests;
  assert.equal((await call('GET',null,'?action=td')).status,401);
  assert.equal((await call('GET',null,'?action=export&format=csv')).status,401);

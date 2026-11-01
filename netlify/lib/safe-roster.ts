@@ -4,7 +4,7 @@ import {assignSafeIds,type SafeAssignments} from '../../lib/safe-ids';
 import {cleanGuests,type Guest} from '../../lib/guest-roster';
 import {GUEST_IMPORT_VERSION} from "../../shared/tour-import.mjs";
 export const GUEST_LIST_VERSION=GUEST_IMPORT_VERSION;
-export const GUEST_ORDER_VERSION="sm23-left-column-then-right-v1";
+export const GUEST_ORDER_VERSION="ic2026-left-column-then-right-v1";
 export type RosterData={guests:Guest[];revealed:boolean;safeAssignments?:SafeAssignments;guestListVersion?:string;guestOrderVersion?:string};
 export function rosterData(data?:RosterData|null){
  // Publish the supplied list once, retaining matching guest/profile IDs and

@@ -1,3 +1,8 @@
+## Official guest list and marked-section cleanup
+
+- Import the supplied 19-person November 16 IC guest list, in the supplied column order, with names and hometowns only. Use distinct guest IDs so sample guests’ meal/private records are not assigned to real travelers; retain prior Safe assignments without recycling them.
+- Remove the marked pre-departure plan, My plans journey panel, Vedana hotel explanatory sentence, built-in Handouts welcome/itinerary block, empty-handout message and repeated trip footer. Keep Safe access and Day 1’s welcome letter elsewhere intact.
+
 ## TD-controlled optional day content
 
 - Default each day’s announcement, memories, trivia and language lessons to hidden, with per-day TD Suitcase controls. Saved announcements stay drafts until revealed; hidden announcements are omitted from public API responses and update notifications.
