@@ -1,3 +1,8 @@
+## TD-controlled optional day content
+
+- Default each day’s announcement, memories, trivia and language lessons to hidden, with per-day TD Suitcase controls. Saved announcements stay drafts until revealed; hidden announcements are omitted from public API responses and update notifications.
+- Use the compact announcement up/down control on both sites. Remove Home clock location, schedule headings and daily-note panels from traveler journey pages.
+
 ## Prototype paper meal-choice import
 
 - Add TD-only camera/multiple-photo entry with layout splitting and drag-to-select sheet regions. Recognize each crop on-device and keep separate review entries per paper.

@@ -5,6 +5,7 @@ import {TDLogin,useTDSession} from './TDSession';
 import {ResourceSlot,ResourceGroup,useResources} from './ResourceLibrary';
 import CityMapUploads from './CityMapUploads';
 import JourneyTimeline from './JourneyTimeline';
+import {DayOptions} from './DayFeatures';
 import useXavierPhoto from './useXavierPhoto';
 import './td-suitcase.css';
 import WondercaseMark from './WondercaseMark';
@@ -25,7 +26,8 @@ export default function TDSuitcase({days,dateLabel,announcement,resources,groups
    <TDLogin open={false} onClose={()=>{}}/>
    <nav className="td-workspace-nav" aria-label="TD Suitcase sections">{[['announcements','Announcements'],['schedule','Daily schedule'],['documents','Documents & menus'],['maps','Maps'],['travelers','Travelers'],['account','My account'],...(process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'?[['meal-choices','Meal choices']]:[])].map(([id,title])=><button key={id} aria-pressed={section===id} onClick={()=>setSection(id)}>{title}</button>)}</nav>
    {(section==='announcements'||section==='schedule')&&<label className="td-day-picker">Journey day<select value={dayId} onChange={e=>setDayId(Number(e.target.value))}>{days.map((d,i)=><option key={d.date} value={d.date}>Day {i+1} · {dateLabel(d.date)} · {d.title}</option>)}</select></label>}
-   {section==='announcements'&&<div key={`note-${dayId}`}><p className="td-hint">Post an announcement for the selected day. Once saved, you can share it through WhatsApp.</p>{announcement(dayId)}</div>}
+   {(section==='announcements'||section==='schedule')&&<DayOptions day={dayId}/>}
+   {section==='announcements'&&<div key={`note-${dayId}`}><p className="td-hint">Prepare an announcement for the selected day, then use the show/hide option to release it.</p>{announcement(dayId)}</div>}
    {section==='schedule'&&<div key={`schedule-${dayId}`}><ResourceSlot id={`schedule-${dayId}`} title={`Day ${days.indexOf(day)+1} schedule`} group="schedules" icon="calendar"/><JourneyTimeline day={dayId} dateLabel={dateLabel(dayId)} events={day.events} note={day.note}/></div>}
    {section==='documents'&&<div><h2>Documents &amp; menus</h2><p className="td-hint">Upload PDFs or images up to 3 MB. New uploads stay hidden until you reveal them. Add handouts as needed; this collection starts empty. Revealed documents appear in Essentials under the matching collection or hotel; the Maps collection appears in the Map tab.</p><label className="td-day-picker">Collection<select value={group} onChange={e=>setGroup(e.target.value)}>{groups.map(g=><option key={g.id} value={g.id}>{g.title}</option>)}</select></label>{error&&<p role="alert">{error} <button onClick={()=>void reload()}>Try again</button></p>}{loaded&&<p className="td-hint">{Object.values(items).filter(i=>i.group===group&&i.visible&&!i.deleted).length} released in this collection</p>}{resources.filter(r=>r.group===group).map(r=><ResourceSlot key={r.id} id={r.id} title={r.title} group={r.group}>{r.content}</ResourceSlot>)}<ResourceGroup key={group} group={group}/></div>}
    {section==='maps'&&<CityMapUploads/>}

@@ -19,6 +19,7 @@ import {HelpAndTutorials} from './JourneyExtras';
 import useXavierPhoto from "./useXavierPhoto";
 import GuestProfiles from "./GuestProfiles";
 import JourneyTimeline from "./JourneyTimeline";
+import {DayFeaturesProvider,useDayFeatures} from "./DayFeatures";
 import welcomeLetter from "./xavier-welcome.json";
 import "./meal-choices.css";
 import DayPhoto from "./DayPhoto";
@@ -436,7 +437,7 @@ function CurrentTripDay({ date, now, onPrevious, onNext, onSelect, children }: {
     <div className={`home-day-overview${beforeTrip ? ' before-trip' : ''}`}>
       <div className="home-overview-top">
         <div className="home-day-switch"><button type="button" aria-label="Previous Home day" disabled={date === days[0].date} onClick={onPrevious}>‹</button><span className="journey-day-number">Day {tauck(date)}</span><button type="button" aria-label="Next Home day" disabled={date === days[days.length-1].date} onClick={onNext}>›</button></div>
-        <div className="home-local-clock">{now&&<time>{now.toLocaleTimeString('en-US',{timeZone:'Asia/Bangkok',hour:'numeric',minute:'2-digit'})}</time>}<small>{day.region} time</small></div>
+        <div className="home-local-clock">{now&&<time>{now.toLocaleTimeString('en-US',{timeZone:'Asia/Bangkok',hour:'numeric',minute:'2-digit'})}</time>}</div>
       </div>
       <div className="home-overview-date"><div className="home-date-row"><h2>{longTripDate(date)}</h2><button type="button" className="home-calendar-toggle" aria-label="Toggle journey calendar" title="Calendar" aria-expanded={calendarOpen} aria-controls="home-trip-calendar" onClick={()=>setCalendarOpen(open=>!open)}><BrandIcon name="calendar"/></button></div><p>{day.region}</p></div>
       <svg className="home-destination-outline" viewBox="0 0 320 110" fill="none" stroke="currentColor" strokeWidth="1" aria-hidden="true"><path d="M0 95 70 20 125 83 172 34 245 96M142 95l62-62 85 62M0 100h320M250 95V44m-20 22 20-22 20 22m-36 0h32m-42 16 26-24 26 24m-50 0h48"/></svg>
@@ -644,7 +645,7 @@ function XavierWelcomePanel({ expanded = false }: { expanded?: boolean }) {
   </details>;
 }
 
-function XavierDailyNote({ date, home = false, currentDay = false, headerAction }: { date: number; home?: boolean; currentDay?: boolean; headerAction?:React.ReactNode }) {
+function XavierDailyNote({ date, home = false, currentDay = false, headerAction,editor=false }: { date: number; home?: boolean; currentDay?: boolean; headerAction?:React.ReactNode;editor?:boolean }) {
   const { authenticated, configured, refresh: refreshTD } = useTDSession();
   const legacyMode = configured === false;
   const [note, setNote] = useState<XavierNote | null>(null);
@@ -749,6 +750,7 @@ function XavierDailyNote({ date, home = false, currentDay = false, headerAction 
   }
 
   const visibleNote = note?.tripDate === date ? note : null;
+  if(!editor&&(!visibleNote||loading))return null;
 
   return (
     <section className={`xavier-daily-note${visibleNote ? " has-note" : ""}${home ? " home-special-notes" : ""}`}>
@@ -1857,9 +1859,10 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     if (deltaX < 0 && detail.date < 20) openDay(detail.date + 1);
     if (deltaX > 0 && detail.date > 5) openDay(detail.date - 1);
   }
+  const {forDay:dayFeatures}=useDayFeatures();
   const detail = tab === "home" ? days.find((d) => d.date === (selected ?? currentDay)) : undefined;
   const previewFirstDay = (clock?.beforeTrip ?? true) && detail?.date === days[0].date;
-  const announcementPanel=detail?<div key="announcement" className="home-announcement"><XavierDailyNote date={detail.date} headerAction={<button className="home-announcement-move" type="button" onClick={swapHomePanels} aria-label={scheduleFirst?"Move announcement up":"Move announcement down"} title={scheduleFirst?"Move announcement up":"Move announcement down"} aria-controls="home-journey-panels"><span aria-hidden="true">{scheduleFirst?"↑":"↓"}</span></button>}/></div>:null;
+  const announcementPanel=detail&&dayFeatures(detail.date).announcement?<div key="announcement" className="home-announcement"><XavierDailyNote date={detail.date} headerAction={<button className="home-announcement-move" type="button" onClick={swapHomePanels} aria-label={scheduleFirst?"Move announcement up":"Move announcement down"} title={scheduleFirst?"Move announcement up":"Move announcement down"} aria-controls="home-journey-panels"><span aria-hidden="true">{scheduleFirst?"↑":"↓"}</span></button>}/></div>:null;
   const schedulePanel=detail?<div key="schedule" className="home-schedule-card"><CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}>
               <div className="home-schedule-content">
             {previewFirstDay ? <section className="release-card home-predeparture-schedule" aria-label="Day 1 itinerary"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/></section> : <ResourceSlot id={`schedule-${detail.date}`} title="Schedule" group="schedules" icon="calendar"><JourneyTimeline heading="" key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
@@ -1905,7 +1908,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             <button className="journey-back-home" type="button" onClick={()=>{setFullJourney(false);window.scrollTo({top:0,behavior:"instant"});}}>← Back to Home</button>
             <CurrentTripDay date={detail.date} now={now} onPrevious={()=>openDay(detail.date-1)} onNext={()=>openDay(detail.date+1)} onSelect={openDay}/>
             <h1>{detail.title}</h1>
-            <XavierDailyNote date={detail.date}/>
+            {dayFeatures(detail.date).announcement&&<XavierDailyNote date={detail.date}/>}
             {previewFirstDay ? <JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note} previewUnavailable/> : <ResourceSlot id={`schedule-${detail.date}`} title="Schedule" group="schedules" icon="calendar"><JourneyTimeline key={detail.date} day={detail.date} dateLabel={longTripDate(detail.date)} events={detail.events} note={detail.note}/></ResourceSlot>}
             <div className="detail-footer">
               <div>
@@ -1938,10 +1941,10 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             </section>)}
             <div className="day-community-sections">
               {storytelling.some(story => story.days.includes(detail.date)) && <section className="storytelling-panel" aria-label="Stories of your destination"><span className="eyebrow">STORIES OF YOUR DESTINATION</span>{storytelling.filter(story => story.days.includes(detail.date)).map(story => <ResourceSlot key={story.id} id={`story-${story.id}`} title={story.title} group="stories"><p>{story.description}</p><a href={`/storytelling.html?story=${story.id}&day=${detail.date-4}`}>Read the illustrated story →</a></ResourceSlot>)}</section>}
-              <TravelJournal date={detail.date} />
+              {dayFeatures(detail.date).memories&&<TravelJournal date={detail.date} />}
             </div>
-            <details className="day-disclosure" key={`language-${detail.date}`}><summary>A little language lesson</summary><LocalLanguageLesson region={detail.region} /></details>
-              <details className="day-disclosure" key={`trivia-${detail.date}`}><summary>How about some trivia?</summary><DailyTrivia date={detail.date} /></details>
+            {dayFeatures(detail.date).language&&<details className="day-disclosure" key={`language-${detail.date}`}><summary>A little language lesson</summary><LocalLanguageLesson region={detail.region} /></details>}
+              {dayFeatures(detail.date).trivia&&<details className="day-disclosure" key={`trivia-${detail.date}`}><summary>How about some trivia?</summary><DailyTrivia date={detail.date} /></details>}
             <details className="day-save-format"><summary><BrandIcon name="book"/><span>Save this day</span><span aria-hidden="true">⌄</span></summary><p>Choose your format:</p><div className="day-save-actions">
               <DayPhoto label="Photo (PNG)" date={detail.date} dateLabel={longTripDate(detail.date)} title={detail.title} events={detail.events} note={detail.note} flight={internalFlights.find(flight=>flight.date===detail.date)} hotel={detail.hotel} />
               <PdfDownload url={`/api/export-itinerary?section=days&day=${tauck(detail.date)}`} label="PDF document" />
@@ -2053,14 +2056,14 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           {key:'rating',title:'Help Wondercase Grow',icon:'feedback',image:'/images/more-grow.svg'},
         ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={moreSection===item.key} aria-controls={`more-${item.key}`} onClick={()=>{const next=moreSection===item.key?null:item.key;sectionScrollTarget.current=next?`more-${next}`:null;setMoreSection(next);}}><img src={item.image} alt=""/><strong>{item.title}</strong><small>{item.key==='learn'?'Trivia & language':item.key==='help'?'FAQs, how-tos & tutorials':item.key==='shop'?'Coming soon':item.key==='rating'?'Your ideas help us bloom':null}</small></button>)}</div>
         {moreSection==='help'&&<HelpAndTutorials/>}
-        {moreSection==='learn'&&<section id="more-learn" className="more-open-panel"><h2>Learn more</h2><label>Choose a journey day<select value={learnDay} onChange={event=>setLearnDay(Number(event.target.value))}>{days.map(day=><option key={day.date} value={day.date}>Day {tauck(day.date)} · {day.title}</option>)}</select></label><LocalLanguageLesson key={`learn-language-${learnDay}`} region={days.find(day=>day.date===learnDay)!.region}/><LanguageQuiz key={`language-quiz-${learnDay}`} region={days.find(day=>day.date===learnDay)!.region}/><DailyTrivia key={`learn-trivia-${learnDay}`} date={learnDay}/></section>}
+        {moreSection==='learn'&&<section id="more-learn" className="more-open-panel"><h2>Learn more</h2><label>Choose a journey day<select value={learnDay} onChange={event=>setLearnDay(Number(event.target.value))}>{days.map(day=><option key={day.date} value={day.date}>Day {tauck(day.date)} · {day.title}</option>)}</select></label>{dayFeatures(learnDay).language&&<><LocalLanguageLesson key={`learn-language-${learnDay}`} region={days.find(day=>day.date===learnDay)!.region}/><LanguageQuiz key={`language-quiz-${learnDay}`} region={days.find(day=>day.date===learnDay)!.region}/></>}{dayFeatures(learnDay).trivia&&<DailyTrivia key={`learn-trivia-${learnDay}`} date={learnDay}/>}</section>}
 
         <RecommendedReading visible={moreSection==='reading'}/>
         <details id="more-tauck" key={`tauck-${moreSection}`} hidden={moreSection!=='tauck'} open className="day-disclosure asia-journeys"><summary>More Tauck experiences</summary><div className="asia-journeys-list"><article className="asia-journey-card"><span className="asia-journey-duration">14 days</span><h2>Kingdoms &amp; Dragons: Singapore to Bali</h2><p>Journey from Singapore through Java, Bali and Flores, exploring Borobudur and Prambanan, Ubud and Komodo National Park, before ending in Jimbaran Bay.</p><a href="https://www.tauck.com/tours/kingdoms-dragons-singapore-bali-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Kingdoms &amp; Dragons: Singapore to Bali on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">16 days</span><h2>The Mekong, Vietnam, Laos &amp; Cambodia</h2><p>Ho Chi Minh City, Hanoi, Phnom Penh, Siem Reap and Luang Prabang.</p><a href="https://www.tauck.com/tours/indochina-vietnam-cambodia-laos-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View The Mekong, Vietnam, Laos &amp; Cambodia on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>A Portrait of India</h2><p>New Delhi, Agra, Jaipur, Udaipur, Mumbai, Kochi, Kumarakom and Varanasi.</p><a href="https://www.tauck.com/tours/portrait-of-india-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View A Portrait of India on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>Northern India &amp; Nepal</h2><p>New Delhi, Kathmandu, Dhulikhel, Mumbai, Bandhavgarh National Park and Chitwan National Park.</p><a href="https://www.tauck.com/tours/northern-india-and-nepal-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Northern India &amp; Nepal on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">13 days</span><h2>India’s Golden Triangle, Udaipur &amp; Mumbai</h2><p>New Delhi, Agra, Jaipur, Udaipur, Varanasi and Mumbai.</p><a href="https://www.tauck.com/tours/spotlight-on-india-guided-tour" target="_blank" rel="noopener noreferrer" aria-label="View India’s Golden Triangle, Udaipur &amp; Mumbai on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article></div></details>
         <details id="more-rating" key={`rating-${moreSection}`} hidden={moreSection!=='rating'} open className="day-disclosure feedback-disclosure"><summary>Help Wondercase Grow</summary><AppRatings /></details>
       </section>}
       {tab === "gallery" && <section className="section gallery-page"><h1 className="tab-page-title">Gallery</h1><article className="album-invite"><h2>Shared Photo Gallery coming soon</h2></article></section>}
-      {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day}/>} groups={[{id:'handouts',title:'Handouts'},{id:'maps',title:'Maps'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
+      {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day} editor/>} groups={[{id:'handouts',title:'Handouts'},{id:'maps',title:'Maps'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
        {id:'guide-singapore',title:'Singapore Guide',group:'guides',content:<span/>},
        {id:'guide-java',title:'Java Guide',group:'guides',content:<XavierJavaGuide/>},
        {id:'guide-bali',title:'Bali Guide',group:'guides',content:<XavierBaliGuide/>},
@@ -2098,5 +2101,5 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
 }
 
 export default function Home(props: {initialTab?: Tab;initialSelected?:number|null}) {
- return <TDProvider><ResourceProvider><TravelerHome {...props}/></ResourceProvider></TDProvider>;
+ return <TDProvider><DayFeaturesProvider><ResourceProvider><TravelerHome {...props}/></ResourceProvider></DayFeaturesProvider></TDProvider>;
 }
