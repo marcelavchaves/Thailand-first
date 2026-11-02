@@ -1,3 +1,8 @@
+## Soft Forest palette
+
+- Apply Soft Forest (#4F6B5D) to the brand color, UI text, actions, main mark and matching SVG icons. Keep the cream/gold accents.
+- Keep the prototype Journey Shop tile available in its existing coming-soon state.
+
 ## Always-available Learn more activities
 
 - Always show language lessons, the language quiz and trivia in More → Learn more. Keep TD per-day visibility controls for the journey pages.

@@ -1,5 +1,5 @@
-/* Filled actions match the original live Wondercase green. */
-:root{--action-green:var(--brand-green);--action-green-hover:#284d42;--action-ink:var(--brand-ivory)}
+/* Filled actions match the Soft Forest Wondercase green. */
+:root{--action-green:var(--brand-green);--action-green-hover:#435b4f;--action-ink:var(--brand-ivory)}
 :is(
  .day-save-format>summary,.home-announcement-move,.home-bottom-journey,.home-swap-button,.home-open-journey,.journey-action,
  .pdf-export-button,.home-meal-choice-button,.journey-safe-button,
