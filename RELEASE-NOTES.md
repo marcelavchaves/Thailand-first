@@ -1,3 +1,7 @@
+## Remove Home journey action and welcome letter
+
+- Remove the separate Journey/Open journey button from Home and the welcome-letter display from the app. Home day navigation, schedules and other actions remain available.
+
 ## Official guest list and marked-section cleanup
 
 - Import the supplied 19-person November 16 IC guest list, in the supplied column order, with names and hometowns only. Use distinct guest IDs so sample guests’ meal/private records are not assigned to real travelers; retain prior Safe assignments without recycling them.

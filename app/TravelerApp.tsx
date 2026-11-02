@@ -19,7 +19,6 @@ import useXavierPhoto from "./useXavierPhoto";
 import GuestProfiles from "./GuestProfiles";
 import JourneyTimeline from "./JourneyTimeline";
 import {DayFeaturesProvider,useDayFeatures} from "./DayFeatures";
-import welcomeLetter from "./xavier-welcome.json";
 import "./meal-choices.css";
 import DayPhoto from "./DayPhoto";
 import LocalLanguageLesson from "./LocalLanguageLesson";
@@ -631,17 +630,6 @@ function MemoryTextLinks({ text }: { text: string }) {
     const url = part.replace(/[.,!?;:]+$/, '');
     return <span key={index}><a href={url} target="_blank" rel="noopener noreferrer">{url}</a>{part.slice(url.length)}</span>;
   })}</>;
-}
-
-function XavierWelcomePanel({ expanded = false }: { expanded?: boolean }) {
-  return <details className="info-accordion xavier-welcome-panel" open={expanded || undefined}>
-    <summary>
-      <span className="accordion-icon"><Icon name="people" size={18} /></span>
-      <span><small>FROM YOUR TOUR DIRECTOR</small><strong>Xavier’s Welcome Letter</strong></span>
-      <b>＋</b>
-    </summary>
-    <XavierWelcome />
-  </details>;
 }
 
 function XavierDailyNote({ date, home = false, currentDay = false, headerAction,editor=false }: { date: number; home?: boolean; currentDay?: boolean; headerAction?:React.ReactNode;editor?:boolean }) {
@@ -1289,7 +1277,6 @@ function XavierContactCard({onSuitcase}:{onSuitcase:()=>void}) {
   </section>;
 }
 
-function XavierWelcome() { return <article className="xavier-letter"><h2>{welcomeLetter.greeting}</h2><p>{welcomeLetter.welcome}</p>{welcomeLetter.paragraphs.map((text,i)=><p key={i}>{text}</p>)}<p><a href={`mailto:${xavierEmail}`}>{xavierEmail}</a><br/><a href={xavierPhoneUrl}>WhatsApp: {xavierPhoneDisplay}</a></p><h3>Our First Meeting</h3><p>{welcomeLetter.meeting}</p><ol>{welcomeLetter.checklist.map(item=><li key={item}>{item}</li>)}</ol><h3>A Journey to Remember</h3>{welcomeLetter.journey.map((text,i)=><p key={i}>{text}</p>)}<p><strong>I look forward to traveling with you!</strong></p><p>Warmly,<br/>Xavier (X)<br/>Your Tauck Tour Director</p><p><a href="/documents/xavier-welcome-letter.pdf" target="_blank" rel="noopener noreferrer">Open Xavier’s original welcome letter (PDF) ↗</a></p><p><a href="https://maps.app.goo.gl/xYNpoB1qDGe6rfy76?g_st=i" target="_blank" rel="noopener noreferrer">Open Xavier’s Hanoi map ↗</a></p></article>; }
 
 function XavierJavaGuide() {
   const originalPages = ["IMG_8807.jpeg", "IMG_8808.jpeg", "IMG_8809.jpeg"];
@@ -1901,7 +1888,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           <div id="home-journey-panels" className="home-journey-panels">
             {scheduleFirst?[schedulePanel,announcementPanel]:[announcementPanel,schedulePanel]}
           </div>
-          <button className="home-open-journey" type="button" aria-expanded={fullJourney} onClick={()=>{setFullJourney(value=>!value);if(!fullJourney)window.setTimeout(()=>document.getElementById('complete-day-journey')?.scrollIntoView({behavior:'smooth',block:'start'}),0);}}><BrandIcon name="compass"/><span className="home-action-label">Journey Day {tauck(detail.date)}</span><span className="home-action-arrow" aria-hidden="true">→</span></button>
           </>}
           {fullJourney&&<div className="detail-body" id="complete-day-journey">
             <button className="journey-back-home" type="button" onClick={()=>{setFullJourney(false);window.scrollTo({top:0,behavior:"instant"});}}>← Back to Home</button>
@@ -1925,7 +1911,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
                 <strong>{detail.meals}</strong>
               </div>
             </div>
-            {detail.date === days[0].date && <><XavierWelcomePanel expanded /></>}
             <JourneyHotelResources name={detail.hotel}/>
               {localGuides.filter(guide => guide.days.includes(detail.date)).map(guide => <ResourceSlot id={`local-${localGuides.indexOf(guide)}`} title="Meet your local guide" group="local-guides" icon="people" key={guide.name}><section className="local-guide-panel" aria-label="Meet your local guide"><span className="eyebrow">MEET YOUR LOCAL GUIDE</span><h2>{guide.name} <small>· {guide.destination}</small></h2><a href={`/images/${guide.image}`} target="_blank" rel="noreferrer" aria-label={`Open ${guide.name}’s guide card at full size`}><img src={`/images/${guide.image}`} alt={`${guide.name}, your local guide in ${guide.destination}`} /></a><p>{guide.introduction}</p></section></ResourceSlot>)}
             
