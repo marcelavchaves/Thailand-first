@@ -1,3 +1,7 @@
+## Remove Home journey action and welcome letter
+
+- Remove the separate Journey/Open journey button from Home and the welcome-letter display from the app. Home day navigation, schedules and other actions remain available.
+
 ## Private live TD password reset
 
 - Add an expiring, single-use live-site reset link. Saving replaces only the TD password, revokes old password sessions and signs in the new session. No credentials or reset tokens are bundled in the page.
