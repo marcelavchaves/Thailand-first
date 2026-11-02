@@ -1,3 +1,7 @@
+## Always-available Learn more activities
+
+- Always show language lessons, the language quiz and trivia in More → Learn more. Keep TD per-day visibility controls for the journey pages.
+
 ## Remove Home journey action and welcome letter
 
 - Remove the separate Journey/Open journey button from Home and the welcome-letter display from the app. Home day navigation, schedules and other actions remain available.
