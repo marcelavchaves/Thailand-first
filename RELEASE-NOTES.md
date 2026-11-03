@@ -1,3 +1,7 @@
+## Prototype photo gallery link
+
+- Replace the Gallery coming-soon message with the supplied Omnifizer Wondercase Photo Gallery link. Open the gallery directly in a separate window for its own browsing and member flow.
+
 ## Soft Forest palette
 
 - Apply Soft Forest (#4F6B5D) to the brand color, UI text, actions, main mark and matching SVG icons. Keep the cream/gold accents.
