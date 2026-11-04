@@ -1,3 +1,7 @@
+## Prototype meal-page visual cleanup
+
+- Remove the marked intro banner, dietary helper paragraph, repeated submission deadline line and reload button. Keep a screen-reader page title, the dietary field, meal controls and bottom deadline guidance.
+
 ## Submit-only meal choices
 
 - Remove individual and all-meal draft-saving buttons. Put dietary restrictions above meal status and tiles. Keep submission, review, deadlines and existing saved records intact.
