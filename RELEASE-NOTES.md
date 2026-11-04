@@ -1,3 +1,7 @@
+## Guest list simplification
+
+- Remove the “A little about me” section and introduction prompts from guest cards and profile dialogs. Keep names, hometowns, photos, contacts and guest workspace links. Stored introductions are preserved.
+
 ## Soft Forest palette
 
 - Apply Soft Forest (#4F6B5D) to the brand color, UI text, actions, main mark and matching SVG icons. Keep the cream/gold accents.
