@@ -1,3 +1,11 @@
+## Submit-only meal choices
+
+- Remove individual and all-meal draft-saving buttons. Put dietary restrictions above meal status and tiles. Keep submission, review, deadlines and existing saved records intact.
+
+## Guest list simplification
+
+- Remove the “A little about me” section and introduction prompts from guest cards and profile dialogs. Keep names, hometowns, photos, contacts and guest workspace links. Stored introductions are preserved.
+
 ## Prototype gallery destination update
 
 - Update the Gallery button to the newly supplied Omnifizer gallery.
