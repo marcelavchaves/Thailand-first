@@ -1,3 +1,7 @@
+## Prototype gallery destination update
+
+- Update the Gallery button to the newly supplied Omnifizer gallery.
+
 ## Prototype photo gallery link
 
 - Replace the Gallery coming-soon message with the supplied Omnifizer Wondercase Photo Gallery link. Open the gallery directly in a separate window for its own browsing and member flow.
