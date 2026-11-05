@@ -9,7 +9,7 @@ const state={stores:new Map(),td:false,now:RealDate.parse('2026-11-16T10:00:00Z'
 globalThis.mealTest=state;
 globalThis.Date=class extends RealDate{constructor(...args){super(...(args.length?args:[state.now]));}static now(){return state.now;}};
 globalThis.Netlify={env:{get:k=>k==='SITE_ID'?state.site:k==='MEAL_PIN_ENCRYPTION_KEY'?'a'.repeat(64):k==='PROTOTYPE_TD_SETUP_HASH'?createHash('sha256').update('b'.repeat(64)).digest('hex'):k==='PROTOTYPE_TD_SETUP_EXPIRES'||k==='PROTOTYPE_TD_RESET_EXPIRES'?'2026-12-01T00:00:00Z':k==='PROTOTYPE_TD_RESET_HASH'?createHash('sha256').update('c'.repeat(64)).digest('hex'):undefined}};
-const storage=`export function getStore({name}){const s=globalThis.mealTest;if(!s.stores.has(name))s.stores.set(name,new Map());const map=s.stores.get(name);return {get:async k=>structuredClone(map.get(k)?.data??null),getWithMetadata:async k=>structuredClone(map.get(k)??null),setJSON:async(k,data,options={})=>{const old=map.get(k);if(options.onlyIfNew&&old||options.onlyIfMatch&&options.onlyIfMatch!==old?.etag)return {modified:false};const etag=String(++s.sequence);map.set(k,{data:structuredClone(data),etag});return {modified:true,etag}},delete:async k=>map.delete(k)}}`;
+const storage=`export function getStore({name}){const s=globalThis.mealTest;if(!s.stores.has(name))s.stores.set(name,new Map());const map=s.stores.get(name);return {get:async k=>structuredClone(map.get(k)?.data??null),getWithMetadata:async k=>{if(s.beforeRead)await s.beforeRead(name,k,map);return structuredClone(map.get(k)??null)},setJSON:async(k,data,options={})=>{const old=map.get(k);if(options.onlyIfNew&&old||options.onlyIfMatch&&options.onlyIfMatch!==old?.etag)return {modified:false};const etag=String(++s.sequence);map.set(k,{data:structuredClone(data),etag});return {modified:true,etag}},delete:async k=>map.delete(k)}}`;
 try{
  await build({stdin:{contents:'export {default as handler} from "./netlify/functions/meal-choices.mts";export {default as setup} from "./netlify/functions/prototype-td-setup.mts"; export {menus,MEAL_DEADLINE,mealReport} from "./lib/meal-choices";',resolveDir:root,loader:'ts'},outfile:join(temp,'bundle.mjs'),bundle:true,platform:'node',format:'esm',external:['pdfkit'],plugins:[{name:'test-storage',setup(b){b.onResolve({filter:/^@netlify\/blobs$|\/td-auth$/},a=>({path:a.path,namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},a=>({contents:a.path.endsWith('/td-auth')?'export async function hasTDSession(){return globalThis.mealTest.td} export function sameOrigin(r){return r.headers.get("origin")===new URL(r.url).origin} export async function tdPasswordConfigured(){return !!globalThis.mealTest.stores.get("td-credentials")?.get("password")} export async function resetTDPassword(next){globalThis.mealTest.stores.get("td-credentials").set("password",{data:{reset:true},etag:"reset"});return true} export async function passwordSessionCookie(){return "test-setup-cookie=1; Secure; HttpOnly"}':storage}));}}]});
  const {handler,setup,menus,MEAL_DEADLINE,mealReport}=await import(join(temp,'bundle.mjs'));
@@ -143,6 +143,39 @@ try{
  assert.equal((await call('POST',paper)).status,409); // Duplicate/stale review never overwrites a new import.
  assert.equal((await handler(req('POST',paper,'','','https://evil.test'))).status,403);
  state.td=false;
+ // Visibility is TD-only and preserves hidden meals across traveler writes.
+ const allShown=Object.fromEntries(menus.map(m=>[m.id,true])),hiddenFarewell={...allShown,farewell:false};
+ assert.equal((await call('POST',{action:'update-visibility',visibility:hiddenFarewell,revision:null})).status,401);
+ state.td=true;
+ const beforeVisibility=structuredClone(state.stores.get('meal-choices-v1').get('choice/'+a.id).data);
+ const visibleConfig=await ok(await call('POST',{action:'update-visibility',visibility:hiddenFarewell,revision:null}));
+ assert.equal((await call('POST',{action:'update-visibility',visibility:allShown,revision:null})).status,409);
+ assert.equal((await call('POST',{action:'update-visibility',visibility:{...hiddenFarewell,unknown:true},revision:visibleConfig.visibilityRevision})).status,400);
+ assert.equal((await call('POST',{action:'update-visibility',visibility:{...hiddenFarewell,vedana:'yes'},revision:visibleConfig.visibilityRevision})).status,400);
+ assert.equal((await handler(req('POST',{action:'update-visibility',visibility:allShown,revision:visibleConfig.visibilityRevision},'','','https://evil.test'))).status,403);
+ const tdVisible=await ok(await call('GET',null,'?action=td'));assert.deepEqual(tdVisible.guests.find(g=>g.id===a.id).submission,beforeVisibility);
+ state.td=false;
+ let travelerVisible=await ok(await call('GET',null,'',cookie));assert.equal(travelerVisible.visibility.farewell,false);assert.equal(travelerVisible.submission.selections.farewell,undefined);assert.equal(travelerVisible.submission.mealStates.farewell,undefined);
+ assert.equal((await call('PUT',{action:'submit',menuId:'farewell',selections,dietary:'Cannot touch hidden meal',revision:travelerVisible.revision},'',cookie)).status,403);
+ assert.deepEqual(state.stores.get('meal-choices-v1').get('choice/'+a.id).data,beforeVisibility);
+ await ok(await call('PUT',{action:'submit',selections,dietary:'Visible meals only',revision:travelerVisible.revision},'',cookie));
+ const afterVisibleSubmit=state.stores.get('meal-choices-v1').get('choice/'+a.id).data;
+ assert.deepEqual(afterVisibleSubmit.mealStates.farewell,beforeVisibility.mealStates.farewell);assert(!afterVisibleSubmit.audit.at(-1).meals.some(m=>m.menuId==='farewell'));
+ state.td=true;
+ await ok(await call('PUT',{action:'submit',menuId:'farewell',guestId:a.id,selections,dietary:'TD can prepare hidden meal',revision:state.stores.get('meal-choices-v1').get('choice/'+a.id).etag},'',cookie));
+ const hiddenTD=structuredClone(state.stores.get('meal-choices-v1').get('choice/'+a.id).data);
+ await ok(await call('POST',{action:'update-visibility',visibility:allShown,revision:visibleConfig.visibilityRevision}));
+ state.td=false;travelerVisible=await ok(await call('GET',null,'',cookie));assert.equal(travelerVisible.submission.mealStates.farewell.dietary,'TD can prepare hidden meal');assert.deepEqual(state.stores.get('meal-choices-v1').get('choice/'+a.id).data,hiddenTD);
+ // Hiding between initial validation and the final write must reject the pending traveler edit.
+ let visibilityReads=0;state.beforeRead=async(name,key,map)=>{if(name==='meal-choices-v1'&&key==='settings/visibility'&&++visibilityReads===2){const old=map.get(key);map.set(key,{data:{...old.data,visibility:hiddenFarewell},etag:String(++state.sequence)});}};
+ const raceRevision=state.stores.get('meal-choices-v1').get('choice/'+a.id).etag;
+ assert.equal((await call('PUT',{action:'submit',menuId:'farewell',selections,dietary:'Race must not overwrite',revision:raceRevision},'',cookie)).status,403);delete state.beforeRead;assert.equal(visibilityReads,2);assert.deepEqual(state.stores.get('meal-choices-v1').get('choice/'+a.id).data,hiddenTD);
+ state.td=true;
+ const currentVisibility=await ok(await call('GET',null,'?action=td'));
+ await ok(await call('POST',{action:'update-visibility',visibility:Object.fromEntries(menus.map(m=>[m.id,false])),revision:currentVisibility.visibilityRevision}));
+ state.td=false;const noneShown=await ok(await call('GET',null,'',cookie));assert.equal(Object.keys(noneShown.submission.selections).length,0);assert.equal(noneShown.locked,true);assert.equal((await call('PUT',{action:'submit',selections,dietary:'No released meals',revision:noneShown.revision},'',cookie)).status,403);
+ assert.equal((await call('POST',{action:'clear-pin',guestId:a.id})).status,401);
+ state.td=true;await ok(await call('POST',{action:'clear-pin',guestId:a.id}));assert.deepEqual(state.stores.get('meal-choices-v1').get('choice/'+a.id).data,hiddenTD);state.td=false;
  state.site='2207afda-0a2b-4b67-a708-91c325bd214a';assert.equal((await call('GET')).status,404);
  state.site='c1f3ce92-834f-4a1e-a84b-1551409ddb7b';
  assert.equal((await setup(req('POST',{token:'c'.repeat(64),password:'Some long test password'}))).status,403);
@@ -157,5 +190,5 @@ try{
  state.now=RealDate.parse('2026-12-02T00:00:00Z');
  assert.equal((await setup(req('POST',{mode:'reset',token:'c'.repeat(64),password:'New long password'}))).status,403);
  assert.equal((await setup(req('POST',{token:'b'.repeat(64),password:'Some long test password'}))).status,403);
- console.log('PASS real handler: prototype isolation, private-link scope/rotation, revoked name-only sessions, server-authored change history, TD-only deadline management/exports, per-meal submission and exact cutoff, closed selections/allergies preserved, legacy migration, stale-write protection, CSRF, CSV/XLSX/PDF, TD-only reviewed paper import with history/cutoff/CAS, and one-time TD setup.');
+ console.log('PASS real handler: prototype isolation, private-link scope/rotation, revoked name-only sessions, server-authored change history, TD-only deadline management/exports, per-meal submission and exact cutoff, closed selections/allergies preserved, legacy migration, stale-write protection, CSRF, CSV/XLSX/PDF, TD-only reviewed paper import with history/cutoff/CAS, TD meal visibility with hidden-choice preservation, and one-time TD setup.');
 }finally{globalThis.Date=RealDate;await rm(temp,{recursive:true,force:true});}

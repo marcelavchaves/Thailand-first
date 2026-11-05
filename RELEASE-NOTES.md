@@ -1,3 +1,9 @@
+## Prototype meal release controls and direct Gallery opening
+
+- Remove the circled bulk-submit, PIN setup, sharing and bottom deadline panels. Keep individual meal submission and existing PIN enforcement, with TD PIN removal available for recovery.
+- Add one TD show/hide switch per meal. Preserve saved choices/history, keep hidden meals in TD reporting and block traveler edits to hidden meals, including a visibility change during submission.
+- Open the photo gallery directly from the Gallery tab. The external gallery owns its member recognition and Join flow; the app does not guess membership.
+
 ## Prototype meal-page visual cleanup
 
 - Remove the marked intro banner, dietary helper paragraph, repeated submission deadline line and reload button. Keep a screen-reader page title, the dietary field, meal controls and bottom deadline guidance.

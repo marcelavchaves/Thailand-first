@@ -3,7 +3,7 @@ import {getStore} from '@netlify/blobs';
 import {createHash,randomBytes,randomInt,scryptSync,timingSafeEqual,createCipheriv,createDecipheriv} from 'node:crypto';
 import {hasTDSession,sameOrigin} from '../lib/td-auth';
 import {rosterData,type RosterData} from '../lib/safe-roster';
-import {menus,MEAL_DEADLINE,WELCOME_DINNER_AT,PROTOTYPE_SITE_ID,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
+import {menus,MEAL_DEADLINE,WELCOME_DINNER_AT,PROTOTYPE_SITE_ID,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,defaultMealVisibility,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealVisibility,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
 import {exportMeals} from '../lib/meal-exports';
 const store=()=>getStore({name:'meal-choices-v1',consistency:'strong'});
 const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
@@ -11,13 +11,14 @@ const cookieName='__Host-wondercase_meals';
 const tokenOf=(r:Request)=>r.headers.get('cookie')?.match(/(?:^|;\s*)__Host-wondercase_meals=([a-f0-9]{64})(?:;|$)/)?.[1];
 const reply=(body:unknown,status=200,extra:Record<string,string>={})=>Response.json(body,{status,headers:{'Cache-Control':'no-store','Vary':'Cookie','X-Content-Type-Options':'nosniff',...extra}});
 async function deadlineSettings(){
- const record=await store().getWithMetadata('settings/deadlines',{type:'json'});
+ const [record,visible]=await Promise.all([store().getWithMetadata('settings/deadlines',{type:'json'}),store().getWithMetadata('settings/visibility',{type:'json'})]);
  const saved=record?.data as {deadlines?:MealDeadlines}|undefined;
- return {deadlines:{...defaultMealDeadlines(),...saved?.deadlines},revision:record?.etag||null};
+ const visibility={...defaultMealVisibility(),...(visible?.data as {visibility?:MealVisibility}|undefined)?.visibility};
+ return {deadlines:{...defaultMealDeadlines(),...saved?.deadlines},revision:record?.etag||null,visibility,visibilityRevision:visible?.etag||null};
 }
-function metadata(settings:{deadlines:MealDeadlines;revision:string|null}){
+function metadata(settings:Awaited<ReturnType<typeof deadlineSettings>>){
  const lockedMeals=mealLocks(settings.deadlines);
- return {menus,deadline:MEAL_DEADLINE,deadlines:settings.deadlines,settingsRevision:settings.revision,pinRequired:MEAL_PINS_REQUIRED,privateLinksRequired:false,optionalPin:true,welcomeDinnerAt:WELCOME_DINNER_AT,serverNow:new Date().toISOString(),lockedMeals,locked:Object.values(lockedMeals).every(Boolean)};
+ return {menus,deadline:MEAL_DEADLINE,deadlines:settings.deadlines,settingsRevision:settings.revision,visibility:settings.visibility,visibilityRevision:settings.visibilityRevision,pinRequired:MEAL_PINS_REQUIRED,privateLinksRequired:false,optionalPin:true,welcomeDinnerAt:WELCOME_DINNER_AT,serverNow:new Date().toISOString(),lockedMeals,locked:menus.filter(m=>settings.visibility[m.id]).every(m=>lockedMeals[m.id])};
 }
 const pinKey=()=>{const key=Netlify.env.get('MEAL_PIN_ENCRYPTION_KEY');if(!key||!/^[a-f0-9]{64}$/.test(key))throw Error('Meal PIN setup is not complete.');return Buffer.from(key,'hex');};
 function encryptPin(pin:string){const iv=randomBytes(12),cipher=createCipheriv('aes-256-gcm',pinKey(),iv);const bytes=Buffer.concat([cipher.update(pin,'utf8'),cipher.final()]);return {iv:iv.toString('hex'),tag:cipher.getAuthTag().toString('hex'),data:bytes.toString('hex')};}
@@ -28,7 +29,12 @@ type Protection={salt?:string;hash?:string;version:string;protected:boolean};
 const protection=async(id:string)=>await store().get('protection/'+id,{type:'json'}) as Protection|null;
 const validPin=(pin:unknown,p:Protection)=>typeof pin==='string'&&/^\d{4}$/.test(pin)&&!!p.salt&&!!p.hash&&timingSafeEqual(scryptSync(pin,p.salt,64),Buffer.from(p.hash,'hex'));
 type Access={hash:string;version:string;encrypted:Credential['encrypted']};
-function travelerSubmission(value:unknown){if(!value)return null;const {audit,...submission}=value as MealSubmission;return submission;}
+function travelerSubmission(value:unknown,visibility?:MealVisibility){
+ if(!value)return null;const {audit,...submission}=value as MealSubmission;
+ if(!visibility)return submission;
+ const visible=(entries:Record<string,unknown>)=>Object.fromEntries(Object.entries(entries).filter(([id])=>visibility[id]));
+ return {...submission,selections:visible(submission.selections),...(submission.mealStates?{mealStates:visible(submission.mealStates)}:{})};
+}
 async function roster(){return rosterData(await getStore({name:'guest-profiles',consistency:'strong'}).get('roster',{type:'json'}) as RosterData|null);}
 async function authenticatedGuest(request:Request,guests:{id:string;name:string}[]){
  const token=tokenOf(request);if(!token)return null;
@@ -103,9 +109,9 @@ export default async function handler(request:Request){
     return reply({...metadata(settings),guest,submission:travelerSubmission(choice?.data),revision:choice?.etag||null});
    }
    if(action!=='traveler')return reply({error:'Not found.'},404);
-   const guest=await authenticatedGuest(request,guests);
+   const guest=await authenticatedGuest(request,guests),td=await hasTDSession(request);
    const choice=guest?await store().getWithMetadata('choice/'+guest.id,{type:'json'}):null;
-   return reply({...metadata(settings),td:await hasTDSession(request),guests:revealed?await Promise.all(guests.map(async g=>({id:g.id,name:g.name,protected:!!(await protection(g.id))?.protected}))):[],guest:guest?{id:guest.id,name:guest.name,protected:!!(await protection(guest.id))?.protected}:null,submission:travelerSubmission(choice?.data),revision:choice?.etag||null});
+   return reply({...metadata(settings),td,guests:revealed?await Promise.all(guests.map(async g=>({id:g.id,name:g.name,protected:!!(await protection(g.id))?.protected}))):[],guest:guest?{id:guest.id,name:guest.name,protected:!!(await protection(guest.id))?.protected}:null,submission:travelerSubmission(choice?.data,td?undefined:settings.visibility),revision:choice?.etag||null});
   }
   if(request.method==='DELETE'){
    const token=tokenOf(request);if(token)await store().delete('session/'+hash(token));
@@ -169,6 +175,20 @@ export default async function handler(request:Request){
     return reply({ok:true,message:body.protected?'Your choices are now PIN-protected.':'Your choices are now public. Anyone can edit them by selecting your name.'});
    }
    if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
+   if(body.action==='update-visibility'){
+    if((body.revision||null)!==settings.visibilityRevision)return reply({error:'Meal visibility changed in another window. Refresh before saving.'},409);
+    if(!body.visibility||typeof body.visibility!=='object'||Array.isArray(body.visibility)||Object.keys(body.visibility).length!==menus.length||menus.some(m=>typeof body.visibility[m.id]!=='boolean')||Object.keys(body.visibility).some(id=>!menus.some(m=>m.id===id)))return reply({error:'Choose shown or hidden for each meal.'},400);
+    const saved=await store().setJSON('settings/visibility',{visibility:body.visibility,updatedAt:new Date().toISOString()},settings.visibilityRevision?{onlyIfMatch:settings.visibilityRevision}:{onlyIfNew:true});
+    if(!saved.modified)return reply({error:'Meal visibility changed in another window. Refresh before saving.'},409);
+    return reply({ok:true,visibility:body.visibility,visibilityRevision:saved.etag||null});
+   }
+   if(body.action==='clear-pin'){
+    const guest=guests.find(g=>g.id===body.guestId);if(!guest)return reply({error:'Choose a current traveler.'},400);
+    const old=await store().getWithMetadata('protection/'+guest.id,{type:'json'});
+    const saved=await store().setJSON('protection/'+guest.id,{protected:false,version:randomBytes(16).toString('hex')},old?{onlyIfMatch:old.etag}:{onlyIfNew:true});
+    if(!saved.modified)return reply({error:'PIN protection changed in another window. Refresh before trying again.'},409);
+    return reply({ok:true,message:'Traveler PIN removed. Saved meal choices are unchanged.'});
+   }
    if(body.action==='generate-links'){
     let count=0;for(const guest of guests)if(await generateLink(guest.id))count++;
     return reply({ok:true,message:`${count} private traveler link${count===1?'':'s'} created. Existing links were kept.`});
@@ -194,7 +214,7 @@ export default async function handler(request:Request){
     }
     const saved=await store().setJSON('settings/deadlines',{deadlines,updatedAt:new Date().toISOString()},settings.revision?{onlyIfMatch:settings.revision}:{onlyIfNew:true});
     if(!saved.modified)return reply({error:'Deadlines changed in another window. Refresh before saving.'},409);
-    settings={deadlines,revision:saved.etag||null};
+    settings={...settings,deadlines,revision:saved.etag||null};
     return reply({ok:true,message:'Meal deadlines saved.',...metadata(settings)});
    }
    if(!MEAL_PINS_REQUIRED)return reply({error:'Traveler meal PINs are paused on the prototype.'},409);
@@ -217,17 +237,21 @@ export default async function handler(request:Request){
   if(body.guestId!==guest.id)return reply({error:'The selected traveler changed in another tab. Reload and choose your name before saving.'},409);
   if(body.action!=='save'&&body.action!=='submit')return reply({error:'Choose Save draft or Submit choices.'},400);
   if(!(body.revision===null||typeof body.revision==='string'))return reply({error:'Refresh your choices before saving.'},400);
+  const canEditHidden=guest.actor.type==='td'||guest.actor.type==='td-paper';
   const requested=body.menuId||'all';
   if(requested!=='all'&&!menus.some(m=>m.id===requested))return reply({error:'Choose an available meal.'},400);
+  if(!canEditHidden&&requested==='all'&&!menus.some(m=>settings.visibility[m.id]))return reply({error:'Your tour director has not released any meals.',...metadata(settings)},403);
+  if(!canEditHidden&&requested!=='all'&&!settings.visibility[requested])return reply({error:'This meal is hidden by your tour director.',...metadata(settings)},403);
   let locks=mealLocks(settings.deadlines);
   if(paperImport&&body.menuIds.some((id:string)=>locks[id]))return reply({error:'A selected meal deadline has passed. Closed meals cannot be imported.',...metadata(settings)},423);
-  const targets=menus.filter(m=>(paperImport?body.menuIds.includes(m.id):requested==='all'||m.id===requested)&&!locks[m.id]).map(m=>m.id);
+  const targets=menus.filter(m=>(paperImport?body.menuIds.includes(m.id):requested==='all'||m.id===requested)&&(canEditHidden||settings.visibility[m.id])&&!locks[m.id]).map(m=>m.id);
   if(!targets.length)return reply({error:'The deadline has passed for this meal. Its choices are read-only.',...metadata(settings)},423);
   let clean;try{clean=validateSubmission(body,body.action==='submit',targets);}catch(e){return reply({error:e instanceof Error?e.message:'Check your choices.'},400);}
   const previous=await store().getWithMetadata('choice/'+guest.id,{type:'json'});
   if((previous?.etag||null)!==body.revision)return reply({error:'Your choices changed in another window. Reload before saving.'},409);
   // Recheck settings and server time immediately before saving. Closed meals are never overwritten.
   settings=await deadlineSettings();locks=mealLocks(settings.deadlines);
+  if(!canEditHidden&&targets.some(id=>!settings.visibility[id]))return reply({error:'A selected meal has just been hidden by your tour director. Reopen meal choices to see available meals.',...metadata(settings)},403);
   if(targets.some(id=>locks[id]))return reply({error:'A meal deadline has just passed. Reload to continue with the remaining open meals.',...metadata(settings)},423);
   const old=previous?.data as MealSubmission|undefined;
   const selections={...old?.selections},mealStates:Record<string,MealState>={};
@@ -242,7 +266,7 @@ export default async function handler(request:Request){
   const submission:MealSubmission={selections,mealStates,dietary:clean.dietary,status:allSubmitted?'submitted':'draft',updatedAt:now,submittedAt:allSubmitted?now:null,audit:[...(old?.audit||[]),entry]};
   const saved=await store().setJSON('choice/'+guest.id,submission,previous?{onlyIfMatch:previous.etag}:{onlyIfNew:true});
   if(!saved.modified)return reply({error:'Your choices changed in another window. Reload before saving.'},409);
-  return reply({submission:travelerSubmission(submission),revision:saved.etag,...metadata(settings)});
+  return reply({submission:travelerSubmission(submission,canEditHidden?undefined:settings.visibility),revision:saved.etag,...metadata(settings)});
  }catch(e){return reply({error:e instanceof Error&&e.message==='Meal PIN setup is not complete.'?e.message:'Meal choices are temporarily unavailable. Please try again.'},503);}
 }
 export const config:Config={path:'/api/meal-choices',rateLimit:{windowLimit:90,windowSize:60,aggregateBy:['ip','domain']}};

@@ -9,6 +9,8 @@ export type MealState={status:'draft'|'submitted';dietary:string;updatedAt:strin
 export type MealAuditEntry={id:string;at:string;actor:{type:'traveler-link'|'td'|'public'|'pin'|'td-paper';label:string};action:'save'|'submit';meals:{menuId:string;before:{choices:Record<string,string>;state:MealState|null};after:{choices:Record<string,string>;state:MealState}}[]};
 export type MealSubmission={selections:Selections;dietary:string;status:'draft'|'submitted';updatedAt:string;submittedAt:string|null;mealStates?:Record<string,MealState>;audit?:MealAuditEntry[]};
 export type MealDeadlines=Record<string,string>;
+export type MealVisibility=Record<string,boolean>;
+export const defaultMealVisibility=():MealVisibility=>Object.fromEntries(menus.map(m=>[m.id,true]));
 export const defaultMealDeadlines=():MealDeadlines=>Object.fromEntries(menus.map(m=>[m.id,MEAL_DEADLINE]));
 export function mealState(submission:MealSubmission|null|undefined,id:string):MealState|null{
  if(!submission)return null;
