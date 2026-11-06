@@ -1934,7 +1934,6 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
               <PdfDownload url={`/api/export-itinerary?section=days&day=${tauck(detail.date)}`} label="Download this day as PDF" />
             </div>
           </div>}
-          {process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&detail.date===days[0].date&&<a className="home-meal-choice-button home-meal-choice-footer" href="/meal-choices"><BrandIcon name="food"/><span className="home-action-label">Meal choices – select your meals</span><span className="home-action-arrow" aria-hidden="true">→</span></a>}
         </section>
       )}
       {tab === "hotels" && (

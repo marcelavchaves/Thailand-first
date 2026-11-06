@@ -1,3 +1,7 @@
+## November 6, 2026 — Remove live Home meal entry
+
+Remove the meal choices button from Home on live. Guest-card meal links and TD meal management remain available.
+
 ## November 6, 2026 — Revised official itinerary
 
 Update Days 1–15 from the supplied IC Itinerary 2026 Official PDF, including revised meeting/departure times, meals, the Siem Reap evening program and Chiang Mai festival note. Retain Day 16, which is absent from the attachment. Refresh the schedule API/PDF snapshot and source PDF; advance the import version so older deployed schedules are replaced and later TD edits remain supported.
