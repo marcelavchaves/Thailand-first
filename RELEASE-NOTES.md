@@ -1,3 +1,7 @@
+## November 6, 2026 — Live meal choices and photo gallery
+
+Promote prototype meal choices to live: five menus, dietary restrictions first, individual submissions, per-meal cutoffs, TD visibility controls, reports/exports, change history and reviewed paper-form scanning. Gallery opens the supplied Omnifizer album directly and delegates member recognition/Join to that service. Live uses separate meal data and a fresh encryption key; existing live credentials and hidden Journey Shop remain unchanged.
+
 ## Guest list simplification
 
 - Remove the “A little about me” section and introduction prompts from guest cards and profile dialogs. Keep names, hometowns, photos, contacts and guest workspace links. Stored introductions are preserved.

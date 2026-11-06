@@ -20,6 +20,8 @@ import GuestProfiles from "./GuestProfiles";
 import JourneyTimeline from "./JourneyTimeline";
 import {DayFeaturesProvider,useDayFeatures} from "./DayFeatures";
 import DayPhoto from "./DayPhoto";
+import "./meal-choices.css";
+import WondercaseGallery from "./WondercaseGallery";
 import LocalLanguageLesson from "./LocalLanguageLesson";
 import LoadingIndicator from "./LoadingIndicator";
 import { getJourneyStatus } from "./trip-clock";
@@ -1932,6 +1934,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
               <PdfDownload url={`/api/export-itinerary?section=days&day=${tauck(detail.date)}`} label="Download this day as PDF" />
             </div>
           </div>}
+          {process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&detail.date===days[0].date&&<a className="home-meal-choice-button home-meal-choice-footer" href="/meal-choices"><BrandIcon name="food"/><span className="home-action-label">Meal choices – select your meals</span><span className="home-action-arrow" aria-hidden="true">→</span></a>}
         </section>
       )}
       {tab === "hotels" && (
@@ -2042,7 +2045,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
         <details id="more-tauck" key={`tauck-${moreSection}`} hidden={moreSection!=='tauck'} open className="day-disclosure asia-journeys"><summary>More Tauck experiences</summary><div className="asia-journeys-list"><article className="asia-journey-card"><span className="asia-journey-duration">14 days</span><h2>Kingdoms &amp; Dragons: Singapore to Bali</h2><p>Journey from Singapore through Java, Bali and Flores, exploring Borobudur and Prambanan, Ubud and Komodo National Park, before ending in Jimbaran Bay.</p><a href="https://www.tauck.com/tours/kingdoms-dragons-singapore-bali-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Kingdoms &amp; Dragons: Singapore to Bali on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">16 days</span><h2>The Mekong, Vietnam, Laos &amp; Cambodia</h2><p>Ho Chi Minh City, Hanoi, Phnom Penh, Siem Reap and Luang Prabang.</p><a href="https://www.tauck.com/tours/indochina-vietnam-cambodia-laos-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View The Mekong, Vietnam, Laos &amp; Cambodia on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>A Portrait of India</h2><p>New Delhi, Agra, Jaipur, Udaipur, Mumbai, Kochi, Kumarakom and Varanasi.</p><a href="https://www.tauck.com/tours/portrait-of-india-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View A Portrait of India on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>Northern India &amp; Nepal</h2><p>New Delhi, Kathmandu, Dhulikhel, Mumbai, Bandhavgarh National Park and Chitwan National Park.</p><a href="https://www.tauck.com/tours/northern-india-and-nepal-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Northern India &amp; Nepal on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">13 days</span><h2>India’s Golden Triangle, Udaipur &amp; Mumbai</h2><p>New Delhi, Agra, Jaipur, Udaipur, Varanasi and Mumbai.</p><a href="https://www.tauck.com/tours/spotlight-on-india-guided-tour" target="_blank" rel="noopener noreferrer" aria-label="View India’s Golden Triangle, Udaipur &amp; Mumbai on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article></div></details>
         <details id="more-rating" key={`rating-${moreSection}`} hidden={moreSection!=='rating'} open className="day-disclosure feedback-disclosure"><summary>Help Wondercase Grow</summary><AppRatings /></details>
       </section>}
-      {tab === "gallery" && <section className="section gallery-page"><h1 className="tab-page-title">Gallery</h1><article className="album-invite"><h2>Shared Photo Gallery coming soon</h2></article></section>}
+      {tab === "gallery" && <WondercaseGallery/>}
       {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day} editor/>} groups={[{id:'handouts',title:'Handouts'},{id:'maps',title:'Maps'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
        {id:'guide-singapore',title:'Singapore Guide',group:'guides',content:<span/>},
        {id:'guide-java',title:'Java Guide',group:'guides',content:<XavierJavaGuide/>},

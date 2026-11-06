@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  NEXT_PUBLIC_MEAL_CHOICES = "true"
 
 [functions]
   directory = "netlify/functions"
@@ -31,3 +32,6 @@
 
 [functions."export-itinerary"]
   included_files = ["netlify/data/itinerary-content.json", "scripts/fonts/**", "public/images/**", "public/documents/**"]
+
+[functions."meal-choices"]
+  included_files = ["scripts/fonts/**"]
