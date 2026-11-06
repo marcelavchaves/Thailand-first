@@ -15,6 +15,22 @@ assert(days[7].events.some(e=>e[1].includes('K6 825 13:00/14:20')));
 assert.equal(days[8].events[0][0],'4:30');
 assert(days[10].events.some(e=>e[1].includes('Intercontinental at the elephant sanctuary')));
 assert.equal(days[15].events[0][1],'Safe travel home! See you soon, I hope!');
+// November 6 revision: distinct activities/times must survive the import.
+assert(days[0].events[0][1].includes('location to be confirmed'));
+assert(days[1].events[0][1].includes('7th floor'));
+assert.equal(days[2].events.find(e=>e[1].includes('two-hour drive'))[0],'10:00');
+assert.equal(days[2].events.find(e=>e[1].includes('check in'))[0],'13:00');
+assert.equal(days[4].events.find(e=>e[1].includes('Cyclos'))[0],'10:30');
+assert.equal(days[5].events.find(e=>e[1].includes('Danang Airport'))[0],'8:15');
+assert.equal(days[5].events.find(e=>e[1].includes('Tour of the Tunnels'))[0],'13:15');
+assert.equal(days[6].events[0][0],'6:30');
+assert(days[6].events.find(e=>e[0]==='18:00')[1].includes('mezzanine'));
+assert.equal(days[7].events.find(e=>e[1].includes('Arrival at Raffles'))[0],'18:30');
+assert.equal(days[7].events.find(e=>e[1].includes('Apsara'))[0],'19:00');
+assert(days[9].events.some(e=>e[1].includes('Yi Peng')));
+assert.equal(days[10].events.find(e=>e[1].includes('Lunch is catered'))[0],'12:00');
+const previous={importVersion:'vct-ic2026-official-2026-10-28-v1',events:[['OLD','Earlier tour schedule']],note:''};
+assert.deepEqual(importedSchedule(snapshot,10,previous).events,days[5].events);
 // A published import replaces outdated deployed edits, then respects later TD edits/hides.
 const stale={importVersion:'kd103-cher-sm23-published-v2',events:[['OLD','Old schedule']],note:''};
 assert.deepEqual(importedSchedule(snapshot,6,stale).events,days[1].events);

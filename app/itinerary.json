@@ -8,7 +8,7 @@
     "events": [
       [
         "9:00 - 11:00",
-        "Hospitality desk in the Business Center (hotel staff can confirm any location change). Please bring your completed guest information form, signed Vespa tour waiver, printed color copy of your Cambodian visa, Vietnamese visa, passport, and three completed menu choices."
+        "Hospitality desk (location to be confirmed). Please bring your passport, visas for Vietnam and Cambodia, your guest form and menu options."
       ],
       [
         "18:00",
@@ -32,11 +32,11 @@
     "events": [
       [
         "6:00",
-        "Breakfast is served at Spice Garden and Le Club Bar."
+        "Breakfast is served at Spice Garden, Le Club Bar or on the 7th floor."
       ],
       [
         "8:45",
-        "Depart from the lobby for a 45-minute ride through the old city on Club cars, return to the hotel for a quick break before leaving by coach for the Presidential Palace, Ho Chi Minh’s Mausoleum, Hanoi Hilton and One Pillar Pagoda."
+        "Departure for a 45-minute ride through the old city on Club cars. Return to the hotel for a quick break before leaving by coach for the Presidential Palace, Ho Chi Minh’s Mausoleum, Hanoi Hilton and One Pillar Pagoda."
       ],
       [
         "12:30",
@@ -52,11 +52,11 @@
       ],
       [
         "17:15",
-        "Return to hotel. Dinner is on your own tonight."
+        "Return to hotel. Dinner is not included tonight. Drinks and food are served on the 7th floor until 19:00."
       ],
       [
         "21:00",
-        "Checked tagged luggage will be picked up OUTSIDE your room. No power bank in checked luggage."
+        "Checked luggage pick up OUTSIDE your room."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -72,23 +72,27 @@
     "events": [
       [
         "5:30",
-        "Early Breakfast opening in Spice Garden restaurant ."
+        "Early Breakfast opening in Spice Garden restaurant."
       ],
       [
         "6:00",
-        "Depart for the airport. Vietnam Airlines to Danang VN163/8:05-9:30. Enjoy a two hours drive to Hue and visit Emperor Tu Duc Mausoleum."
+        "Depart for the airport. Vietnam Airlines to Danang VN163/8:05-9:30."
       ],
       [
-        "12:45",
-        "Arrive at La Residence Hotel and Spa in Hue for check in and lunch."
+        "10:00",
+        "Enjoy a two-hour drive to Hue and visit Emperor Tu Duc Mausoleum."
+      ],
+      [
+        "13:00",
+        "Arrive at La Residence Hotel & Spa, Hue for check in and lunch à la carte."
       ],
       [
         "15:00",
-        "Depart hotel on a Cyclo tour of Hue citadel / Imperial city and Purple Forbidden City."
+        "Depart on Cyclos to Hue citadel / Imperial city and Purple Forbidden City."
       ],
       [
         "17:00",
-        "Return to hotel. Dinner tonight is in Le Parfum restaurant from 18:30"
+        "Return to hotel. Dinner at Le Parfum restaurant starting at 18:30."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -108,7 +112,7 @@
       ],
       [
         "8:00",
-        "Checked luggage OUTSIDE you room ready for pick up."
+        "Checked luggage OUTSIDE your room ready for pick up."
       ],
       [
         "9:00",
@@ -116,11 +120,11 @@
       ],
       [
         "12:00",
-        "Drive along the Highway #1 to the Vedana Lagoon Resort, beautiful scenic road."
+        "Drive along Highway 1 to the Vedana Lagoon Resort."
       ],
       [
         "13:00",
-        "lunch at Horizon restaurant in Vedana Lagoon Resort."
+        "Lunch at Horizon restaurant."
       ],
       [
         "14:00",
@@ -128,7 +132,11 @@
       ],
       [
         "16:00",
-        "Arrival at Furama Resort. Located on China Beach. Dinner is tonight in any of the Furama’s fine restaurants.; Café Indochine, Don Cipriani or the Steak House."
+        "Arrival at Furama Resort. Located on China Beach."
+      ],
+      [
+        "PM",
+        "Dinner is included tonight in any of the Furama’s fine restaurants: Café Indochine, Don Cipriani’s or the Steak House."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -148,19 +156,23 @@
       ],
       [
         "8:30",
-        "Depart for a visit to a local farming village followed by a drive to Hoi An. Transfer onto Cyclos to better see this UNESCO World Heritage Site."
+        "Depart for a visit to a local farming village followed by a drive to Hoi An."
+      ],
+      [
+        "10:30",
+        "Ride to the UNESCO World Heritage Site on Cyclos."
       ],
       [
         "12:00",
-        "Time to explore the city. Lots of great choices for lunch and shopping."
+        "Free time to explore the town. Lunch on your own."
       ],
       [
         "13:30",
-        "Departure back to Furama hotel for those who want more time at the resort. You can also choose to come back later. I will arrange it for you."
+        "Departure back to Furama hotel. You can also choose to come back later. I will arrange it for you."
       ],
       [
         "DINNER",
-        "Dinner at your choice of restaurant. Café Indochine, Don Cipriani or the Steak House."
+        "Dinner at your choice of restaurant: Café Indochine, Don Cipriani or the Steak House."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -175,32 +187,36 @@
     "intro": "",
     "events": [
       [
-        "7:00",
-        "Breakfast opens at Cafe Indochine Luggage pick up OUTSIDE the room."
+        "6:30",
+        "Breakfast opens at Cafe Indochine."
       ],
       [
-        "8:45",
-        "Depart hotel for Danang Airport."
+        "6:30",
+        "Luggage pick up OUTSIDE the room."
+      ],
+      [
+        "8:15",
+        "Depart the hotel for Danang Airport."
       ],
       [
         "9:55",
-        "Flight departure for Saigon: VN113/9:55-11:30"
+        "Flight departure for Saigon: VN113/9:55-11:30."
       ],
       [
         "11:45",
-        "Depart for Cu Chi Tunnels, boxed lunch served on the way to the tunnels, 90 minutes drive."
+        "Departure from the airport for a 90-minute drive towards the Cu Chi Tunnels. Boxed lunch will be served during the travel."
       ],
       [
-        "13:00",
-        "Tour the Tunnels. After the tour we head back to Saigon. Two hour visit."
+        "13:15",
+        "Tour of the Tunnels. An approximately two-hour tour."
       ],
       [
         "17:00",
         "Arrive at Park Hyatt Saigon."
       ],
       [
-        "DINNER",
-        "Dinner tonight is at Square One Restaurant."
+        "PM",
+        "Dinner tonight is included at Square One Restaurant."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -215,20 +231,20 @@
     "intro": "",
     "events": [
       [
-        "6:00",
-        "Breakfast opens in Cafe Opera ( lobby level)"
+        "6:30",
+        "Breakfast opens in Café Opera."
       ],
       [
         "9:00",
-        "Depart for Saigon tour. See the bustling Ben Tanh market, the Presidential palace, serving as the seat of government for South Vietnam during the war. Our tour continues as we see the Notre Dame Cathedral and the Eiffel inspired Post Office."
+        "Departure for the Saigon city tour, including Ben Thanh market, the Presidential Palace, and the Eiffel-inspired Post Office."
       ],
       [
         "12:30",
-        "Lunch at Opera restaurant in the hotel. Free time for rest of the afternoon."
+        "Lunch at Café Opera in the hotel. Free time for the rest of the afternoon."
       ],
       [
         "18:00",
-        "foodie and nightlights tour of Saigon by VESPA, new addition to the tour."
+        "Meet at the mezzanine for the Saigon by VESPA tour."
       ],
       [
         "21:00",
@@ -248,7 +264,7 @@
     "events": [
       [
         "6:30",
-        "Breakfast opens at Cafe Opera and Square One."
+        "Breakfast opens at Cafe Opera."
       ],
       [
         "8:15",
@@ -256,11 +272,11 @@
       ],
       [
         "9:30",
-        "Depart for the airport. Going through passport and security control, it can take over an hour if crowded at Saigon airport."
+        "Depart for the airport."
       ],
       [
         "13:00",
-        "Flight departure to Siem Reap: K6 825 13:00/14:20"
+        "Flight departure to Siem Reap: K6 825 13:00/14:20."
       ],
       [
         "14:45",
@@ -268,7 +284,15 @@
       ],
       [
         "15:00",
-        "Afternoon tour to Ta Prohm temple, the Tomb Raider movie temple (where trees and roots grow out of the temple ruins), Ancient city of Angkor Thom and Bayon temple."
+        "Afternoon tour to Ta Prohm temple, Ancient city of Angkor Thom and Bayon temple."
+      ],
+      [
+        "18:30",
+        "Arrival at Raffles Grand Hotel."
+      ],
+      [
+        "19:00",
+        "Dinner and Cambodian dance performance at Apsara restaurant."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -288,7 +312,7 @@
       ],
       [
         "5:00",
-        "Depart to visit Angkor Wat, sure to be one of the highlights of your tour to Asia."
+        "Departure to Angkor Wat."
       ],
       [
         "8:00",
@@ -296,11 +320,11 @@
       ],
       [
         "10:30",
-        "Depart to Tonle Sap Lake. Our private boat tour will reveal the hard life of the people living in the floating villages of this largest freshwater lake in Southeast Asia."
+        "Departure to Tonle Sap Lake. A private boat tour."
       ],
       [
         "12:30",
-        "Lunch at Sokkhak River Side restaurant in Siem Reap town."
+        "Lunch at Sokkhak River Side restaurant in Siem Reap town. Free afternoon."
       ],
       [
         "13:30",
@@ -308,7 +332,7 @@
       ],
       [
         "PM",
-        "A La Carte dinner at Cafe D’Angkor or the 1932."
+        "Included à la carte dinner at Cafe D’Angkor or the 1932."
       ]
     ],
     "note": "Conservative dress code all day today, shorts are fine as long as they cover your knees. Times and activities are subject to change.",
@@ -332,31 +356,35 @@
       ],
       [
         "7:00",
-        "Depart for the airport, around 45 minutes ride."
+        "Depart for the airport, around a 45-minute ride."
       ],
       [
         "9:50",
-        "Flight departure for Bangkok: TG1589 9:50/10:55"
+        "Flight departure for Bangkok: TG1589 9:50/10:55."
       ],
       [
         "10:55",
-        "Arrival at Bangkok’s Suvarnbhumi international airport. We will clear Thai immigration here. Remember to have your passport, Thai QR code, both boarding passes."
+        "Arrival at Bangkok’s Suvarnabhumi international airport. We will clear Thai immigration here. Remember to have your passport, Thai QR code and both boarding passes."
       ],
       [
         "13:30",
-        "Flight departure for Chiang Mai: TG110 13:25/14:40"
+        "Flight departure for Chiang Mai: TG110 13:25/14:40."
       ],
       [
         "14:45",
-        "On arrival in Chiang Mai, follow signage for International Baggage Claim, we will clear Thai Customs here. Tour the Old Walled City of Chiang Mai before going to the hotel."
+        "On arrival in Chiang Mai, follow signage for International Baggage Claim; we will clear Thai Customs here. Tour the Old Walled City of Chiang Mai before going to the hotel."
       ],
       [
         "16:30",
-        "Arrive at Intercontinental our home for the next three nights."
+        "Arrive at Intercontinental, our home for the next three nights."
       ],
       [
         "18:30",
-        "Thai Welcome Dinner and traditional show as we enjoy dinner."
+        "Thai Welcome Dinner and traditional show."
+      ],
+      [
+        "EVENING",
+        "The itinerary notes that we are here on the last day of the Chiang Mai candle and lantern festival, known primarily as Yi Peng and celebrated alongside Loy Krathong."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -376,23 +404,23 @@
       ],
       [
         "8:30",
-        "Depart for Kanta elephant sanctuary. Dress casually, bring a bathing suit or change of underwear if you want to bathe the elephants. The sanctuary provides their own clothing as well as lockers, changing rooms, towel and showers."
+        "Depart for Kanta elephant sanctuary. Dress casually. We will have the opportunity to bathe with the elephants."
       ],
       [
-        "LUNCH",
+        "12:00",
         "Lunch is catered by the Intercontinental at the elephant sanctuary."
       ],
       [
         "13:00",
-        "After lunch, we have a fascinating visit to the Mae Rim Hill Tribe Village. See their distinct culture and living conditions. See the Long Neck Karen tribe with their brass neck rings. Bring some Thai Baht if you’re interested to purchase some of their homemade handicrafts. No US cash or cards accepted here."
+        "After lunch, visit the Mae Rim Hill Tribe Village. See the Long Neck Karen tribe with their brass neck rings. Some Thai Baht might be useful if you’re interested in some homemade handicrafts. No US cash or cards accepted."
       ],
       [
         "14:45",
         "Return to hotel and rest of the day at leisure."
       ],
       [
-        "DINNER",
-        "Dinner at your restaurant choice, The Gad Lanna (Northern Thai cuisine) and HONG's Chinese Restaurant."
+        "PM",
+        "Dinner included at your restaurant choice: The Gad Lanna (Northern Thai cuisine) and HONG’s Chinese Restaurant."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -416,11 +444,11 @@
       ],
       [
         "13:00",
-        "Return to hotel and rest of the day at leisure. Lunch today is on your own."
+        "Return to hotel and rest of the day at leisure. Lunch today is not included."
       ],
       [
         "DINNER",
-        "Dinner at hotel at your restaurant choice. Enjoy our last night in Chiang Mai!!"
+        "Dinner at hotel at your restaurant choice. Enjoy our last night in Chiang Mai!"
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -448,11 +476,11 @@
       ],
       [
         "12:45",
-        "lunch on arrival at Rosewood Hotel."
+        "Included lunch on arrival at Rosewood Hotel."
       ],
       [
         "15:00",
-        "Depart by Skytrain. Bangkok’ BTS or SKYTRAIN connects the whole city by an overhead rail line."
+        "Depart by Skytrain. Bangkok’s SKYTRAIN (BTS) connects the whole city by an overhead rail line."
       ],
       [
         "17:00",
@@ -460,7 +488,7 @@
       ],
       [
         "PM",
-        "Dinner is tonight at hotel’s Nan Bei restaurant (19th floor). Please, make your dinner reservation time at lunch today."
+        "Dinner is included at Nan Bei restaurant on the 19th floor of our Hotel. You will make your table and time reservation during lunch."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -484,23 +512,23 @@
       ],
       [
         "9:15",
-        "Cross the river and visit to Bangkok’s Iconic Wat Arun (the Temple of Dawn)"
+        "Cross the river and visit Bangkok’s iconic Wat Arun (the Temple of Dawn)."
       ],
       [
         "10:00",
-        "Transfer to our special canal boat for a fascinating tour through the canals (Klongs) of Old Bangkok, known as the Venice of the East"
+        "Transfer to our special canal boat for a fascinating tour through the canals (Klongs) of Old Bangkok, known as the Venice of the East."
       ],
       [
         "12:30",
-        "lunch at famous Sorndaeng restaurant (Michelin Star)"
+        "Included lunch at famous Sorndaeng restaurant (Michelin Star)."
       ],
       [
         "14:30",
-        "Return to Rosewood hotel and rest of the ay at leisure."
+        "Return to Rosewood hotel and rest of the day at leisure."
       ],
       [
         "DINNER",
-        "Dinner tonight is on your own, see suggestions sheet"
+        "Dinner tonight is not included, see suggestions sheet."
       ]
     ],
     "note": "Times and activities are subject to change.",
@@ -520,19 +548,19 @@
       ],
       [
         "8:00",
-        "Depart for the Highlight temples of Bangkok"
+        "Depart for the highlight temples of Bangkok."
       ],
       [
         "8:30",
-        "Visit the temple of the Emerald Buddha and the Grand Palace, shorts not allowed."
+        "Visit the temple of the Emerald Buddha and the Grand Palace."
       ],
       [
         "10:30",
-        "A police escorted Tuk Tuk ride through the streets of Bangkok."
+        "A police-escorted Tuk Tuk ride through the streets of Bangkok."
       ],
       [
         "11:00",
-        "Visit to Wat Po, famous temple of the Reclining Buddha, more than 140 feet long and 50 feet high. The complex contains beautiful traditional Thai architecture and home to the teaching school for traditional Thai massage."
+        "Visit to Wat Po, famous temple of the Reclining Buddha."
       ],
       [
         "13:00",
@@ -540,11 +568,11 @@
       ],
       [
         "18:15",
-        "Farewell cocktail reception at Lennon’s Bar on 30th floor!!"
+        "Farewell cocktail reception at Lennon’s Bar on 30th floor."
       ],
       [
         "19:00",
-        "Farewell dinner at Pavilion room, on 5th floor!!"
+        "Farewell dinner at Pavilion room, on 5th floor. Time to say see you soon, not good-bye!"
       ]
     ],
     "note": "BRING COMMENT CARDS Times and activities are subject to change.",
