@@ -1,3 +1,7 @@
+## November 6, 2026 — Revised official itinerary
+
+Update Days 1–15 from the supplied IC Itinerary 2026 Official PDF, including revised meeting/departure times, meals, the Siem Reap evening program and Chiang Mai festival note. Retain Day 16, which is absent from the attachment. Refresh the schedule API/PDF snapshot and source PDF; advance the import version so older deployed schedules are replaced and later TD edits remain supported.
+
 ## November 6, 2026 — Trivia follows the Vietnam, Cambodia & Thailand itinerary
 
 Replace inherited Singapore/Indonesia questions with four questions for each of the 16 tour days, matched to that day’s destinations and sights. Use a new progress key so scores from the old question set do not carry over. Available through Learn more and the existing optional daily trivia panels.

@@ -7,7 +7,7 @@ export async function renderExport(content,{root,baseUrl,section,days=[]}) {
  doc.registerFont('Body',path.join(root,'scripts/fonts/DejaVuSans.ttf'));doc.registerFont('Bold',path.join(root,'scripts/fonts/DejaVuSans-Bold.ttf'));
  const green='#163E33',gold='#96712E';let y=70;const width=499;
  const abs=u=>new URL(u,baseUrl).href;
- function page(){doc.addPage();doc.rect(0,0,595,842).fill('#FCFAF4');doc.rect(0,0,595,10).fill('#D6B66D');doc.font('Bold').fontSize(9).fillColor(green).text('KINGDOMS & DRAGONS · 102ND TOUR',48,30);y=70;}
+ function page(){doc.addPage();doc.rect(0,0,595,842).fill('#FCFAF4');doc.rect(0,0,595,10).fill('#D6B66D');doc.font('Bold').fontSize(9).fillColor(green).text('WONDERCASE · VIETNAM, CAMBODIA & THAILAND',48,30);y=70;}
  function text(value,{size=11,bold=false,link}={}){if(!value)return;doc.font(bold?'Bold':'Body').fontSize(size);const h=doc.heightOfString(String(value),{width,lineGap:3});if(y+h>755)page();doc.font(bold?'Bold':'Body').fontSize(size).fillColor(link?gold:green).text(String(value),48,y,{width,lineGap:3,link,underline:!!link});y+=h+10;}
  function measure(value,size=11,bold=false){doc.font(bold?'Bold':'Body').fontSize(size);return doc.heightOfString(String(value||''),{width,lineGap:3})+10;}
  function keep(height){if(y+height>755)page();}
