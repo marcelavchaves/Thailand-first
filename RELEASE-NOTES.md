@@ -1,3 +1,7 @@
+## November 6, 2026 — Prototype TD hotel manifests
+
+Add Hotel manifests to TD Suitcase: numbered guests, preferred names, traveling-together groups, per-hotel room/bed requests and dates, shared/hotel-specific observations, red important notes, preview, room totals and TD-only PDF/CSV downloads. Public guest cards show only preferred names; hotel details remain private. Existing roster, Safe assignments and live site are preserved.
+
 ## November 6, 2026 — Revised official itinerary
 
 Update Days 1–15 from the supplied IC Itinerary 2026 Official PDF, including revised meeting/departure times, meals, the Siem Reap evening program and Chiang Mai festival note. Retain Day 16, which is absent from the attachment. Refresh the schedule API/PDF snapshot and source PDF; advance the import version so older deployed schedules are replaced and later TD edits remain supported.

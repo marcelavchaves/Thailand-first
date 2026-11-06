@@ -14,7 +14,12 @@ export default async function handler(request:Request){try{
  const item=await store.getWithMetadata('roster',{type:'json'});
  const data=rosterData(item?.data as RosterData|undefined);
  const {guests,revealed}=data;
- if(request.method==='GET')return reply({guests:td?guests:revealed?publicGuests(guests):[],guestCount:guests.length,revealed,...(td?{revision:item?.etag||null}:{})});
+ if(request.method==='GET'){
+  const visible=td?guests:revealed?publicGuests(guests):[];
+  // Project only preferred names; private rooming, groups and observations never enter this response.
+  const manifest=visible.length?await getStore({name:'hotel-manifests-v1',consistency:'strong'}).get('manifest',{type:'json'}) as {guests?:Record<string,{preferredName?:string}>}|null:null;
+  return reply({guests:visible.map(g=>({...g,preferredName:manifest?.guests?.[g.id]?.preferredName||''})),guestCount:guests.length,revealed,...(td?{revision:item?.etag||null}:{})});
+ }
  const raw=await request.text();if(raw.length>250000)return reply({error:'Guest list is too large.'},413);
  let body;try{body=JSON.parse(raw);}catch{return reply({error:'Invalid request.'},400);}
  if((body.revision||null)!==(item?.etag||null))return reply({error:'The guest list changed. Reload it before saving.'},409);

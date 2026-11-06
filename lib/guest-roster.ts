@@ -1,4 +1,4 @@
-export type Guest = {id:string;name:string;origin:string;bio:string;phone:string;email:string;social:string;shareContact:boolean;safeId?:string};
+export type Guest = {id:string;name:string;origin:string;bio:string;phone:string;email:string;social:string;shareContact:boolean;safeId?:string;preferredName?:string};
 export const MAX_GUESTS=100;
 export function cleanGuests(value:unknown):Guest[]{
  if(!Array.isArray(value)||value.length>MAX_GUESTS)throw Error('Use a maximum of 100 guests.');

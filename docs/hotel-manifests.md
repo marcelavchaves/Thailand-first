@@ -1,0 +1,15 @@
+# Prototype hotel manifests
+
+Prototype only: TD Suitcase → Hotel manifests. The attached SM017 document guided the fields and layout; its sample guests and Singapore–Bali tour data are not imported into the current tour.
+
+The editor starts with the current guest roster, stable guest IDs, sequential suggested guest numbers, current hotels and itinerary dates. Roommates and traveling-together groups are separate. Enter the same room-group label for roommates; occupancy determines Single/Double/Triple/Quad. Use a shared traveling-together label for companions across rooms. Numbers are editable and must be unique from 001–999. No room-sharing relationships are guessed from surnames.
+
+Preferred names, travel groups and shared guest observations apply throughout the tour. Shared observations are included for every hotel; additional notes, important observations, room assignments, beds and arrival/departure dates are per hotel. Copy room assignments transfers only rooms and beds, preserving the destination hotel's notes. Important observations are printed in red and explicitly labeled IMPORTANT. The TD has an optional separate staff single room. Summaries count guest rooms separately from staff.
+
+Save before downloading a hotel PDF or guest CSV. Each guest needs a number and room group; conflicting bed requests and rooms exceeding four occupants block export. Preview is available while editing. PDF includes tour/hotel details, shared/per-hotel notes, numbered guests, preferred names, travel companions with guest-number references, room requests and counts. CSV contains hotel metadata, guest details and explicit IMPORTANT columns; CSV has no text colors and spreadsheet formula prefixes are escaped. Documents download to the TD's device for review and manual sending; no hotel messages are sent automatically.
+
+Private storage: `hotel-manifests-v1`, key `manifest`, scoped to the prototype site. GET, PUT, PDF and CSV require a TD session; writes also require same-origin and exact manifest/roster revisions. The prototype API rejects live and unrelated site IDs. Guest-list GET projects only the preferred-name string for visible guests, with no rooming/travel-group/observation data. Clearing a preferred name removes it from the public display. Existing guest IDs, Safe assignments, profiles and meal records remain independent. Guest-list hiding still suppresses names.
+
+The existing roster editor continues to manage legal/display names and guest additions/removals. Reopening Hotel manifests incorporates the current roster; stale edits must be reloaded. Legacy names already containing a parenthesized preferred name are recognized without duplicating it.
+
+Validation: `node tests/hotel-manifest.mjs`, `node tests/guest-roster.mjs`, static Next build, generated PDF visual inspection, and local browser checks with synthetic guest/API fixtures for editing, save/export guards, preview, preferred-name guest-list display and phone widths. PDF fonts are explicitly included in the Netlify function package.

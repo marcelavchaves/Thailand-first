@@ -2,6 +2,7 @@
 import {useEffect,useState,useRef} from 'react';
 import {useTDSession} from './TDSession';
 import {type Guest} from '../lib/guest-roster';
+import {guestDisplayName} from '../lib/hotel-manifest';
 import ClassicSafeIcon from './ClassicSafeIcon';
 import GuestRosterManager from './GuestRosterManager';
 import './guest-roster.css';
@@ -57,14 +58,14 @@ export default function GuestProfiles({directorMode=false}:{directorMode?:boolea
   
   <ul className="guest-list guest-grid" style={{gridTemplateRows:`repeat(${Math.max(1,Math.ceil((hidden?guestCount:guests.length)/2))},auto)`}}>{loaded&&hidden&&Array.from({length:guestCount},(_,index)=><li className="guest-entry guest-hidden-card" key={`hidden-${index}`}><span className="guest-hidden-lock" aria-label="Not revealed">🔒</span><div className="guest-traveler-avatar" style={{backgroundPosition:`${index%2===0?0:100}% ${[0,50,100][Math.floor(index/2)%3]}%`}} role="img" aria-label="Traveler avatar"/><strong>Traveler {String(index+1).padStart(2,'0')}</strong></li>)}{!hidden&&guests.map(guest=>{const p={...profiles[guest.id],intro:profiles[guest.id]?.intro||guest.bio};return <li className="guest-entry" key={guest.id} data-guest-id={guest.id}>
    <button type="button" className="guest-photo-button" aria-label={`View ${guest.name}’s profile`} aria-haspopup="dialog" onClick={()=>setSelectedId(guest.id)}>{p.photo?<img className="guest-photo" src={p.photo} alt={guest.name} width={240} height={240}/>:<div className="guest-photo guest-photo-placeholder" aria-label="Photo coming soon"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-2a8 8 0 0 1 16 0v2"/></svg></div>}</button>
-   <button type="button" className="guest-details guest-details-button" aria-label={`Read ${guest.name}’s profile`} onClick={()=>setSelectedId(guest.id)}><strong>{guest.name}</strong><p className="guest-origin">{guest.origin}</p>
+   <button type="button" className="guest-details guest-details-button" aria-label={`Read ${guest.name}’s profile`} onClick={()=>setSelectedId(guest.id)}><strong>{guestDisplayName(guest)}</strong><p className="guest-origin">{guest.origin}</p>
 
    </button><div className="guest-workspace-actions"><a className="guest-safe-link" href={`/traveler-safe/?safe=${encodeURIComponent(guest.safeId||'')}`} aria-label={`Open ${guest.name}’s assigned Safe ${guest.safeId||''}`} title={`Traveler Safe ${guest.safeId||''}`} data-pdf-exclude><ClassicSafeIcon/><span>Safe</span></a>{process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&<a className="guest-safe-link guest-meal-link" href={`/meal-choices?guest=${encodeURIComponent(guest.id)}`} aria-label={`Open ${guest.name}’s meal choices`} data-pdf-exclude><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="12" r="6"/><path d="M3 3v6m3-6v6M3 6h3M4.5 9v12M21 3c-3 2-3 7 0 9v9"/></svg><span>Meal choices</span></a>}</div></li>;})}</ul><p role="status" data-pdf-exclude>{message}</p>
   <dialog ref={dialog} className="guest-profile-dialog" aria-labelledby="guest-profile-title" data-pdf-exclude onClose={()=>setSelectedId(null)} onClick={event=>{if(event.target===event.currentTarget){const r=event.currentTarget.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)event.currentTarget.close();}}}>
    <button type="button" className="guest-profile-close" autoFocus onClick={()=>dialog.current?.close()} aria-label="Close guest profile">Close ×</button>
    {selectedGuest&&<div className="guest-profile-content">
     {selectedProfile?.photo?<img className="guest-profile-large-photo" src={selectedProfile.photo} alt={selectedGuest.name}/>:<div className="guest-profile-no-photo">Photo coming soon</div>}
-    <h2 id="guest-profile-title">{selectedGuest.name}</h2>
+    <h2 id="guest-profile-title">{guestDisplayName(selectedGuest)}</h2>
     <p className="guest-profile-origin">From: {selectedGuest.origin}</p>
     {(selectedGuest.phone||selectedGuest.email||selectedGuest.social)&&<section className="guest-contact-details"><h3>Keep in touch</h3>{authenticated&&!selectedGuest.shareContact&&<small>TD only · Not shared with travelers</small>}{selectedGuest.phone&&<a href={`tel:${selectedGuest.phone.replace(/[^+0-9]/g,'')}`}>{selectedGuest.phone}</a>}{selectedGuest.email&&<a href={`mailto:${selectedGuest.email}`}>{selectedGuest.email}</a>}{selectedGuest.social&&<a href={selectedGuest.social} target="_blank" rel="noopener noreferrer">Social media ↗</a>}</section>}
     {(!authenticated||managing)&&profileControls(selectedGuest,selectedProfile||{})}
