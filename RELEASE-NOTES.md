@@ -1,3 +1,7 @@
+## November 6, 2026 — Trivia follows the Vietnam, Cambodia & Thailand itinerary
+
+Replace inherited Singapore/Indonesia questions with four questions for each of the 16 tour days, matched to that day’s destinations and sights. Use a new progress key so scores from the old question set do not carry over. Available through Learn more and the existing optional daily trivia panels.
+
 ## Prototype meal release controls and direct Gallery opening
 
 - Remove the circled bulk-submit, PIN setup, sharing and bottom deadline panels. Keep individual meal submission and existing PIN enforcement, with TD PIN removal available for recovery.
