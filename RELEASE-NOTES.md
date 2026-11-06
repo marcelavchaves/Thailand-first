@@ -1,3 +1,7 @@
+## November 6, 2026 — Pick rooms and traveling groups; apply manifest across hotels
+
+Define room groups by selecting guests, then define traveling-together groups by selecting whole rooms. Room occupancy and bed requests apply together, and assigned guests cannot be duplicated into another room. Add Apply manifest to all hotels with confirmation; copy rooming and hotel observations while keeping each hotel’s stay dates.
+
 ## November 6, 2026 — Prototype TD hotel manifests
 
 Add Hotel manifests to TD Suitcase: numbered guests, preferred names, traveling-together groups, per-hotel room/bed requests and dates, shared/hotel-specific observations, red important notes, preview, room totals and TD-only PDF/CSV downloads. Public guest cards show only preferred names; hotel details remain private. Existing roster, Safe assignments and live site are preserved.

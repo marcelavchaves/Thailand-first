@@ -39,3 +39,38 @@ export function checkExport(data:HotelManifest,hotel:string,roster:{id:string;na
   const beds=new Set(group.guests.map(g=>data.hotels[hotel].entries[g.id].bed).filter(Boolean));if(beds.size>1)throw Error(`Room ${group.key} has conflicting bed requests. Use the same preference for its occupants.`);
  }
 }
+
+/** Assign a room by selecting roster IDs. Never overwrite a different room implicitly. */
+export function assignRoomGroup(data:HotelManifest,hotel:string,oldRoom:string|null,name:string,members:string[],bed:string):HotelManifest{
+ const label=name.trim(),entries=data.hotels[hotel].entries;
+ if(!label||label.length>60||label.startsWith('unassigned:'))throw Error('Enter a room-group name of up to 60 characters.');
+ if(!members.length||members.length>4||new Set(members).size!==members.length)throw Error('Choose one to four guests for this room.');
+ if(members.some(id=>!entries[id]))throw Error('Choose guests from the current guest list.');
+ if(label!==oldRoom&&Object.values(entries).some(e=>e.room===label))throw Error('A room group with this name already exists.');
+ if(members.some(id=>entries[id].room&&entries[id].room!==oldRoom))throw Error('Remove a guest from their current room group before moving them.');
+ if(!['','King/Queen','Two beds','No preference'].includes(bed))throw Error('Choose a bed request.');
+ const selected=new Set(members);
+ const next=Object.fromEntries(Object.entries(entries).map(([id,e])=>[id,selected.has(id)?{...e,room:label,bed}:oldRoom&&e.room===oldRoom?{...e,room:'',bed:''}:e]));
+ return {...data,hotels:{...data.hotels,[hotel]:{...data.hotels[hotel],entries:next}}};
+}
+export function removeRoomGroup(data:HotelManifest,hotel:string,room:string):HotelManifest{
+ return {...data,hotels:{...data.hotels,[hotel]:{...data.hotels[hotel],entries:Object.fromEntries(Object.entries(data.hotels[hotel].entries).map(([id,e])=>[id,e.room===room?{...e,room:'',bed:''}:e]))}}};
+}
+/** Traveling companions are selected as whole rooms and retained by stable guest ID. */
+export function assignTravelGroup(data:HotelManifest,hotel:string,oldName:string|null,name:string,rooms:string[]):HotelManifest{
+ const label=name.trim();if(!label||label.length>100)throw Error('Enter a traveling-group name of up to 100 characters.');
+ const known=new Set(Object.values(data.hotels[hotel].entries).map(e=>e.room).filter(Boolean));
+ if(!rooms.length||new Set(rooms).size!==rooms.length||rooms.some(room=>!known.has(room)))throw Error('Choose room groups from this hotel.');
+ if(label!==oldName&&Object.values(data.guests).some(g=>g.travelGroup===label))throw Error('A traveling group with this name already exists.');
+ const selected=new Set(rooms);
+ return {...data,guests:Object.fromEntries(Object.entries(data.guests).map(([id,g])=>[id,selected.has(data.hotels[hotel].entries[id].room)?{...g,travelGroup:label}:oldName&&g.travelGroup===oldName?{...g,travelGroup:''}:g]))};
+}
+export function removeTravelGroup(data:HotelManifest,name:string):HotelManifest{
+ return {...data,guests:Object.fromEntries(Object.entries(data.guests).map(([id,g])=>[id,g.travelGroup===name?{...g,travelGroup:''}:g]))};
+}
+/** Share the selected manifest without copying its hotel-specific stay dates. */
+export function applyManifestToAllHotels(data:HotelManifest,source:string):HotelManifest{
+ if(!data.hotels[source])throw Error('Choose a hotel first.');
+ const sheet=data.hotels[source];
+ return {...data,hotels:Object.fromEntries(Object.entries(data.hotels).map(([id,h])=>[id,id===source?h:{...h,notes:sheet.notes,important:sheet.important,entries:Object.fromEntries(Object.entries(sheet.entries).map(([guest,e])=>[guest,{...e}]))}]))};
+}
