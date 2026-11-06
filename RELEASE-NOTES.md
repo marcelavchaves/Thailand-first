@@ -1,3 +1,7 @@
+## November 6, 2026 — Trivia follows the Vietnam, Cambodia & Thailand itinerary
+
+Replace inherited Singapore/Indonesia questions with four questions for each of the 16 tour days, matched to that day’s destinations and sights. Use a new progress key so scores from the old question set do not carry over. Available through Learn more and the existing optional daily trivia panels.
+
 ## November 6, 2026 — Live meal choices and photo gallery
 
 Promote prototype meal choices to live: five menus, dietary restrictions first, individual submissions, per-meal cutoffs, TD visibility controls, reports/exports, change history and reviewed paper-form scanning. Gallery opens the supplied Omnifizer album directly and delegates member recognition/Join to that service. Live uses separate meal data and a fresh encryption key; existing live credentials and hidden Journey Shop remain unchanged.

@@ -1,0 +1,674 @@
+{
+  "5": [
+    {
+      "question": "Which city welcomes us at the start of this tour?",
+      "options": [
+        "Hanoi",
+        "Hue",
+        "Ho Chi Minh City"
+      ],
+      "answer": 0,
+      "fact": "Our itinerary begins in Hanoi, Vietnam’s capital, with a welcome reception and dinner."
+    },
+    {
+      "question": "Which historic hotel is our Hanoi home?",
+      "options": [
+        "Sofitel Legend Metropole Hanoi",
+        "Park Hyatt Saigon",
+        "Raffles Grand Hotel"
+      ],
+      "answer": 0,
+      "fact": "The Sofitel Legend Metropole Hanoi is our base for the first two nights."
+    },
+    {
+      "question": "Hanoi is the capital of which country?",
+      "options": [
+        "Vietnam",
+        "Cambodia",
+        "Thailand"
+      ],
+      "answer": 0,
+      "fact": "Hanoi is Vietnam’s capital; later in the tour we visit Cambodia and Thailand."
+    },
+    {
+      "question": "Which restaurant hosts our welcome dinner?",
+      "options": [
+        "Le Beaulieu",
+        "Square One",
+        "Nan Bei"
+      ],
+      "answer": 0,
+      "fact": "Our first evening’s dinner is at Le Beaulieu in the Metropole Hanoi."
+    }
+  ],
+  "6": [
+    {
+      "question": "Hanoi’s water puppetry grew out of traditions associated with which landscape?",
+      "options": [
+        "Flooded rice fields",
+        "Desert oases",
+        "Snowy mountain valleys"
+      ],
+      "answer": 0,
+      "fact": "Water puppetry developed in the villages of northern Vietnam’s Red River Delta, where flooded fields provided a stage."
+    },
+    {
+      "question": "The Hanoi Hilton was a nickname for which place on our sightseeing route?",
+      "options": [
+        "Hoa Lo Prison",
+        "A luxury hotel",
+        "The Presidential Palace"
+      ],
+      "answer": 0,
+      "fact": "Hoa Lo Prison is widely known by the wartime nickname Hanoi Hilton; it is part of our Hanoi sightseeing day."
+    },
+    {
+      "question": "What flower does the One Pillar Pagoda’s design evoke?",
+      "options": [
+        "A lotus",
+        "A sunflower",
+        "A tulip"
+      ],
+      "answer": 0,
+      "fact": "The small pagoda rises from a single pillar above a pond, evoking a lotus blossom."
+    },
+    {
+      "question": "Whose mausoleum is included in our Hanoi sightseeing?",
+      "options": [
+        "Ho Chi Minh’s",
+        "Emperor Tu Duc’s",
+        "King Jayavarman VII’s"
+      ],
+      "answer": 0,
+      "fact": "The itinerary includes Ho Chi Minh’s Mausoleum alongside the Presidential Palace and One Pillar Pagoda."
+    }
+  ],
+  "7": [
+    {
+      "question": "Which Vietnamese city was the imperial capital of the Nguyen dynasty?",
+      "options": [
+        "Hue",
+        "Da Nang",
+        "Hoi An"
+      ],
+      "answer": 0,
+      "fact": "Hue served as the Nguyen dynasty’s imperial capital and contains the citadel and imperial monuments we visit."
+    },
+    {
+      "question": "Which emperor’s mausoleum do we visit on the way to Hue?",
+      "options": [
+        "Tu Duc",
+        "Khufu",
+        "Qin Shi Huang"
+      ],
+      "answer": 0,
+      "fact": "After landing in Da Nang, our itinerary takes us to Emperor Tu Duc’s mausoleum before the hotel in Hue."
+    },
+    {
+      "question": "Which enclosed royal area lies within Hue’s Imperial City?",
+      "options": [
+        "The Purple Forbidden City",
+        "The Grand Palace of Bangkok",
+        "Angkor Thom"
+      ],
+      "answer": 0,
+      "fact": "The Purple Forbidden City formed the innermost royal precinct of the imperial complex in Hue."
+    },
+    {
+      "question": "What is a cyclo, used for our Hue tour?",
+      "options": [
+        "A three-wheeled cycle rickshaw",
+        "A river ferry",
+        "An overhead train"
+      ],
+      "answer": 0,
+      "fact": "A cyclo is a pedal-powered, three-wheeled passenger vehicle; we use them to explore Hue."
+    }
+  ],
+  "8": [
+    {
+      "question": "Which river do we cruise after visiting Thien Mu Pagoda?",
+      "options": [
+        "The Perfume River",
+        "The Chao Phraya",
+        "The Thames"
+      ],
+      "answer": 0,
+      "fact": "Our Hue morning pairs Thien Mu Pagoda with a cruise on the Perfume River."
+    },
+    {
+      "question": "Thien Mu Pagoda is a landmark of which city?",
+      "options": [
+        "Hue",
+        "Siem Reap",
+        "Chiang Mai"
+      ],
+      "answer": 0,
+      "fact": "Thien Mu Pagoda stands beside the Perfume River in Hue."
+    },
+    {
+      "question": "Which resort is our lunch stop between Hue and Da Nang?",
+      "options": [
+        "Vedana Lagoon Resort",
+        "Furama Resort",
+        "Park Hyatt Saigon"
+      ],
+      "answer": 0,
+      "fact": "The itinerary stops for lunch at Horizon restaurant in Vedana Lagoon Resort before continuing to Da Nang."
+    },
+    {
+      "question": "Where do we stay after arriving in Da Nang?",
+      "options": [
+        "Furama Resort",
+        "La Residence Hotel and Spa",
+        "Rosewood Bangkok"
+      ],
+      "answer": 0,
+      "fact": "Furama Resort is our coastal base for Da Nang and the excursion to Hoi An."
+    }
+  ],
+  "9": [
+    {
+      "question": "Hoi An’s historic town is especially associated with which former role?",
+      "options": [
+        "An international trading port",
+        "An alpine ski resort",
+        "A desert caravan stop"
+      ],
+      "answer": 0,
+      "fact": "Hoi An flourished as a trading port, and its old town reflects Vietnamese and international influences."
+    },
+    {
+      "question": "Which organization recognizes Hoi An Ancient Town as a World Heritage Site?",
+      "options": [
+        "UNESCO",
+        "The International Olympic Committee",
+        "The World Trade Organization"
+      ],
+      "answer": 0,
+      "fact": "UNESCO recognizes Hoi An Ancient Town for its well-preserved historic trading-port character."
+    },
+    {
+      "question": "Which activity comes before our visit to Hoi An?",
+      "options": [
+        "A visit to a local farming village",
+        "An Angkor Wat sunrise visit",
+        "A Chao Phraya boat ride"
+      ],
+      "answer": 0,
+      "fact": "Our itinerary begins with a local farming village before continuing to Hoi An."
+    },
+    {
+      "question": "What type of transport helps us explore Hoi An’s old town?",
+      "options": [
+        "Cyclos",
+        "Bangkok Skytrains",
+        "Cable cars"
+      ],
+      "answer": 0,
+      "fact": "The itinerary includes a transfer onto cyclos to see Hoi An’s historic streets."
+    }
+  ],
+  "10": [
+    {
+      "question": "What is Saigon’s official name today?",
+      "options": [
+        "Ho Chi Minh City",
+        "Hanoi",
+        "Da Nang"
+      ],
+      "answer": 0,
+      "fact": "Ho Chi Minh City is still widely called Saigon, the name used throughout our itinerary."
+    },
+    {
+      "question": "The Cu Chi tunnels are best described as what?",
+      "options": [
+        "An underground network used during wartime",
+        "A natural cave system beneath Angkor",
+        "A royal canal network"
+      ],
+      "answer": 0,
+      "fact": "The Cu Chi tunnels formed an underground network with passageways and facilities used during the wars in Vietnam."
+    },
+    {
+      "question": "Which part of Vietnam is home to the Cu Chi tunnels?",
+      "options": [
+        "Southern Vietnam",
+        "Northern Vietnam",
+        "Vietnam’s central coast"
+      ],
+      "answer": 0,
+      "fact": "Cu Chi lies outside Ho Chi Minh City in southern Vietnam; we visit after our flight from Da Nang."
+    },
+    {
+      "question": "Which hotel becomes our base in Saigon?",
+      "options": [
+        "Park Hyatt Saigon",
+        "Sofitel Legend Metropole Hanoi",
+        "Intercontinental Chiang Mai"
+      ],
+      "answer": 0,
+      "fact": "After visiting Cu Chi, we arrive at Park Hyatt Saigon, our base for the city sights and evening Vespa tour."
+    }
+  ],
+  "11": [
+    {
+      "question": "Which market is on our Saigon city sightseeing route?",
+      "options": [
+        "Ben Thanh Market",
+        "Chatuchak Market",
+        "Dong Ba Market"
+      ],
+      "answer": 0,
+      "fact": "The itinerary includes Ben Thanh Market, one of Ho Chi Minh City’s best-known landmarks."
+    },
+    {
+      "question": "Saigon’s former Presidential Palace is also commonly known by which name?",
+      "options": [
+        "Reunification Palace",
+        "The Grand Palace",
+        "The Imperial City"
+      ],
+      "answer": 0,
+      "fact": "The former Presidential Palace is also called Independence Palace or Reunification Palace."
+    },
+    {
+      "question": "Which two landmarks appear together on our Saigon city tour?",
+      "options": [
+        "Notre Dame Cathedral and the Central Post Office",
+        "Wat Arun and Wat Pho",
+        "Bayon and Ta Prohm"
+      ],
+      "answer": 0,
+      "fact": "The city tour includes Saigon’s Notre Dame Cathedral and historic Central Post Office."
+    },
+    {
+      "question": "What vehicle is featured in our Saigon evening food tour?",
+      "options": [
+        "A Vespa scooter",
+        "A cyclo",
+        "A canal boat"
+      ],
+      "answer": 0,
+      "fact": "Our evening itinerary explores Saigon’s food and nightlights by Vespa."
+    }
+  ],
+  "12": [
+    {
+      "question": "Which Cambodian city is our base for exploring Angkor?",
+      "options": [
+        "Siem Reap",
+        "Phnom Penh",
+        "Battambang"
+      ],
+      "answer": 0,
+      "fact": "We fly from Saigon to Siem Reap, the gateway to the Angkor temple sites."
+    },
+    {
+      "question": "Which temple on our afternoon tour is famous for trees growing through its ruins?",
+      "options": [
+        "Ta Prohm",
+        "Wat Arun",
+        "One Pillar Pagoda"
+      ],
+      "answer": 0,
+      "fact": "Ta Prohm is famous for large tree roots entwined with its stone ruins and appeared in the Tomb Raider film."
+    },
+    {
+      "question": "What is Bayon temple especially known for?",
+      "options": [
+        "Towers carved with large faces",
+        "A reclining Buddha",
+        "A single pillar above a pond"
+      ],
+      "answer": 0,
+      "fact": "Bayon, within Angkor Thom, is celebrated for its towers bearing large carved faces."
+    },
+    {
+      "question": "Angkor Thom was what kind of place?",
+      "options": [
+        "A walled royal city",
+        "A floating village",
+        "A modern airport"
+      ],
+      "answer": 0,
+      "fact": "Angkor Thom was a royal city of the Khmer Empire; Bayon stands near its center."
+    }
+  ],
+  "13": [
+    {
+      "question": "Angkor Wat was originally dedicated to which Hindu deity?",
+      "options": [
+        "Vishnu",
+        "Shiva",
+        "Ganesha"
+      ],
+      "answer": 0,
+      "fact": "Angkor Wat was built in the 12th century as a temple dedicated to Vishnu and later became a Buddhist site."
+    },
+    {
+      "question": "Which empire built Angkor Wat?",
+      "options": [
+        "The Khmer Empire",
+        "The Roman Empire",
+        "The Inca Empire"
+      ],
+      "answer": 0,
+      "fact": "Angkor Wat is one of the great architectural achievements of the Khmer Empire."
+    },
+    {
+      "question": "Which lake do we explore after our sunrise visit to Angkor Wat?",
+      "options": [
+        "Tonle Sap",
+        "Lake Baikal",
+        "Lake Geneva"
+      ],
+      "answer": 0,
+      "fact": "After Angkor Wat and breakfast, the itinerary takes us by private boat onto Tonle Sap."
+    },
+    {
+      "question": "What is unusual about the river connecting Tonle Sap to the Mekong?",
+      "options": [
+        "Its flow reverses seasonally",
+        "It flows uphill all year",
+        "It is permanently frozen"
+      ],
+      "answer": 0,
+      "fact": "Seasonal changes in the Mekong’s water level reverse the Tonle Sap River’s flow, expanding and draining the lake."
+    }
+  ],
+  "14": [
+    {
+      "question": "Chiang Mai is in which part of Thailand?",
+      "options": [
+        "Northern Thailand",
+        "Southern Thailand",
+        "Thailand’s eastern coast"
+      ],
+      "answer": 0,
+      "fact": "We fly via Bangkok to Chiang Mai in northern Thailand and tour its Old Walled City."
+    },
+    {
+      "question": "What does the name Chiang Mai mean?",
+      "options": [
+        "New city",
+        "Golden river",
+        "Temple of dawn"
+      ],
+      "answer": 0,
+      "fact": "Chiang Mai means new city; it was founded in 1296 as a capital of the Lanna kingdom."
+    },
+    {
+      "question": "Which features still mark Chiang Mai’s historic Old City?",
+      "options": [
+        "Walls and a moat",
+        "Sea cliffs and lighthouses",
+        "Roman aqueducts"
+      ],
+      "answer": 0,
+      "fact": "Surviving walls, gates and a surrounding moat trace Chiang Mai’s historic city boundary."
+    },
+    {
+      "question": "Which historic kingdom is closely associated with Chiang Mai?",
+      "options": [
+        "Lanna",
+        "Khmer",
+        "Majapahit"
+      ],
+      "answer": 0,
+      "fact": "Chiang Mai was a capital of the Lanna kingdom, whose heritage remains visible in northern Thai culture and architecture."
+    }
+  ],
+  "15": [
+    {
+      "question": "Which sanctuary is on our Chiang Mai itinerary?",
+      "options": [
+        "Kanta Elephant Sanctuary",
+        "Komodo National Park",
+        "Sepilok Orangutan Rehabilitation Centre"
+      ],
+      "answer": 0,
+      "fact": "Our itinerary visits Kanta Elephant Sanctuary before lunch and the Mae Rim village visit."
+    },
+    {
+      "question": "Which elephant species is native to Thailand?",
+      "options": [
+        "The Asian elephant",
+        "The African savanna elephant",
+        "The African forest elephant"
+      ],
+      "answer": 0,
+      "fact": "Thailand’s native elephants are Asian elephants, a species found across parts of South and Southeast Asia."
+    },
+    {
+      "question": "An elephant’s trunk combines which two body parts?",
+      "options": [
+        "Its nose and upper lip",
+        "Its ears and neck",
+        "Its jaw and tongue"
+      ],
+      "answer": 0,
+      "fact": "An elephant’s trunk is an elongated nose and upper lip, used for breathing, smelling, touching and handling food."
+    },
+    {
+      "question": "Which village area follows the elephant sanctuary in our itinerary?",
+      "options": [
+        "Mae Rim",
+        "Hoi An",
+        "Cu Chi"
+      ],
+      "answer": 0,
+      "fact": "After the sanctuary lunch, we visit the Mae Rim Hill Tribe Village in the Chiang Mai area."
+    }
+  ],
+  "16": [
+    {
+      "question": "Doi Suthep temple overlooks which city?",
+      "options": [
+        "Chiang Mai",
+        "Bangkok",
+        "Hanoi"
+      ],
+      "answer": 0,
+      "fact": "Wat Phra That Doi Suthep stands on the mountain above Chiang Mai, our base for three nights."
+    },
+    {
+      "question": "What does wat mean in Thai place names?",
+      "options": [
+        "A temple or monastery",
+        "An airport",
+        "A market"
+      ],
+      "answer": 0,
+      "fact": "Wat refers to a temple or monastery, as in Wat Phra That Doi Suthep, Wat Arun and Wat Pho."
+    },
+    {
+      "question": "What is the gleaming central sacred structure at Doi Suthep called?",
+      "options": [
+        "A chedi",
+        "A minaret",
+        "An amphitheater"
+      ],
+      "answer": 0,
+      "fact": "The temple’s golden chedi is a Buddhist reliquary monument, also known as a stupa."
+    },
+    {
+      "question": "Which mythical serpents decorate the famous staircase at Doi Suthep?",
+      "options": [
+        "Nagas",
+        "Griffins",
+        "Unicorns"
+      ],
+      "answer": 0,
+      "fact": "Nagas are serpent beings found in Buddhist and Hindu traditions; they flank Doi Suthep’s ceremonial staircase."
+    }
+  ],
+  "17": [
+    {
+      "question": "Bangkok is commonly called Krung Thep in Thai. What does this mean?",
+      "options": [
+        "City of angels",
+        "City of bridges",
+        "City of flowers"
+      ],
+      "answer": 0,
+      "fact": "Krung Thep is a shortened form of Bangkok’s ceremonial Thai name and means city of angels."
+    },
+    {
+      "question": "Which urban transport system do we try on arrival in Bangkok?",
+      "options": [
+        "The BTS Skytrain",
+        "The London Underground",
+        "The Singapore cable car"
+      ],
+      "answer": 0,
+      "fact": "Our first Bangkok afternoon includes a ride on the BTS Skytrain, an elevated urban rail system."
+    },
+    {
+      "question": "Which hotel is our base in Bangkok?",
+      "options": [
+        "Rosewood Bangkok",
+        "Raffles Grand Hotel",
+        "Furama Resort"
+      ],
+      "answer": 0,
+      "fact": "Rosewood Bangkok is our base for the final nights and the farewell celebrations."
+    },
+    {
+      "question": "What is Thailand’s currency?",
+      "options": [
+        "Thai baht",
+        "Vietnamese dong",
+        "Cambodian riel"
+      ],
+      "answer": 0,
+      "fact": "The baht is Thailand’s currency; dong and riel belong to the two countries we visited earlier on the tour."
+    }
+  ],
+  "18": [
+    {
+      "question": "Which Bangkok temple is known as the Temple of Dawn?",
+      "options": [
+        "Wat Arun",
+        "Wat Pho",
+        "Wat Phra Kaew"
+      ],
+      "answer": 0,
+      "fact": "Wat Arun, the Temple of Dawn, is on our riverside sightseeing route."
+    },
+    {
+      "question": "Which river is central to today’s Bangkok boat excursion?",
+      "options": [
+        "The Chao Phraya",
+        "The Perfume River",
+        "The Red River"
+      ],
+      "answer": 0,
+      "fact": "We travel to River City on the Chao Phraya before crossing to Wat Arun and exploring the canals."
+    },
+    {
+      "question": "What does the Thai word khlong refer to?",
+      "options": [
+        "A canal",
+        "A mountain",
+        "A palace"
+      ],
+      "answer": 0,
+      "fact": "Khlong, also written klong, means canal; Bangkok’s waterways once formed a major transport network."
+    },
+    {
+      "question": "What nickname reflects old Bangkok’s network of canals?",
+      "options": [
+        "Venice of the East",
+        "Pearl of the Atlantic",
+        "City of Seven Hills"
+      ],
+      "answer": 0,
+      "fact": "Bangkok’s extensive canal network helped earn it the nickname Venice of the East."
+    }
+  ],
+  "19": [
+    {
+      "question": "Which temple houses the Emerald Buddha?",
+      "options": [
+        "Wat Phra Kaew",
+        "Wat Arun",
+        "Wat Pho"
+      ],
+      "answer": 0,
+      "fact": "Wat Phra Kaew, the Temple of the Emerald Buddha, is within the Grand Palace complex."
+    },
+    {
+      "question": "Despite its name, the Emerald Buddha is carved from what kind of material?",
+      "options": [
+        "Green stone",
+        "Emerald gemstone",
+        "Painted wood"
+      ],
+      "answer": 0,
+      "fact": "The Emerald Buddha is carved from green stone, commonly described as jade, rather than emerald gemstone."
+    },
+    {
+      "question": "Which temple on our itinerary is famous for a giant reclining Buddha?",
+      "options": [
+        "Wat Pho",
+        "Ta Prohm",
+        "Thien Mu Pagoda"
+      ],
+      "answer": 0,
+      "fact": "Wat Pho, also written Wat Po, is famous for its large reclining Buddha and its association with traditional Thai massage."
+    },
+    {
+      "question": "What vehicle carries us through Bangkok between today’s temple visits?",
+      "options": [
+        "A tuk-tuk",
+        "A cyclo",
+        "A Vespa"
+      ],
+      "answer": 0,
+      "fact": "The itinerary includes a tuk-tuk ride between the Grand Palace visit and Wat Pho."
+    }
+  ],
+  "20": [
+    {
+      "question": "Which city is the final stop on our tour?",
+      "options": [
+        "Bangkok",
+        "Chiang Mai",
+        "Siem Reap"
+      ],
+      "answer": 0,
+      "fact": "Our journey ends in Bangkok after exploring its river, canals, temples and Grand Palace."
+    },
+    {
+      "question": "Which three countries have we visited on this tour?",
+      "options": [
+        "Vietnam, Cambodia and Thailand",
+        "Vietnam, Laos and Malaysia",
+        "Singapore, Indonesia and Thailand"
+      ],
+      "answer": 0,
+      "fact": "Our route runs through Vietnam, Cambodia and Thailand, ending in Bangkok."
+    },
+    {
+      "question": "Which country on our route is home to both Angkor Wat and Tonle Sap?",
+      "options": [
+        "Cambodia",
+        "Thailand",
+        "Vietnam"
+      ],
+      "answer": 0,
+      "fact": "Our Siem Reap stay in Cambodia includes Angkor Wat and a boat excursion on Tonle Sap."
+    },
+    {
+      "question": "Which pair of capitals bookends our journey?",
+      "options": [
+        "Hanoi and Bangkok",
+        "Hue and Chiang Mai",
+        "Saigon and Siem Reap"
+      ],
+      "answer": 0,
+      "fact": "We begin in Hanoi, Vietnam’s capital, and finish in Bangkok, Thailand’s capital."
+    }
+  ]
+}
