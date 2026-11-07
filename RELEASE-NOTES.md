@@ -1,3 +1,7 @@
+## November 7, 2026 · Updated app guides
+
+Replaced the older tour help with a captioned two-minute animated tutorial, chapter controls, transcript and twelve-page printable guide for November 16–December 1, 2026. Updated FAQs, phone installation videos and saved tutorial links. Guides describe the Safe flow available in this edition.
+
 ## November 7, 2026 — Always-visible journey map above city tiles
 
 Keep the large journey map visible at the top of Maps with city tiles below. Remove the expandable overview control.
