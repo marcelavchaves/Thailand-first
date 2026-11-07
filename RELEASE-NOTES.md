@@ -1,3 +1,7 @@
+## November 7, 2026 — Always-visible journey map above city tiles
+
+Keep the large journey map visible at the top of Maps with city tiles below. Remove the expandable overview control.
+
 ## November 7, 2026 — City map tiles
 
 Make city maps the primary Maps view, with two square tiles per row on phones and three on larger screens. Preserve supplied Xavier links and uploaded city maps. Keep the overall journey map in an expandable overview below the tiles.
