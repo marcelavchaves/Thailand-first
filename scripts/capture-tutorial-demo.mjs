@@ -8,12 +8,12 @@ const hotspots=[];
 for(let step=0;step<30;step++){
  await send('Page.navigate',{url:base+'/tutorial-explore.html?capture=1&step='+step});
  await wait('document.querySelector(".is-capture")?.dataset.step==="'+step+'"&&document.readyState==="complete"');
- await evaluate('document.fonts.ready');await evaluate('Promise.all([...document.images].map(i=>i.decode().catch(()=>{})))');
+ await evaluate('document.documentElement.style.overflow="hidden";document.body.style.overflow="hidden"');await evaluate('document.fonts.ready');await evaluate('Promise.all([...document.images].map(i=>i.decode().catch(()=>{})))');
  await new Promise(r=>setTimeout(r,380));
  const text=await evaluate('document.body.innerText');assert(!/Xavier|2026|November|December|Tauck/.test(text));
  assert.equal(await evaluate('document.querySelectorAll(".demo-nav button").length'),6);
- if([10,11,14].includes(step))await evaluate('document.querySelector(".demo-content").scrollTop=1000');
- if(step===12)await evaluate('[...document.querySelectorAll("button")].find(b=>b.textContent.includes("Hotel details")).click()');
+ if([7,10,11,12,14].includes(step))await evaluate('document.querySelector(".demo-content").scrollTop=1000');
+ if(step===12){await evaluate('[...document.querySelectorAll("button")].find(b=>b.textContent.includes("Hotel details")).click()');await evaluate('document.querySelector(".demo-content").scrollTop=1000');}
  if(step===25)await evaluate('[...document.querySelectorAll("button")].find(b=>b.textContent==="Reveal answer").click()');
  await evaluate('window.scrollTo(0,0)');
  const nav=await evaluate('(()=>{const r=document.querySelector(".demo-nav [aria-pressed=true]").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()');
