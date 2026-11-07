@@ -3,8 +3,8 @@ from pathlib import Path
 import subprocess,math,json,sys,textwrap
 root=Path(__file__).resolve().parent.parent
 out=root/'.installation-build';out.mkdir(exist_ok=True)
-font=lambda n,b=False:ImageFont.truetype(str(root/'scripts/fonts'/('DejaVuSans-Bold.ttf' if b else 'DejaVuSans.ttf')),n)
-G='#526f60';gold='#d5b76d';ink='#243e37';blue='#087abf'
+font=lambda n,b=False:ImageFont.truetype(str(root/'public/fonts'/('montserrat-600.ttf' if b else 'montserrat-400.ttf')),n)
+G='#4F6B5D';gold='#C9A962';ink='#4F6B5D';blue='#087abf'
 # Screen illustrations are intentionally schematic, avoiding dependence on a particular OS layout.
 iphone=[
 ('Start with your TD’s email','email','Open your TD’s email on your iPhone. Find the Wondercase app link. Keep Wi-Fi or mobile data on.',(365,510)),

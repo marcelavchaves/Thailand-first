@@ -10,8 +10,8 @@ import qrcode
 root=Path(__file__).resolve().parent.parent
 chapters=json.loads((root/'assets/tutorial/help-content.json').read_text())
 out=root/'.tutorial-build';out.mkdir(exist_ok=True)
-G='#18483f';GOLD='#bb9951';CREAM='#f8f4e9';INK='#263f38'
-font=lambda n,b=False:ImageFont.truetype(str(root/'scripts/fonts'/('DejaVuSans-Bold.ttf' if b else 'DejaVuSans.ttf')),n)
+G='#4F6B5D';GOLD='#C9A962';CREAM='#F9F6EC';INK='#4F6B5D'
+font=lambda n,b=False:ImageFont.truetype(str(root/'public/fonts'/('montserrat-600.ttf' if b else 'montserrat-400.ttf')),n)
 def wrap(d,t,x,y,w,n,color=INK,b=False):
  line=''
  for word in t.split():
@@ -32,7 +32,7 @@ for i,ch in enumerate(chapters):
  im=Image.new('RGB',(720,1280),CREAM);d=ImageDraw.Draw(im)
  d.rectangle((0,0,720,10),fill=GOLD);d.text((36,28),'WONDERCASE  |  YOUR APP GUIDE',font=font(23,True),fill=G)
  d.text((36,72),f'{i+1:02} / {len(chapters):02}    •    Vietnam, Cambodia & Thailand',font=font(18),fill=INK)
- y=wrap(d,ch['title'],36,125,648,33,G,True);wrap(d,ch['subtitle'],36,y+8,648,21,GOLD)
+ y=wrap(d,ch['title'],36,125,648,33,G,True);wrap(d,ch['subtitle'],36,y+8,648,21,'#806329')
  d.rounded_rectangle((36,265,684,555),radius=22,fill=G)
  d.text((60,285),'LOOK FOR THESE IN THE APP',font=font(16,True),fill='#e1c989')
  for j,t in enumerate(ch['panel']):
@@ -54,7 +54,7 @@ for i,ch in enumerate(chapters):
 proc.stdin.close();assert proc.wait()==0
 (root/'public/tutorial/traveler-tutorial.vtt').write_text('\n'.join(vtt))
 # Print-friendly interactive booklet, same chapters and instructions as the video.
-for name,f in [('Guide','DejaVuSans.ttf'),('GuideBold','DejaVuSans-Bold.ttf')]:pdfmetrics.registerFont(TTFont(name,str(root/'scripts/fonts'/f)))
+for name,f in [('Guide','montserrat-400.ttf'),('GuideBold','montserrat-600.ttf')]:pdfmetrics.registerFont(TTFont(name,str(root/'public/fonts'/f)))
 target=root/'public/tutorial/instruction-booklet.pdf';c=canvas.Canvas(str(target),pagesize=(595,842));c.setTitle('Wondercase - Vietnam, Cambodia & Thailand Guide')
 base='https://thailand-first.netlify.app/'
 def txt(t,x,y,size=12,b=False,color=INK):c.setFillColor(color);c.setFont('GuideBold' if b else 'Guide',size);c.drawString(x,y,t)

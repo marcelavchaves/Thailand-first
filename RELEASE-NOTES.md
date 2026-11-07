@@ -1,3 +1,7 @@
+## November 7, 2026 · Thailand tutorial styling
+
+Updated the suitcase with a compass medallion and removed Tauck branding. Matched tutorial player, video, installation guides and booklet to the app’s soft forest green, warm gold, ivory and Montserrat typography.
+
 ## November 7, 2026 · Reusable suitcase tutorial
 
 Restored the supplied Singapore tutorial’s suitcase arrival/unpacking and dark green-and-gold interactive player. Added current itinerary instructions without departure dates or a named TD across tutorials, printable guides, installation videos and FAQs.
