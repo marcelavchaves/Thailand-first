@@ -1,3 +1,7 @@
+## November 6, 2026 — Prototype 5 MB booklets and individual printed pages
+
+Raise PDF booklet uploads to 5 MB using staged transfer and segmented downloads. Split wide two-page PDF sheets into individual pages with correct navigation, text and links. Add TD layout choices for complete sheets, left/right or right/left order; layout changes return the booklet to hidden for preview. Existing wide booklets use automatic splitting without re-upload.
+
 ## November 6, 2026 — Prototype interactive PDF handouts
 
 PDFs uploaded in TD Handouts become hidden interactive booklets with page swiping, navigation, zoom/pinch, readable page text and document links. Add conversion for existing PDF handouts, TD preview and show/hide controls. Hidden booklet listings and direct PDF/reader metadata are blocked for guests; replacements stay hidden for review.
