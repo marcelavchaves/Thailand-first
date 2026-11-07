@@ -4,16 +4,16 @@ import math
 
 def render_opening(proc,fps,root,out):
  art=Image.open(root/'assets/tutorial/closed-suitcase.png').convert('RGBA')
- serif=lambda n,b=False:ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSerif'+('-Bold' if b else '')+'.ttf',n)
- sans=lambda n:ImageFont.truetype(str(root/'scripts/fonts/DejaVuSans.ttf'),n)
- gold='#d7b86d';cream='#f7f0df';green='#1e3b2f'
+ serif=lambda n,b=False:ImageFont.truetype(str(root/'public/fonts'/('montserrat-600.ttf' if b else 'montserrat-400.ttf')),n)
+ sans=lambda n:ImageFont.truetype(str(root/'public/fonts/montserrat-400.ttf'),n)
+ gold='#C9A962';cream='#F9F6EC';green='#4F6B5D'
  def center(d,text,y,size=26,fill=cream,b=False):
   f=serif(size,b);d.text(((720-d.textlength(text,font=f))/2,y),text,font=f,fill=fill)
  for frame in range(19*fps):
-  t=frame/fps;im=Image.new('RGB',(720,1280),'#21150e');d=ImageDraw.Draw(im)
+  t=frame/fps;im=Image.new('RGB',(720,1280),cream);d=ImageDraw.Draw(im)
   # Warm radial leather background.
   for r in range(650,0,-10):
-   c=int(30+22*(1-r/650));d.ellipse((360-r,620-r,360+r,620+r),fill=(c,int(c*.70),int(c*.48)))
+   q=1-r/650;d.ellipse((360-r,620-r,360+r,620+r),fill=(249-int(18*q),246-int(12*q),236-int(12*q)))
   opening=max(0,min(1,(t-1.0)/2.1));rise=max(0,min(1,(t-2.3)/1.7));ease=1-(1-rise)**3
   if opening==0:
    pic=art.resize((720,720));im.paste(pic,(0,180),pic)

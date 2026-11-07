@@ -54,7 +54,28 @@
     .chapters select { width:100%; border-radius:9px; background:#294836; }
     .hint { color:var(--muted); text-align:center; font-size:.83rem; margin:15px 0; }
     @media (max-width:600px) { .video-wrap { width:min(100%,34.875vh); } video { max-height:62vh; } .time { font-size:.74rem; } button { min-height:46px; } }
-  </style>
+
+    @font-face{font-family:Montserrat;src:url('/fonts/montserrat-400.ttf') format('truetype');font-weight:400;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('/fonts/montserrat-600.ttf') format('truetype');font-weight:600 800;font-display:swap}
+    @font-face{font-family:Cinzel;src:url('/fonts/cinzel-400.ttf') format('truetype');font-weight:400;font-display:swap}
+    :root{color-scheme:light;--green:#4F6B5D;--gold:#C9A962;--cream:#F9F6EC;--muted:#65756b}
+    body{background:#F9F6EC;color:#4F6B5D;font-family:Montserrat,'Avenir Next',sans-serif}
+    h1{font-family:Montserrat,'Avenir Next',sans-serif;font-weight:400;line-height:1.3}
+    .eyebrow{font-family:Cinzel,Georgia,serif;color:#806329;letter-spacing:.16em}
+    .player{background:#fff;border-color:#C9A962;box-shadow:0 10px 32px #4f6b5d12}
+    .arrival{background:radial-gradient(circle at 50% 47%,#e7eadd,#F9F6EC 70%)}
+    video{background:#F9F6EC}
+    .start-overlay,button,select{font-family:Montserrat,'Avenir Next',sans-serif;background:#fff;color:#4F6B5D;border-color:#C9A962}
+    .start-overlay{background:#4F6B5D;color:#F9F6EC;font-weight:600;box-shadow:0 4px 12px #4f6b5d20}
+    #unpackButton,#play{background:#4F6B5D;color:#F9F6EC;font-family:Montserrat,'Avenir Next',sans-serif;box-shadow:none}
+    button:hover,button:focus-visible,select:focus-visible{background:#e8ede4}
+    .speed button[aria-pressed=true]{background:#4F6B5D;color:#F9F6EC;border-color:#4F6B5D}
+    .chapters,.release-notes{background:#fff;border-color:#ded8c7;color:#65756b}
+    .chapters select{background:#F9F6EC;color:#4F6B5D;border-color:#C9A962}
+    .chapters label,.release-notes summary{color:#806329}
+    .hint a{color:#4F6B5D!important}
+
+</style>
 </head>
 <body>
 <main>
@@ -65,9 +86,9 @@
   </header>
   <section class="player" aria-label="Tutorial video player">
     <div class="video-wrap">
-    <div class="arrival" id="arrival" aria-label="Tauck suitcase rolls in from the left"><div class="roll-object" id="rollObject"><span class="wheel left" aria-hidden="true"></span><span class="wheel right" aria-hidden="true"></span><img src="/tutorial/closed-suitcase.png" alt="Closed Tauck suitcase with luggage tag"></div></div>
-    <video id="video" playsinline preload="auto" poster="/tutorial/intro-poster.jpg?v=evergreen-3" aria-label="Wondercase animated app tutorial">
-      <track id="captions" kind="captions" src="/tutorial/traveler-tutorial.vtt?v=evergreen-3" srclang="en" label="English captions">
+    <div class="arrival" id="arrival" aria-label="Wondercase suitcase rolls in from the left"><div class="roll-object" id="rollObject"><span class="wheel left" aria-hidden="true"></span><span class="wheel right" aria-hidden="true"></span><img src="/tutorial/closed-suitcase.png" alt="Closed Wondercase suitcase with luggage tag"></div></div>
+    <video id="video" playsinline preload="auto" poster="/tutorial/intro-poster.jpg?v=thailand-brand-4" aria-label="Wondercase animated app tutorial">
+      <track id="captions" kind="captions" src="/tutorial/traveler-tutorial.vtt?v=thailand-brand-4" srclang="en" label="English captions">
       Your browser does not support this video. Download the MP4 from this folder.
     </video>
     <button id="startTutorial" class="start-overlay" type="button" aria-label="Let our journey begin; play tutorial" hidden>▶ Let our journey begin!</button>
@@ -104,7 +125,7 @@
   </section>
   <details class="release-notes"><summary>How to use this tutorial</summary><p>The suitcase rolls in when the page opens. Let’s Unpack starts the opening, and the “Let our journey begin!” button on the instruction card starts the walkthrough. You can pause, replay or choose a chapter. This guide works for any departure and assigned TD.</p></details>
   <p class="hint">The suitcase rolls in automatically and waits for Let’s Unpack. The instruction card waits for Let our journey begin. Space: play or pause · ← / →: skip 10 seconds · Speed buttons work on iPhone, Android, and desktop browsers.</p>
-<p class="hint"><a style="color:var(--gold)" href="/tutorial/traveler-tutorial.mp4?v=evergreen-3" download>Download video</a> · <a style="color:var(--gold)" href="/instruction-booklet" target="_top">Illustrated guide</a> · <a style="color:var(--gold)" href="/" target="_top">Back to Wondercase</a></p></main>
+<p class="hint"><a style="color:var(--gold)" href="/tutorial/traveler-tutorial.mp4?v=thailand-brand-4" download>Download video</a> · <a style="color:var(--gold)" href="/instruction-booklet" target="_top">Illustrated guide</a> · <a style="color:var(--gold)" href="/" target="_top">Back to Wondercase</a></p></main>
 
 <script>
 (() => {
@@ -124,7 +145,7 @@
   const gateAt = 6.7;
   const walkthroughAt = 19;
   let phase = 'closed';
-  video.src = '/tutorial/traveler-tutorial.mp4?v=evergreen-3';
+  video.src = '/tutorial/traveler-tutorial.mp4?v=thailand-brand-4';
   video.load();
   let settled = false;
   const settle = () => {
