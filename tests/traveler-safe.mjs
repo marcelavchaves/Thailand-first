@@ -11,8 +11,8 @@ const realFetch=globalThis.fetch;const people={
 };
 globalThis.fetch=async(url,opts)=>{assert.equal(url,'https://identity.test/user');const token=opts.headers.Authorization.replace('Bearer ','');assert.notEqual(token,'operator-token');return people[token]?Response.json(people[token]):Response.json({error:'Expired'}, {status:401});};
 try{
- await build({stdin:{contents:`export {default as session} from './netlify/functions/safe-session.mts';export {default as access} from './netlify/functions/safe-access.mts';export {default as documents} from './netlify/functions/safe-documents.mts';export {default as plans} from './netlify/functions/safe-plans.mts';export {GUEST_IMPORT_VERSION} from './shared/tour-import.mjs';`,resolveDir:process.cwd(),loader:'ts'},outfile:join(temp,'test.mjs'),bundle:true,platform:'node',format:'esm',external:['sharp'],plugins:[{name:'mock',setup(b){b.onResolve({filter:/^@netlify\/(blobs|identity)$|\/td-auth$/},a=>({path:a.path,namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path.endsWith('identity')?`export const getIdentityConfig=()=>({url:'https://identity.test',token:'operator-token'});export async function getUser(){throw Error('Operator must not be used as a visitor')}export async function logout(){globalThis.safeTest.logout++}`:a.path.endsWith('/td-auth')?`export async function hasTDSession(){return globalThis.safeTest.td}export function sameOrigin(r){return r.headers.get('origin')===new URL(r.url).origin}`:mock}));}}]});
- const {session,access,documents,plans,GUEST_IMPORT_VERSION}=await import(join(temp,'test.mjs'));const origin='https://prototype.test';const req=(path,body=null,token='',method=body?'POST':'GET',requestOrigin=origin)=>new Request(origin+path,{method,headers:{Origin:requestOrigin,Cookie:token.startsWith('__Host')?token:token?'nf_jwt='+token:''},body:body?JSON.stringify(body):undefined});
+ await build({stdin:{contents:`export {default as session} from './netlify/functions/safe-session.mts';export {default as access} from './netlify/functions/safe-access.mts';export {default as invitations} from './netlify/functions/safe-invitations.mts';export {default as documents} from './netlify/functions/safe-documents.mts';export {default as plans} from './netlify/functions/safe-plans.mts';export {GUEST_IMPORT_VERSION} from './shared/tour-import.mjs';`,resolveDir:process.cwd(),loader:'ts'},outfile:join(temp,'test.mjs'),bundle:true,platform:'node',format:'esm',external:['sharp'],plugins:[{name:'mock',setup(b){b.onResolve({filter:/^@netlify\/(blobs|identity)$|\/td-auth$/},a=>({path:a.path,namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path.endsWith('identity')?`export const getIdentityConfig=()=>({url:'https://identity.test',token:'operator-token'});export async function getUser(){throw Error('Operator must not be used as a visitor')}export async function logout(){globalThis.safeTest.logout++}`:a.path.endsWith('/td-auth')?`export async function hasTDSession(){return globalThis.safeTest.td}export function sameOrigin(r){return r.headers.get('origin')===new URL(r.url).origin}`:mock}));}}]});
+ const {session,access,invitations,documents,plans,GUEST_IMPORT_VERSION}=await import(join(temp,'test.mjs'));const origin='https://prototype.test';const req=(path,body=null,token='',method=body?'POST':'GET',requestOrigin=origin)=>new Request(origin+path,{method,headers:{Origin:requestOrigin,Cookie:token.startsWith('__Host')?token:token?'nf_jwt='+token:''},body:body?JSON.stringify(body):undefined});
  const ok=async r=>{assert.equal(r.status,200,await r.clone().text());return r.json();};const seed=(store,key,data,etag='seed')=>state.db.set(store+'/'+key,{data:structuredClone(data),etag});
  const guests=[1,2].map(n=>({id:`00000000-0000-4000-8000-00000000000${n}`,name:'Sample Guest '+n,origin:'',bio:'',phone:'',email:'',social:'',shareContact:false,safeId:'TG0'+n}));
  seed('guest-profiles','roster',{guests,guestListVersion:GUEST_IMPORT_VERSION,guestOrderVersion:'ic2026-left-column-then-right-v1',revealed:true,safeAssignments:{byGuest:Object.fromEntries(guests.map(g=>[g.id,g.safeId])),next:3}});
@@ -35,5 +35,30 @@ try{
  state.td=true;admin=await ok(await access(req('/api/safe-access')));const removal={revision:admin.revision,rosterRevision:admin.rosterRevision,guests:admin.guests.map(g=>({id:g.id,emails:g.emails.filter(e=>e!=='a@example.test')}))};await ok(await access(req('/api/safe-access',removal,'','PUT')));state.td=false;assert.equal((await documents(req('/api/safe-documents',null,'a.a.a'))).status,401);assert.equal((await ok(await documents(req('/api/safe-documents',null,'p.p.p')))).documents.length,1);
  assert.equal((await session(req('/api/safe-session',null,'p.p.p','DELETE','https://evil.test'))).status,403);assert.equal((await session(req('/api/safe-session',null,'p.p.p','DELETE'))).status,200);assert.equal(state.logout,1);
  assert(!JSON.stringify(await ok(await session(req('/api/safe-session',null,'x.x.x')))).includes('partner@example.test'));
+
+ // One-use private invitations: guests choose an email; only the TD issues links.
+ assert.equal((await invitations(req('/api/safe-invitations',{action:'create',safeId:'TG01'}))).status,401);
+ state.td=true;
+ assert.equal((await invitations(req('/api/safe-invitations',{action:'create',safeId:'TG01'},'','POST','https://evil.test'))).status,403);
+ const issue=async safeId=>ok(await invitations(req('/api/safe-invitations',{action:'create',safeId})));
+ const link=await issue('TG01'),inviteToken=new URL(link.url).hash.split('=')[1];
+ assert(!JSON.stringify(state.db.get('traveler-safe-access/assignments').data).includes(inviteToken),'Only token hashes stored');
+ state.td=false;
+ assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:inviteToken},'u.u.u'))).status,401);
+ assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:inviteToken},'b.b.b'))).status,409,'Cannot connect another Safe');
+ await ok(await invitations(req('/api/safe-invitations',{action:'claim',token:inviteToken},'x.x.x')));
+ assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:inviteToken},'x.x.x'))).status,410,'One use only');
+ assert.equal((await ok(await session(req('/api/safe-session',null,'x.x.x')))).safeId,'TG01');
+ assert.equal(state.db.get('traveler-safe-accounts/tg01').data.key,oldKey,'Claim preserves encryption key');
+ state.td=true;
+ const expired=await issue('TG02'),expiredToken=new URL(expired.url).hash.split('=')[1];
+ const settings=state.db.get('traveler-safe-access/assignments').data;for(const i of Object.values(settings.invitations))i.expiresAt=0;
+ state.td=false;assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:expiredToken},'x.x.x'))).status,410);
+ state.td=true;const preserved=await issue('TG02');admin=await ok(await access(req('/api/safe-access')));await ok(await access(req('/api/safe-access',{revision:admin.revision,rosterRevision:admin.rosterRevision,guests:admin.guests.map(g=>({id:g.id,emails:g.emails}))},'','PUT')));assert(Object.keys(state.db.get('traveler-safe-access/assignments').data.invitations).length>0,'Email editing preserves outstanding invitations');
+ state.td=true;const replaced=await issue('TG02'),newLink=await issue('TG02');state.td=false;
+ assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:new URL(replaced.url).hash.split('=')[1]},'x.x.x'))).status,410);
+ state.td=true;await ok(await invitations(req('/api/safe-invitations',{action:'revoke',safeId:'TG02'})));state.td=false;
+ assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:new URL(newLink.url).hash.split('=')[1]},'x.x.x'))).status,410);
+ console.log('PASS private Safe invitations: TD issuance, CSRF, hashed tokens, verified identity, one-use claims, expiration, revocation, replacement, cross-Safe protection and preserved encryption key.');
  console.log('PASS Safe email/Google authorization: verified visitor tokens, no operator/legacy-PIN fallback, TD-only email grants, shared access, subject binding, immediate revocation, account isolation, existing encrypted file/key/plan migration, CSRF, revisions, nickname, document CRUD and activity limits.');
 }finally{globalThis.fetch=realFetch;await rm(temp,{recursive:true,force:true});}

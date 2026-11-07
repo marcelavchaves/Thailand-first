@@ -1,3 +1,9 @@
+## November 7, 2026 · Updated app guides
+
+Replaced the older tour help with a captioned two-minute animated tutorial, chapter controls, transcript and twelve-page printable guide for November 16–December 1, 2026. Updated FAQs, phone installation videos and saved tutorial links. Guides describe the Safe flow available in this edition.
+
+Prototype: added private, one-use Safe invitations so guests choose their verified email or Google account without TD email setup. TD can replace/revoke unused invitations. Removed Home meal choices button; guest-card meal choices remain.
+
 ## November 7, 2026 — Prototype Safe email and Google sign-in
 
 Replace Safe PIN activation/login/recovery with verified email/password and Google sign-in. Add TD Safe email access assignments, including shared Safes. Bind verified accounts to assigned Safes and migrate existing IDs/encryption keys without deleting documents or plans. Retain private storage protections and remove PIN/recovery-code UI. Live is unchanged.

@@ -7,7 +7,7 @@ export const digest=(value:string)=>createHash('sha256').update(value).digest('h
 export type SafeAccount={id:string;username:string;safeId:string;guestId:string;nickname:string;key:string;version:string;auth:'identity'};
 export type SafeIdentity={id:string;email:string};
 export type SafeAccess={safeId:string;guestId:string;emails:string[];subjects:Record<string,string>};
-export type SafeAccessSettings={safes:Record<string,SafeAccess>};
+export type SafeAccessSettings={safes:Record<string,SafeAccess>;invitations?:Record<string,{safeId:string;guestId:string;expiresAt:number}>};
 export const normalizeEmail=(value:unknown)=>typeof value==='string'&&value.trim().length<=254&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())?value.trim().toLowerCase():null;
 // Verify the visitor's token explicitly. Never treat an Identity operator token as a guest.
 export async function safeIdentityUser(request:Request):Promise<SafeIdentity|null>{

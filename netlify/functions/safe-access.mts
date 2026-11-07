@@ -20,7 +20,7 @@ export default async function handler(request:Request){try{
   const prior=settings?.safes[guest.safeId!],subjects=Object.fromEntries(emails.filter(email=>prior?.guestId===guest.id&&prior.subjects[email]).map(email=>[email,prior!.subjects[email]]));safes[guest.safeId!]={safeId:guest.safeId!,guestId:guest.id,emails,subjects};
  }
  const current=await getStore({name:'guest-profiles',consistency:'strong'}).getWithMetadata('roster',{type:'json'});if((current?.etag||null)!==body.rosterRevision)return reply({error:'The guest list changed. Reload before saving.'},409);
- if(!(await store.setJSON('assignments',{safes},record?{onlyIfMatch:record.etag}:{onlyIfNew:true})).modified)return reply({error:'Safe access changed in another window. Reload before saving.'},409);
+ if(!(await store.setJSON('assignments',{...settings,safes},record?{onlyIfMatch:record.etag}:{onlyIfNew:true})).modified)return reply({error:'Safe access changed in another window. Reload before saving.'},409);
  return reply({saved:true});
 }catch{return reply({error:'Unable to manage Safe access. Please try again.'},503);}}
 export const config:Config={path:'/api/safe-access'};

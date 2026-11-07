@@ -4,36 +4,36 @@ import subprocess,math,json,sys,textwrap
 root=Path(__file__).resolve().parent.parent
 out=root/'.installation-build';out.mkdir(exist_ok=True)
 font=lambda n,b=False:ImageFont.truetype(str(root/'scripts/fonts'/('DejaVuSans-Bold.ttf' if b else 'DejaVuSans.ttf')),n)
-G='#18483f';gold='#d5b76d';ink='#243e37';blue='#087abf'
+G='#526f60';gold='#d5b76d';ink='#243e37';blue='#087abf'
 # Screen illustrations are intentionally schematic, avoiding dependence on a particular OS layout.
 iphone=[
-('Start with Xavier’s email','email','Open Xavier’s email on your iPhone. Find the Kingdoms & Dragons app link. Keep Wi-Fi or mobile data on.',(365,510)),
+('Start with Xavier’s email','email','Open Xavier’s email on your iPhone. Find the Wondercase app link. Keep Wi-Fi or mobile data on.',(365,510)),
 ('Open the app link','email','Tap the app link once. If it opens in Safari, continue to the app page. If it opens in another browser or inside email, follow the next steps.',(365,510)),
 ('If needed: copy the link','copy','Return to the email. Touch and hold the app link, then choose Copy Link or Copy. The link is now ready to paste.',(360,600)),
 ('Open Safari','safari','Find Safari, the blue compass icon. Tap it. Use Safari for this iPhone installation walkthrough.',(360,525)),
 ('Paste the app address','paste','Tap Safari’s address bar. Touch and hold inside it, then tap Paste and Go. If you see Paste instead, tap Paste, then Go.',(360,475)),
-('Check the journey page','website','Wait for Kingdoms & Dragons to load. You should see the journey title. If the app was already open in Safari, start here.',(360,460)),
+('Check the journey page','website','Wait for Wondercase to load. You should see the journey title. If the app was already open in Safari, start here.',(360,460)),
 ('Find the Share button','share','Tap Share: a square with an upward arrow. Depending on Safari’s layout, first tap the Page Menu, then Share.',(360,820)),
 ('Expand the Share sheet','sheet','Swipe upward on the Share sheet to reveal more actions. Look below the row of app icons for Add to Home Screen.',(360,690)),
 ('Tap Add to Home Screen','addhome','Tap Add to Home Screen. If it is missing, scroll to Edit Actions, then add the Add to Home Screen action.',(360,560)),
-('Check the app options','confirm','Keep the suggested name K&D102. If Open as Web App appears, leave it switched on. Older iPhones may not show that switch.',(495,630)),
+('Check the app options','confirm','Keep the suggested name Wondercase. If Open as Web App appears, leave it switched on. Older iPhones may not show that switch.',(495,630)),
 ('Tap Add','confirm','Tap Add in the upper-right corner. Wait for the new icon to be placed on this iPhone’s Home Screen.',(525,305)),
-('Find your new app icon','homescreen','Return to the Home Screen: swipe up from the bottom, or press the physical Home button. Swipe between pages to find K&D102.',(250,450)),
+('Find your new app icon','homescreen','Return to the Home Screen: swipe up from the bottom, or press the physical Home button. Swipe between pages to find Wondercase.',(250,450)),
 ('Open your journey','finished','Tap the new app icon. Use it each day instead of finding the email again. Travelers do not need Xavier’s TD Login. Keep internet on for current updates.',(250,450)),
 ('If you need a little help','help','Cannot find the icon? Swipe down on the Home Screen and search its name. If installation did not finish, reopen the link in Safari and repeat Share → Add to Home Screen.',None)
 ]
 android=[
-('Start with Xavier’s email','email','Open Xavier’s email on your Android phone. Find the Kingdoms & Dragons app link. Keep Wi-Fi or mobile data on.',(365,510)),
+('Start with Xavier’s email','email','Open Xavier’s email on your Android phone. Find the Wondercase app link. Keep Wi-Fi or mobile data on.',(365,510)),
 ('Tap the app link','email','Tap the app link once. Use Google Chrome for these steps. Otherwise, choose Open in Chrome if offered, or copy and paste using the next steps.',(365,510)),
 ('If needed: copy the link','copy','Return to the email. Touch and hold the app link, then choose Copy link address or Copy link.',(360,600)),
 ('Open Google Chrome','chrome','Find the round red, yellow, green and blue Chrome icon. Tap it to open the browser.',(360,525)),
 ('Paste and open the link','paste','Tap Chrome’s address bar. Touch and hold, then choose Paste. Tap Go or the arrow on the keyboard to open the app.',(360,475)),
-('Check the journey page','website','Wait for Kingdoms & Dragons to load. If the link was already open in Chrome, you can start here.',(360,460)),
+('Check the journey page','website','Wait for Wondercase to load. If the link was already open in Chrome, you can start here.',(360,460)),
 ('Open Chrome’s menu','more','Tap the three vertical dots next to the address bar. The address bar may be at the top or bottom, depending on your settings.',(550,325)),
 ('Choose the install option','androidmenu','Look for Install and create shortcut, then Install. Other Chrome versions may say Install app or Add to Home screen.',(355,555)),
 ('Confirm installation','androidconfirm','Tap Install in the confirmation box. If your phone offers a shortcut instead, tap Add and follow the placement instructions.',(495,645)),
 ('Give it a moment','waiting','Allow the phone a moment to finish. Then go to your Home Screen using the Home button or your usual swipe-up gesture.',(360,800)),
-('Find the new app','homescreen','Look for the K&D102 icon. Swipe between Home Screen pages. If you do not see it, open your app list and search for it.',(250,450)),
+('Find the new app','homescreen','Look for the Wondercase icon. Swipe between Home Screen pages. If you do not see it, open your app list and search for it.',(250,450)),
 ('If needed: place the icon','appdrawer','If the app is only in your app list, touch and hold its icon. Choose Add to Home, or drag it onto the Home Screen.',(250,450)),
 ('Tap to open your journey','finished','Tap the new icon. You can now open the journey without returning to the email. Travelers do not need Xavier’s TD Login. Keep internet on for current updates.',(250,450)),
 ('If Install is missing','help','Make sure the page is open in Chrome, not an email preview. Try a normal tab and reload. Check the app list first: Chrome may show Open app if it is already installed.',None)
@@ -52,14 +52,14 @@ def icon(im,x,y,size=72):
 def scene(platform,i,entry,total):
  title,state,caption,target=entry
  im=Image.new('RGB',(720,1280),'#f7f2e6');d=ImageDraw.Draw(im)
- d.rectangle((0,0,720,10),fill=gold);d.text((35,28),'KINGDOMS & DRAGONS',font=font(22,True),fill=G);d.text((35,64),f'{"iPhone · Safari" if platform=="iphone" else "Android · Chrome"}  |  HOME SCREEN SETUP',font=font(18),fill=G)
+ d.rectangle((0,0,720,10),fill=gold);d.text((35,28),'WONDERCASE',font=font(22,True),fill=G);d.text((35,64),f'{"iPhone · Safari" if platform=="iphone" else "Android · Chrome"}  |  HOME SCREEN SETUP',font=font(18),fill=G)
  d.rounded_rectangle((35,106,102,166),radius=15,fill=G);d.text((53,121),f'{i+1:02}',font=font(27,True),fill='#ffffff');wrap(d,title,(120,117),570,28,G,True)
  d.rounded_rectangle((115,195,605,965),radius=46,fill='#243e37');d.rounded_rectangle((128,210,592,949),radius=34,fill='#ffffff');d.text((153,232),'9:41',font=font(18,True),fill=ink);d.text((496,232),'▰  Wi-Fi',font=font(14),fill=ink);d.rounded_rectangle((284,220,436,241),radius=10,fill='#243e37')
  def txt(t,x,y,n=22,b=False,c=ink):d.text((x,y),t,font=font(n,b),fill=c)
  def row(t,y,fill='#eef2f1'):
   d.rounded_rectangle((151,y,569,y+59),radius=10,fill=fill);txt(t,170,y+16,19)
  if state in ['email','copy']:
-  txt('Inbox',153,286,22,True);txt('From: Xavier',153,351,20);wrap(d,'Your Kingdoms & Dragons journey',(153,395),410,27,G,True);row('Open the journey app',487,'#e3f1f9');txt('Tap the link above to begin.',153,574,19)
+  txt('Inbox',153,286,22,True);txt('From: Xavier',153,351,20);wrap(d,'Your Wondercase journey',(153,395),410,27,G,True);row('Open the journey app',487,'#e3f1f9');txt('Tap the link above to begin.',153,574,19)
   if state=='copy':d.rounded_rectangle((178,555,542,680),radius=16,fill='#f1f1f1',outline='#c6cecb');txt('Copy Link',215,588,26,True);txt('(wording may vary)',215,635,16)
  elif state in ['safari','chrome']:
   txt('Open your browser',171,325,27,True)
@@ -73,22 +73,22 @@ def scene(platform,i,entry,total):
   if state!='finished':
    row('Journey app address',285)
    if platform=='android':txt('⋮',540,302,28,True)
-  icon(im,167,379,62);txt('Kingdoms & Dragons',240,397,22,True,G);wrap(d,'Singapore to Bali',(165,502),380,38,G,True);txt('October 3 – 16',165,614,22);txt('102nd Tour',165,660,25,True);row('Today’s journey  →',718,'#e8eee5')
+  icon(im,167,379,62);txt('Wondercase',240,397,22,True,G);wrap(d,'Vietnam, Cambodia & Thailand',(165,502),380,30,G,True);txt('Nov 16 – Dec 1',165,640,22);txt('2026 Journey',165,690,25,True);row('Today’s journey  →',750,'#e8eee5')
   if state=='share':
    d.line((346,815,346,837,376,837,376,815),fill=blue,width=4);d.line((361,825,361,792),fill=blue,width=4);d.line((351,803,361,792,371,803),fill=blue,width=4);txt('Share',329,853,19,True,blue)
   if state=='finished':txt('Home     Journey     Hotels     Info',153,865,17,False,G)
  elif state in ['sheet','addhome']:
-  txt('Share',161,288,27,True);txt('Kingdoms & Dragons',161,337,20);row('Mail     Messages     More',398);row('Copy',468);row('Add to Home Screen',538,'#dcece5');row('Add Bookmark',608);row('Edit Actions…',770);txt('Swipe up to see more actions ↑',161,690,19,False,blue)
+  txt('Share',161,288,27,True);txt('Wondercase',161,337,20);row('Mail     Messages     More',398);row('Copy',468);row('Add to Home Screen',538,'#dcece5');row('Add Bookmark',608);row('Edit Actions…',770);txt('Swipe up to see more actions ↑',161,690,19,False,blue)
  elif state=='confirm':
-  txt('Cancel',152,294,19,False,blue);txt('Add',503,294,22,True,blue);txt('Add to Home Screen',167,362,28,True);icon(im,320,426,80);row('K&D102',539);row('Open as Web App',609);d.rounded_rectangle((476,621,550,655),radius=17,fill='#389867');d.ellipse((518,625,544,651),fill='white');txt('If this option is shown',165,687,17)
+  txt('Cancel',152,294,19,False,blue);txt('Add',503,294,22,True,blue);txt('Add to Home Screen',167,362,28,True);icon(im,320,426,80);row('Wondercase',539);row('Open as Web App',609);d.rounded_rectangle((476,621,550,655),radius=17,fill='#389867');d.ellipse((518,625,544,651),fill='white');txt('If this option is shown',165,687,17)
  elif state=='androidmenu':
   txt('Chrome menu',163,294,27,True);row('New tab',362);row('History',432);row('Install and create shortcut',502,'#dcece5');row('Install',572,'#dcece5');wrap(d,'Other versions: Install app or Add to Home screen',(170,682),375,23)
  elif state=='androidconfirm':
-  txt('Install app?',182,415,29,True);icon(im,181,470,70);wrap(d,'K&D102',(266,487),275,23,G,True);txt('Cancel',213,637,22,False,blue);d.rounded_rectangle((430,623,559,674),radius=20,fill=blue);txt('Install',454,635,23,True,'white')
+  txt('Install app?',182,415,29,True);icon(im,181,470,70);wrap(d,'Wondercase',(266,487),275,23,G,True);txt('Cancel',213,637,22,False,blue);d.rounded_rectangle((430,623,559,674),radius=20,fill=blue);txt('Install',454,635,23,True,'white')
  elif state=='waiting':
   txt('Adding your journey…',165,391,28,True);icon(im,316,496,88);wrap(d,'Please give your phone a moment to finish.',(179,638),360,25);d.line((300,864,420,864),fill=ink,width=5)
  elif state in ['homescreen','appdrawer']:
-  txt('Home Screen' if state=='homescreen' else 'Your apps',164,298,28,True);icon(im,212,410,78);txt('K&D102',207,507,19)
+  txt('Home Screen' if state=='homescreen' else 'Your apps',164,298,28,True);icon(im,212,410,78);txt('Wondercase',207,507,19)
   for x,y in [(400,410),(212,600),(400,600)]:d.rounded_rectangle((x,y,x+78,y+78),radius=17,fill='#e2eae7')
   if state=='appdrawer':row('Add to Home',757,'#dcece5')
   else:txt('Swipe to check other pages →',158,777,20)
@@ -103,7 +103,7 @@ def scene(platform,i,entry,total):
  return im,(None if state=='finished' else target)
 
 def run(platform):
- entries=iphone if platform=='iphone' else android;duration=11;fps=16
+ entries=iphone if platform=='iphone' else android;duration=9;fps=8
  target=root/f'public/tutorial/install-{platform}.mp4';p=subprocess.Popen(['ffmpeg','-y','-f','rawvideo','-vcodec','rawvideo','-pix_fmt','rgb24','-s','720x1280','-r',str(fps),'-i','-','-an','-c:v','libx264','-preset','fast','-crf','23','-pix_fmt','yuv420p','-movflags','+faststart',str(target)],stdin=subprocess.PIPE,stderr=subprocess.DEVNULL)
  vtt=['WEBVTT',''];frames=[]
  def stamp(n):return f'{n//3600:02}:{n//60%60:02}:{n%60:02}.000'
@@ -118,4 +118,5 @@ def run(platform):
    p.stdin.write(im.tobytes())
  p.stdin.close();assert p.wait()==0
  (root/f'public/tutorial/install-{platform}.vtt').write_text('\n'.join(vtt));(root/f'assets/tutorial/install-{platform}-storyboard.json').write_text(json.dumps(frames,indent=2,ensure_ascii=False)+'\n');print(platform,'complete:',len(entries)*duration,'seconds')
-if __name__=='__main__':run(sys.argv[1])
+if __name__=='__main__':
+ for platform in ([sys.argv[1]] if len(sys.argv)>1 else ['iphone','android']):run(platform)

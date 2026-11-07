@@ -3,3 +3,5 @@
 .safe-google{width:100%;font-size:15px!important;font-weight:600!important;min-height:48px!important;background:#fff!important;color:var(--brand-green)!important;border-color:var(--brand-green)!important}.safe-auth-divider{text-align:center;color:#68756b}.safe-access-admin{max-width:850px}.safe-access-admin p{line-height:1.7}.safe-access-admin fieldset{border:0;padding:0;min-width:0}.safe-access-admin label{display:grid;gap:8px;margin:18px 0;font-size:14px}.safe-access-admin input{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:10px;border:1px solid #9cad9e;border-radius:8px;background:#fff;color:var(--brand-green);font-size:16px}.safe-access-admin button{min-height:44px;padding:10px 16px;border:1px solid var(--brand-green);border-radius:8px;background:var(--brand-green);color:#fff}.safe-access-admin button:disabled{opacity:.5}
 
 .safe-account{gap:12px;flex-wrap:wrap}.safe-account>span{min-width:0;overflow-wrap:anywhere}.safe-account small{display:block;line-height:1.6}
+
+.safe-access-row{display:grid;gap:10px;margin:18px 0;padding:18px 0;border-bottom:1px solid #ddd8c8}.safe-access-row input{width:100%}
