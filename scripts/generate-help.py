@@ -46,11 +46,8 @@ for i,ch in enumerate(chapters):
  im.save(out/f'guide-{i+1:02}.png')
  words=(ch['title']+'. '+' '.join(ch['steps'])).split();cues=[words[k:k+10] for k in range(0,len(words),10)]
  for k,words in enumerate(cues):vtt.extend([f'{stamp(19+i*duration+k*duration/len(cues))} --> {stamp(19+i*duration+(k+1)*duration/len(cues))}',' '.join(words),''])
- for frame in range(duration*fps):
-  pic=im.copy();draw=ImageDraw.Draw(pic);j=min(2,int(frame/(duration*fps/3)));yy=329+j*70
-  draw.rounded_rectangle((57,yy-3,663,yy+60),radius=12,outline=GOLD,width=3+int(2*(1+math.sin(frame/fps*4))/2))
-  draw.rectangle((36,1251,684,1257),fill='#dce1d8');draw.rectangle((36,1251,36+648*(i+frame/(duration*fps))/len(chapters),1257),fill=GOLD)
-  proc.stdin.write(pic.tobytes())
+from tutorial_tab_frames import render_tabs
+render_tabs(proc,fps,duration,chapters,root,out)
 proc.stdin.close();assert proc.wait()==0
 (root/'public/tutorial/traveler-tutorial.vtt').write_text('\n'.join(vtt))
 # Print-friendly interactive booklet, same chapters and instructions as the video.
