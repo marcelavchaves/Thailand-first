@@ -1,3 +1,7 @@
+## November 7, 2026 · Show the tabs and features
+
+Tutorial video now demonstrates all six tabs through thirty sample app screens, opening calendars, city tiles, hotels, flights, handouts, meal choices, Safe, trivia and language lessons. Added a guided, interactive practice tour with play/pause and step controls. Sample screens never call guest-data APIs or save changes. Preserved each edition’s current Safe and handout behavior.
+
 ## November 7, 2026 · Thailand tutorial styling
 
 Updated the suitcase with a compass medallion and removed Tauck branding. Matched tutorial player, video, installation guides and booklet to the app’s soft forest green, warm gold, ivory and Montserrat typography.
