@@ -1,6 +1,6 @@
-## November 7, 2026 · Show the tabs and features
+## November 7, 2026 · Restore previous tutorial
 
-Tutorial video now demonstrates all six tabs through thirty sample app screens, opening calendars, city tiles, hotels, flights, handouts, meal choices, Safe, trivia and language lessons. Added a guided, interactive practice tour with play/pause and step controls. Sample screens never call guest-data APIs or save changes. Preserved each edition’s current Safe and handout behavior.
+Restored the prior suitcase tutorial with the Thailand colors, fonts and compass artwork. Removed the experimental tab walkthrough. Existing practice-tour links now open the restored tutorial. All other app features remain unchanged.
 
 ## November 7, 2026 · Thailand tutorial styling
 
