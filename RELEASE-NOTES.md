@@ -1,3 +1,7 @@
+## November 7, 2026 — Historical trivia, Learn more tiles and Xavier maps
+
+Replace basic trivia with 64 deeper historical/cultural questions, four plausible choices each and expanded explanations, matched to the tour days. Separate Trivia and Language lesson into side-by-side Learn more tiles. Add the supplied Chiang Mai, Da Nang, Saigon, Bangkok and Siem Reap Google Maps as primary city links, keeping uploaded maps available separately. Refresh PDF trivia content and quiz progress version.
+
 ## November 6, 2026 — Remove live Home meal entry
 
 Remove the meal choices button from Home on live. Guest-card meal links and TD meal management remain available.

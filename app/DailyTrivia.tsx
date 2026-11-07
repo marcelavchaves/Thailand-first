@@ -26,7 +26,7 @@ export const getDailyQuestions = (date: number) => trivia[date] || [];
 
 export default function DailyTrivia({ date }: { date: number }) {
   const questions = getDailyQuestions(date);
-  const storageKey = `wondercase-vct-trivia-v1-${date}`;
+  const storageKey = `wondercase-vct-history-v2-${date}`;
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
 
