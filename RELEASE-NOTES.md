@@ -1,3 +1,7 @@
+## November 7, 2026 — Historical trivia, Learn more tiles and Xavier maps
+
+Replace basic trivia with 64 deeper historical/cultural questions, four plausible choices each and expanded explanations, matched to the tour days. Separate Trivia and Language lesson into side-by-side Learn more tiles. Add the supplied Chiang Mai, Da Nang, Saigon, Bangkok and Siem Reap Google Maps as primary city links, keeping uploaded maps available separately. Refresh PDF trivia content and quiz progress version.
+
 ## November 6, 2026 — Prototype 5 MB booklets and individual printed pages
 
 Raise PDF booklet uploads to 5 MB using staged transfer and segmented downloads. Split wide two-page PDF sheets into individual pages with correct navigation, text and links. Add TD layout choices for complete sheets, left/right or right/left order; layout changes return the booklet to hidden for preview. Existing wide booklets use automatic splitting without re-upload.
