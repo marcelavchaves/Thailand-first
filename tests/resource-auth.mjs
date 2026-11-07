@@ -27,6 +27,29 @@ assert.equal((await handler(new Request(base+'/api/tour-resources?file='+map.id)
 mapEntry=(await (await handler(request(cookie))).json()).items[map.id];
 assert.equal((await handler(request(cookie,{...map,action:'hide',revision:mapEntry.revision}))).status,200);
 assert.equal((await handler(new Request(base+'/api/tour-resources?file='+map.id))).status,404);
+// Interactive handouts are hidden on upload, conversion and replacement.
+const handout={id:'custom-booklet-test',title:'Booklet example',group:'handouts',action:'upload',revision:null,upload:{type:'application/pdf',data:Buffer.from('%PDF-1.4 booklet fixture').toString('base64')}};
+const meta=(id,td=false)=>handler(new Request(base+'/api/tour-resources?booklet='+id,{headers:td?{Cookie:cookie}:{}}));
+const file=(id,td=false)=>handler(new Request(base+'/api/tour-resources?file='+id,{headers:td?{Cookie:cookie}:{}}));
+const getEntry=async id=>(await (await handler(request(cookie))).json()).items[id];
+assert.equal((await handler(request('',handout))).status,401);
+assert.equal((await handler(request(cookie,handout,'https://bad.test'))).status,403);
+assert.equal((await handler(request(cookie,handout))).status,200);
+let book=await getEntry(handout.id);assert.equal(book.booklet,true);assert.equal(book.visible,false);
+assert.equal((await (await handler(request())).json()).items[handout.id],undefined);
+assert.equal((await meta(handout.id)).status,404);assert.equal((await file(handout.id)).status,404);
+assert.equal((await (await meta(handout.id,true)).json()).preview,true);assert.equal((await file(handout.id,true)).status,200);
+assert.equal((await handler(request(cookie,{...handout,action:'reveal',revision:book.revision}))).status,200);
+assert.equal((await meta(handout.id)).status,200);assert.equal((await file(handout.id)).status,200);assert.equal((await meta(handout.id)).headers.get('Cache-Control'),'no-store');
+book=await getEntry(handout.id);assert.equal((await handler(request(cookie,{...handout,action:'hide',revision:book.revision}))).status,200);
+assert.equal((await meta(handout.id)).status,404);assert.equal((await file(handout.id)).status,404);
+book=await getEntry(handout.id);assert.equal((await handler(request(cookie,{...handout,revision:book.revision}))).status,200);book=await getEntry(handout.id);assert.equal(book.visible,false);assert.equal(book.booklet,true);
+// Legacy handout conversion keeps the file but requires an explicit new reveal.
+globalThis.db['tour-resources'].get('entry/'+handout.id).data.booklet=false;globalThis.db['tour-resources'].get('entry/'+handout.id).data.visible=true;
+assert.equal((await meta(handout.id)).status,404);assert.equal((await handler(request(cookie,{...handout,action:'booklet',revision:book.revision}))).status,200);book=await getEntry(handout.id);assert.equal(book.booklet,true);assert.equal(book.visible,false);
+assert.equal((await handler(request(cookie,{...map,action:'booklet',revision:mapEntry.revision}))).status,400);
+assert.equal((await handler(request(cookie,{...handout,action:'delete',revision:book.revision}))).status,200);assert.equal((await meta(handout.id,true)).status,404);assert.equal((await file(handout.id,true)).status,404);
+assert.equal((await (await handler(request())).json()).items[handout.id],undefined);
 await passwordSessionCookie(request(cookie));assert.equal(await hasTDSession(request(cookie)),false);
 assert.equal((await handler(request(cookie,b))).status,401);
-console.log('Resource authorization: anonymous writes, CSRF, session, reveal, conflicts, delete and logout checks passed.');
+console.log('Resource authorization: anonymous writes, CSRF, session, reveal, conflicts, delete/logout, and booklet hidden-upload, direct URL protection, metadata privacy, conversion and replacement checks passed.');

@@ -1771,6 +1771,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
     if (requestedDay >= 1 && requestedDay <= 16) setSelected(requestedDay + 4);
     const requestedTab = params.get('tab');
     const requestedHotel = params.get('hotel');
+    if (requestedTab === 'hotels' && params.get('section') === 'handouts') {setEssentialsSection('handouts');sectionScrollTarget.current='essentials-handouts';}
     if (requestedTab === 'hotels' && params.get('section') === 'flights') {
       setEssentialsSection('flights');
       sectionScrollTarget.current = 'essentials-flights';

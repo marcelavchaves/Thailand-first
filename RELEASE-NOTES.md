@@ -1,3 +1,7 @@
+## November 6, 2026 — Prototype interactive PDF handouts
+
+PDFs uploaded in TD Handouts become hidden interactive booklets with page swiping, navigation, zoom/pinch, readable page text and document links. Add conversion for existing PDF handouts, TD preview and show/hide controls. Hidden booklet listings and direct PDF/reader metadata are blocked for guests; replacements stay hidden for review.
+
 ## November 6, 2026 — Pick rooms and traveling groups; apply manifest across hotels
 
 Define room groups by selecting guests, then define traveling-together groups by selecting whole rooms. Room occupancy and bed requests apply together, and assigned guests cannot be duplicated into another room. Add Apply manifest to all hotels with confirmation; copy rooming and hotel observations while keeping each hotel’s stay dates.
