@@ -1,15 +1,44 @@
-import {createHash,timingSafeEqual,scrypt as deriveKey,randomBytes} from 'node:crypto';
-import {promisify} from 'node:util';import {getStore} from '@netlify/blobs';
-const scrypt=promisify(deriveKey);export const safeStore=(name:string)=>getStore({name:'traveler-safe-'+name,consistency:'strong'});
+import {createHash,randomBytes,randomUUID} from 'node:crypto';
+import {getStore} from '@netlify/blobs';
+import {getIdentityConfig} from '@netlify/identity';
+import {assignedGuest} from './safe-roster';
+export const safeStore=(name:string)=>getStore({name:'traveler-safe-'+name,consistency:'strong'});
 export const digest=(value:string)=>createHash('sha256').update(value).digest('hex');
-export const username=(value:unknown)=>typeof value==='string'&&/^[a-z0-9][a-z0-9_.-]{2,31}$/.test(value.trim().toLowerCase())?value.trim().toLowerCase():null;
-export const validPin=(value:unknown):value is string=>typeof value==='string'&&/^\d{6}$/.test(value);
-export async function pinHash(pin:string,salt:string){return (await scrypt(pin,salt,64) as Buffer).toString('hex');}
-export async function pinMatches(pin:string,account:SafeAccount){return timingSafeEqual(Buffer.from(await pinHash(pin,account.salt),'hex'),Buffer.from(account.hash,'hex'));}
-export type SafeAccount={id:string;username:string;safeId?:string;guestId?:string;nickname?:string;salt:string;hash:string;key:string;version:string;recoveryHash:string;failures:number;lockedUntil:number};
-export async function safeSession(request:Request):Promise<SafeAccount|null>{
- const token=request.headers.get('cookie')?.match(/(?:^|;\s*)__Host-kd_safe=([a-f0-9]{64})(?:;|$)/)?.[1];if(!token)return null;
- const session=await safeStore('sessions').get(digest(token),{type:'json'}) as {username:string;version:string;expires:number}|null;if(!session||session.expires<Date.now())return null;
- const account=await safeStore('accounts').get(session.username,{type:'json'}) as SafeAccount|null;return account?.version===session.version?account:null;
+export type SafeAccount={id:string;username:string;safeId:string;guestId:string;nickname:string;key:string;version:string;auth:'identity'};
+export type SafeIdentity={id:string;email:string};
+export type SafeAccess={safeId:string;guestId:string;emails:string[];subjects:Record<string,string>};
+export type SafeAccessSettings={safes:Record<string,SafeAccess>};
+export const normalizeEmail=(value:unknown)=>typeof value==='string'&&value.trim().length<=254&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())?value.trim().toLowerCase():null;
+// Verify the visitor's token explicitly. Never treat an Identity operator token as a guest.
+export async function safeIdentityUser(request:Request):Promise<SafeIdentity|null>{
+ const raw=request.headers.get('cookie')?.match(/(?:^|;\s*)nf_jwt=([^;]+)/)?.[1];if(!raw)return null;
+ let token;try{token=decodeURIComponent(raw);}catch{return null;}
+ if(token.length>16000||!/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(token))return null;
+ const config=getIdentityConfig();if(!config?.url)return null;
+ const r=await fetch(config.url.replace(/\/$/,'')+'/user',{headers:{Authorization:`Bearer ${token}`},signal:AbortSignal.timeout(5000)});
+ if(r.status===401||r.status===403)return null;if(!r.ok)throw Error('Sign-in verification is temporarily unavailable.');
+ const user=await r.json(),email=normalizeEmail(user.email);if(typeof user.id!=='string'||!user.id||!email||!(user.confirmed_at||user.email_confirmed_at))return null;
+ return {id:user.id,email};
 }
-export async function safeCookie(request:Request,account?:SafeAccount){const old=request.headers.get('cookie')?.match(/(?:^|;\s*)__Host-kd_safe=([a-f0-9]{64})(?:;|$)/)?.[1];if(old)await safeStore('sessions').delete(digest(old));const token=account?randomBytes(32).toString('hex'):'';if(account)await safeStore('sessions').setJSON(digest(token),{username:account.username,version:account.version,expires:Date.now()+4*3600000});return `__Host-kd_safe=${token}; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=${account?14400:0}`;}
+export async function safeSession(request:Request,verified?:SafeIdentity|null):Promise<SafeAccount|null>{
+ const user=verified===undefined?await safeIdentityUser(request):verified;if(!user)return null;
+ for(let attempt=0;attempt<3;attempt++){
+  const accessStore=safeStore('access'),record=await accessStore.getWithMetadata('assignments',{type:'json'}),settings=record?.data as SafeAccessSettings|undefined;
+  const matches=Object.values(settings?.safes||{}).filter(s=>s.emails.includes(user.email));if(matches.length!==1)return null;
+  const access=matches[0],guest=await assignedGuest(access.safeId);if(!guest||guest.id!==access.guestId)return null;
+  if(access.subjects[user.email]&&access.subjects[user.email]!==user.id)return null;
+  if(!access.subjects[user.email]){
+   const next={...settings,safes:{...settings!.safes,[access.safeId]:{...access,subjects:{...access.subjects,[user.email]:user.id}}}};
+   if(!(await accessStore.setJSON('assignments',next,{onlyIfMatch:record!.etag})).modified)continue;
+  }
+  const accounts=safeStore('accounts'),name=access.safeId.toLowerCase(),saved=await accounts.getWithMetadata(name,{type:'json'}),old=saved?.data as any;
+  if(old&&(old.guestId&&old.guestId!==guest.id||old.safeId&&old.safeId!==access.safeId))return null;
+  if(old&&(!old.id||!/^[a-f0-9]{64}$/.test(old.key)))throw Error('This Safe needs assistance.');
+  if(old?.auth==='identity')return old as SafeAccount;
+  // Preserve the original document owner ID and encryption key during migration.
+  const account:SafeAccount={id:old?.id||randomUUID(),username:name,safeId:access.safeId,guestId:guest.id,nickname:old?.nickname||'',key:old?.key||randomBytes(32).toString('hex'),version:randomUUID(),auth:'identity'};
+  if(!(await accounts.setJSON(name,account,saved?{onlyIfMatch:saved.etag}:{onlyIfNew:true})).modified)continue;
+  return account;
+ }
+ throw Error('Your Safe changed. Please try again.');
+}

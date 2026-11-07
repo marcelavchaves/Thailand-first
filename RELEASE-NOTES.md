@@ -1,3 +1,7 @@
+## November 7, 2026 — Prototype Safe email and Google sign-in
+
+Replace Safe PIN activation/login/recovery with verified email/password and Google sign-in. Add TD Safe email access assignments, including shared Safes. Bind verified accounts to assigned Safes and migrate existing IDs/encryption keys without deleting documents or plans. Retain private storage protections and remove PIN/recovery-code UI. Live is unchanged.
+
 ## November 7, 2026 — Always-visible journey map above city tiles
 
 Keep the large journey map visible at the top of Maps with city tiles below. Remove the expandable overview control.
