@@ -2,7 +2,7 @@ import type {Config} from '@netlify/functions';
 import {logout} from '@netlify/identity';
 import {safeStore,safeSession,safeIdentityUser,type SafeAccount} from '../lib/safe-auth';
 const reply=(body:unknown,status=200,cookie?:string)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','Vary':'Cookie',...(cookie?{'Set-Cookie':cookie}:{})}});
-const summary=(a:SafeAccount)=>({username:a.username,safeId:a.safeId,nickname:a.nickname,displayName:a.nickname||a.safeId});
+const summary=(a:SafeAccount)=>({username:a.username,safeId:a.safeId,nickname:a.nickname,displayName:a.nickname||a.safeId||'My Safe'});
 export default async function handler(request:Request){try{
  if(request.method==='GET'){const user=await safeIdentityUser(request),account=user?await safeSession(request,user):null;return reply({authenticated:!!account,identityAuthenticated:!!user,email:user?.email||null,...(account?summary(account):{username:null,safeId:null,nickname:''})});}
  if(request.headers.get('origin')!==new URL(request.url).origin)return reply({error:'Open Traveler Safe from the app.'},403);

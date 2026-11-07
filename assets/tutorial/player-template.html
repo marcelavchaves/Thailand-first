@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1e3b2f">
+  <title>Wondercase · Interactive tutorial</title>
+  <style>
+    :root { color-scheme: dark; --green:#1e3b2f; --gold:#d7b86d; --cream:#f7f0df; --muted:#b9c6bb; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:radial-gradient(circle at 50% 18%,#35513b,#18291f 55%,#132019); color:var(--cream); font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { width:min(100%,1050px); margin:auto; padding:clamp(14px,3vw,32px); }
+    header { text-align:center; margin:6px auto 18px; }
+    .eyebrow { color:var(--gold); text-transform:uppercase; letter-spacing:.24em; font-size:.74rem; font-weight:700; }
+    h1 { font:normal clamp(1.55rem,5vw,2.65rem)/1.12 Georgia,serif; margin:.4rem 0; }
+    .sub { margin:.3rem 0 0; color:var(--muted); }
+    .player { border:1px solid #b9995c; border-radius:19px; background:#101c16; padding:12px; box-shadow:0 22px 58px #07100890; }
+    .video-wrap { position:relative; width:min(100%,39.375vh); margin:auto; }
+    video { aspect-ratio:9/16; }
+    .start-overlay { position:absolute; left:50%; top:63.3%; bottom:auto; transform:translateX(-50%); width:70%; min-height:48px; white-space:normal; padding:9px 12px; font:bold clamp(.85rem,2vw,1.06rem) Georgia,serif; background:#254132; color:#fff3d3; border:2px solid var(--gold); box-shadow:0 6px 18px #0007; }
+    .start-overlay[hidden], #unpackButton[hidden] { display:none; }
+    .unpack-row { display:flex; justify-content:center; padding:16px 0 2px; }
+    #unpackButton { background:var(--gold); color:#17291e; font:bold 1.15rem Georgia,serif; min-height:52px; padding:10px 28px; box-shadow:0 5px 18px #0007; }
+    .release-notes { margin:18px 0; border:1px solid #64775c; border-radius:14px; background:#1d3529; padding:13px 18px; color:var(--muted); }
+    .release-notes summary { cursor:pointer; color:var(--gold); font-weight:700; }
+    .release-notes p { margin:9px 0 0; }
+
+    .arrival { position:absolute; inset:0; z-index:2; display:grid; place-items:center; overflow:hidden; background:radial-gradient(circle at 50% 47%,#513727,#21150e 68%); }
+    .arrival[hidden] { display:none; }
+    .roll-object { position:relative; width:100%; aspect-ratio:1; animation:rollIn 1.7s cubic-bezier(.18,.78,.30,1) both; }
+    .roll-object img { width:100%; height:100%; position:relative; z-index:1; display:block; }
+    .wheel { position:absolute; z-index:0; bottom:9.2%; width:6.5%; aspect-ratio:1; border-radius:50%; border:3px solid #cba969; background:conic-gradient(#18251c 0 25%,#ddba71 25% 31%,#18251c 31% 56%,#ddba71 56% 62%,#18251c 62% 87%,#ddba71 87% 93%,#18251c 93%); box-shadow:0 3px 4px #0007; animation:wheelTurn 1.7s ease-out both; }
+    .wheel.left { left:28.5%; } .wheel.right { right:28.5%; }
+    @keyframes rollIn { 0% { transform:translateX(-130%) rotate(-4deg); } 73% { transform:translateX(4%) rotate(1deg); } 100% { transform:translateX(0) rotate(0); } }
+    @keyframes wheelTurn { from { transform:rotate(-1100deg); } to { transform:rotate(0); } }
+    @media (prefers-reduced-motion:reduce) { .roll-object,.wheel { animation-duration:.01ms; } }
+    .stage-status { text-align:center; color:var(--muted); margin:10px 0 0; font-size:.92rem; }
+    button:disabled,select:disabled,input:disabled { opacity:.45; cursor:not-allowed; }
+    video { display:block; width:100%; max-height:70vh; background:#241810; border-radius:11px; object-fit:contain; }
+    .controls { display:grid; gap:13px; padding:14px 5px 4px; }
+    .progress-row { display:flex; align-items:center; gap:12px; }
+    input[type=range] { width:100%; accent-color:var(--gold); min-height:30px; cursor:pointer; }
+    .time { font-variant-numeric:tabular-nums; color:var(--muted); font-size:.88rem; white-space:nowrap; }
+    .buttons { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:8px; }
+    button,select { border:1px solid #957847; border-radius:999px; background:#284938; color:var(--cream); font:inherit; min-height:43px; padding:8px 14px; cursor:pointer; }
+    button:hover,button:focus-visible,select:focus-visible { background:#395f46; outline:2px solid var(--gold); outline-offset:2px; }
+    #play { background:var(--gold); color:#17291e; font-weight:700; min-width:92px; }
+    .speed { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:7px; padding:2px 0; }
+    .speed-label { color:var(--muted); font-weight:700; margin-right:5px; }
+    .speed button { min-width:55px; padding:7px 9px; }
+    .speed button[aria-pressed=true] { background:var(--gold); border-color:var(--gold); color:#15281e; font-weight:800; }
+    .chapters { margin:22px 0 4px; border:1px solid #64775c; border-radius:14px; padding:14px; background:#1d3529; }
+    .chapters label { display:block; color:var(--gold); font-size:.81rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; margin-bottom:8px; }
+    .chapters select { width:100%; border-radius:9px; background:#294836; }
+    .hint { color:var(--muted); text-align:center; font-size:.83rem; margin:15px 0; }
+    @media (max-width:600px) { .video-wrap { width:min(100%,34.875vh); } video { max-height:62vh; } .time { font-size:.74rem; } button { min-height:46px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">WONDERCASE · YOUR TRAVEL COMPANION</div>
+    <h1>Vietnam, Cambodia &amp; Thailand</h1>
+    <p class="sub">Travel app tutorial · unpacking and guided opening edition</p>
+  </header>
+  <section class="player" aria-label="Tutorial video player">
+    <div class="video-wrap">
+    <div class="arrival" id="arrival" aria-label="Tauck suitcase rolls in from the left"><div class="roll-object" id="rollObject"><span class="wheel left" aria-hidden="true"></span><span class="wheel right" aria-hidden="true"></span><img src="/tutorial/closed-suitcase.png" alt="Closed Tauck suitcase with luggage tag"></div></div>
+    <video id="video" playsinline preload="auto" poster="/tutorial/intro-poster.jpg?v=evergreen-3" aria-label="Wondercase animated app tutorial">
+      <track id="captions" kind="captions" src="/tutorial/traveler-tutorial.vtt?v=evergreen-3" srclang="en" label="English captions">
+      Your browser does not support this video. Download the MP4 from this folder.
+    </video>
+    <button id="startTutorial" class="start-overlay" type="button" aria-label="Let our journey begin; play tutorial" hidden>▶ Let our journey begin!</button>
+    </div>
+    <div class="unpack-row"><button id="unpackButton" type="button" disabled>Let’s Unpack</button></div>
+    <p class="stage-status" id="stageStatus" role="status">The suitcase is rolling into view…</p>
+    <div class="controls">
+      <div class="progress-row">
+        <span class="time" id="elapsed">0:00</span>
+        <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek through tutorial">
+        <span class="time" id="duration">3:19</span>
+      </div>
+      <div class="buttons">
+        <button id="back" type="button" aria-label="Back 10 seconds">↶ 10s</button>
+        <button id="play" type="button" aria-label="Play tutorial">Play</button>
+        <button id="forward" type="button" aria-label="Forward 10 seconds">10s ↷</button>
+        <button id="captionsButton" type="button" aria-pressed="false">CC Off</button>
+        <button id="fullscreen" type="button">Full screen</button>
+      </div>
+      <div class="speed" role="group" aria-label="Playback speed">
+        <span class="speed-label">Speed</span>
+        <button type="button" data-speed="0.5" aria-pressed="false">0.5×</button>
+        <button type="button" data-speed="0.75" aria-pressed="false">0.75×</button>
+        <button type="button" data-speed="1" aria-pressed="true">1×</button>
+        <button type="button" data-speed="1.25" aria-pressed="false">1.25×</button>
+        <button type="button" data-speed="1.5" aria-pressed="false">1.5×</button>
+        <button type="button" data-speed="2" aria-pressed="false">2×</button>
+      </div>
+    </div>
+  </section>
+  <section class="chapters">
+    <label for="chapter">Jump to a section</label>
+    <select id="chapter">__CHAPTER_OPTIONS__</select>
+  </section>
+  <details class="release-notes"><summary>How to use this tutorial</summary><p>The suitcase rolls in when the page opens. Let’s Unpack starts the opening, and the “Let our journey begin!” button on the instruction card starts the walkthrough. You can pause, replay or choose a chapter. This guide works for any departure and assigned TD.</p></details>
+  <p class="hint">The suitcase rolls in automatically and waits for Let’s Unpack. The instruction card waits for Let our journey begin. Space: play or pause · ← / →: skip 10 seconds · Speed buttons work on iPhone, Android, and desktop browsers.</p>
+<p class="hint"><a style="color:var(--gold)" href="/tutorial/traveler-tutorial.mp4?v=evergreen-3" download>Download video</a> · <a style="color:var(--gold)" href="/instruction-booklet" target="_top">Illustrated guide</a> · <a style="color:var(--gold)" href="/" target="_top">Back to Wondercase</a></p></main>
+
+<script>
+(() => {
+  const video = document.getElementById('video');
+  const unpackButton = document.getElementById('unpackButton');
+  const arrival = document.getElementById('arrival');
+  const rollObject = document.getElementById('rollObject');
+  const startButton = document.getElementById('startTutorial');
+  const play = document.getElementById('play');
+  const seek = document.getElementById('seek');
+  const chapters = document.getElementById('chapter');
+  const speeds = [...document.querySelectorAll('[data-speed]')];
+  const cc = document.getElementById('captionsButton');
+  const status = document.getElementById('stageStatus');
+  const elapsed = document.getElementById('elapsed');
+  const duration = document.getElementById('duration');
+  const gateAt = 6.7;
+  const walkthroughAt = 19;
+  let phase = 'closed';
+  video.src = '/tutorial/traveler-tutorial.mp4?v=evergreen-3';
+  video.load();
+  let settled = false;
+  const settle = () => {
+    if (settled) return;
+    settled = true;
+    unpackButton.disabled = false;
+    if (phase === 'closed') status.textContent = 'Press Let’s Unpack to begin.';
+  };
+  rollObject.addEventListener('animationend', settle);
+  setTimeout(settle, 2000);
+  const fmt = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+  const allControls = [play, seek, chapters, cc, document.getElementById('back'), document.getElementById('forward'), document.getElementById('fullscreen'), ...speeds];
+  const setControls = () => {
+    allControls.forEach(el => el.disabled = phase !== 'tutorial');
+    if (phase === 'guide') speeds.forEach(el => el.disabled = false);
+  };
+  const sync = () => {
+    elapsed.textContent = fmt(video.currentTime || 0);
+    if (Number.isFinite(video.duration)) {
+      duration.textContent = fmt(video.duration);
+      if (!seek.matches(':active')) seek.value = Math.round(video.currentTime / video.duration * 1000);
+    }
+    play.textContent = video.paused ? 'Play' : 'Pause';
+    play.setAttribute('aria-label', video.paused ? 'Play tutorial' : 'Pause tutorial');
+    speeds.forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.speed) === video.playbackRate)));
+  };
+  const beginUnpacking = () => {
+    if (phase !== 'closed' || unpackButton.disabled) return;
+    phase = 'unpacking';
+    arrival.hidden = true;
+    unpackButton.hidden = true;
+    status.textContent = 'Unpacking the suitcase…';
+    setControls();
+    video.currentTime = 0;
+    video.play().catch(() => {
+      phase = 'closed'; arrival.hidden = false; unpackButton.hidden = false;
+      status.textContent = 'Press Let’s Unpack to try again.';
+    });
+  };
+  const releaseGuide = () => {
+    if (phase !== 'guide') return;
+    phase = 'tutorial';
+    startButton.hidden = true;
+    status.textContent = 'The app walkthrough is playing. Set your preferred speed below.';
+    setControls();
+    video.currentTime = walkthroughAt;
+    video.play().catch(error => { if (error.name !== 'AbortError') status.textContent = 'Tap Play to continue.'; });
+    sync();
+  };
+  const toggle = () => {
+    if (phase !== 'tutorial') return;
+    if (video.paused) video.play().catch(error => { if (error.name !== 'AbortError') status.textContent = 'Tap Play to continue.'; }); else video.pause();
+  };
+  unpackButton.addEventListener('click', beginUnpacking);
+  startButton.addEventListener('click', releaseGuide);
+  play.addEventListener('click', toggle);
+  video.addEventListener('click', () => { if (phase === 'tutorial') toggle(); });
+  video.addEventListener('timeupdate', () => {
+    if (phase === 'unpacking' && !video.seeking && video.currentTime >= gateAt) {
+      phase = 'guide';
+      video.pause();
+      startButton.hidden = false;
+      status.textContent = 'Read the instruction card. Press Let our journey begin when you’re ready.';
+      startButton.focus();
+      setControls(); sync();
+    }
+  });
+  document.getElementById('back').addEventListener('click', () => { if (phase === 'tutorial') video.currentTime = Math.max(walkthroughAt, video.currentTime - 10); });
+  document.getElementById('forward').addEventListener('click', () => { if (phase === 'tutorial') video.currentTime = Math.min(video.duration || Infinity, video.currentTime + 10); });
+  seek.addEventListener('input', () => { if (phase === 'tutorial' && Number.isFinite(video.duration)) video.currentTime = Math.max(walkthroughAt, video.duration * Number(seek.value) / 1000); });
+  speeds.forEach(button => button.addEventListener('click', () => { if (phase === 'guide' || phase === 'tutorial') { video.playbackRate = Number(button.dataset.speed); sync(); } }));
+  chapters.addEventListener('change', () => {
+    if (phase !== 'tutorial') return;
+    if (Number(chapters.value) === 0) {
+      video.pause(); video.currentTime = 0;
+      phase = 'closed'; arrival.hidden = false; unpackButton.hidden = false; startButton.hidden = true;
+      status.textContent = 'Press Let’s Unpack to begin again.';
+      setControls(); sync();
+    } else { video.currentTime = Number(chapters.value); video.play().catch(error => { if (error.name !== 'AbortError') status.textContent = 'Tap Play to continue.'; }); }
+  });
+  cc.addEventListener('click', () => {
+    if (phase !== 'tutorial') return;
+    const track = video.textTracks[0]; if (!track) return;
+    const on = track.mode !== 'showing'; track.mode = on ? 'showing' : 'disabled';
+    cc.textContent = on ? 'CC On' : 'CC Off'; cc.setAttribute('aria-pressed', String(on));
+  });
+  document.getElementById('fullscreen').addEventListener('click', () => {
+    if (phase !== 'tutorial') return;
+    if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+    else if (document.fullscreenElement) document.exitFullscreen();
+    else if (video.requestFullscreen) video.requestFullscreen();
+  });
+  document.addEventListener('keydown', event => {
+    if (phase !== 'tutorial' || ['INPUT','SELECT','BUTTON'].includes(document.activeElement.tagName)) return;
+    if (event.code === 'Space') { event.preventDefault(); toggle(); }
+    if (event.code === 'ArrowLeft') { event.preventDefault(); video.currentTime = Math.max(walkthroughAt, video.currentTime - 10); }
+    if (event.code === 'ArrowRight') { event.preventDefault(); video.currentTime = Math.min(video.duration || Infinity, video.currentTime + 10); }
+  });
+  for (const name of ['loadedmetadata','timeupdate','play','pause','ratechange','ended']) video.addEventListener(name,sync);
+  setControls(); sync();
+})();
+</script>
+</body>
+</html>

@@ -22,7 +22,7 @@ try{
  const oldCookie='__Host-kd_safe='+'a'.repeat(64);assert.equal((await documents(req('/api/safe-documents',null,oldCookie))).status,401);assert.equal((await session(req('/api/safe-session',{action:'login',safeId:'TG01',pin:'123456'}))).status,405);assert.equal((await session(req('/api/safe-session',{action:'recover',recoveryCode:'old-code'}))).status,405);
  assert.equal((await access(req('/api/safe-access'))).status,401);state.td=true;let admin=await ok(await access(req('/api/safe-access')));const update={revision:admin.revision,rosterRevision:admin.rosterRevision,guests:[{id:guests[0].id,emails:['a@example.test','partner@example.test']},{id:guests[1].id,emails:['b@example.test']}]};
  assert.equal((await access(req('/api/safe-access',update,'','PUT','https://evil.test'))).status,403);let bad=structuredClone(update);bad.guests[1].emails=['A@example.test'];assert.equal((await access(req('/api/safe-access',bad,'','PUT'))).status,400);await ok(await access(req('/api/safe-access',update,'','PUT')));assert.equal((await access(req('/api/safe-access',update,'','PUT'))).status,409);state.td=false;
- for(const token of ['','u.u.u','x.x.x','bad.bad.bad'])assert.equal((await documents(req('/api/safe-documents',null,token))).status,401);
+ for(const token of ['','u.u.u','bad.bad.bad'])assert.equal((await documents(req('/api/safe-documents',null,token))).status,401);
  let a=await ok(await session(req('/api/safe-session',null,'a.a.a')));assert.equal(a.safeId,'TG01');assert.equal(a.displayName,'Our adventures');let migrated=state.db.get('traveler-safe-accounts/tg01').data;assert.equal(migrated.id,oldId);assert.equal(migrated.key,oldKey);assert.equal(migrated.auth,'identity');assert.equal(migrated.hash,undefined);assert.equal(migrated.recoveryHash,undefined);
  const download=await documents(req('/api/safe-documents?id='+docId,null,'a.a.a'));assert.equal(download.status,200);assert(Buffer.from(await download.arrayBuffer()).equals(plain));assert.equal((await ok(await plans(req('/api/safe-plans?date=2026-11-16',null,'a.a.a')))).activities[0].title,'Existing personal plan');
  assert.equal((await documents(req('/api/safe-documents',null,'s.s.s'))).status,401);assert.equal((await ok(await session(req('/api/safe-session?requestSafe=TG02',null,'a.a.a')))).safeId,'TG01');
@@ -32,33 +32,20 @@ try{
  const payload={name:'New.pdf',type:'application/pdf',data:plain.toString('base64'),revision:'seed'};assert.equal((await documents(req('/api/safe-documents',payload,'a.a.a','POST','https://evil.test'))).status,403);await ok(await documents(req('/api/safe-documents',payload,'a.a.a')));const docs=await ok(await documents(req('/api/safe-documents',null,'a.a.a')));assert.equal(docs.documents.length,2);
  assert.equal((await documents(req('/api/safe-documents?id='+docId,{revision:'stale'},'a.a.a','DELETE'))).status,409);await ok(await documents(req('/api/safe-documents?id='+docId,{revision:docs.revision},'a.a.a','DELETE')));
  // Revoking one authorized email leaves the shared owner's records intact.
- state.td=true;admin=await ok(await access(req('/api/safe-access')));const removal={revision:admin.revision,rosterRevision:admin.rosterRevision,guests:admin.guests.map(g=>({id:g.id,emails:g.emails.filter(e=>e!=='a@example.test')}))};await ok(await access(req('/api/safe-access',removal,'','PUT')));state.td=false;assert.equal((await documents(req('/api/safe-documents',null,'a.a.a'))).status,401);assert.equal((await ok(await documents(req('/api/safe-documents',null,'p.p.p')))).documents.length,1);
+ state.td=true;admin=await ok(await access(req('/api/safe-access')));const removal={revision:admin.revision,rosterRevision:admin.rosterRevision,guests:admin.guests.map(g=>({id:g.id,emails:g.emails.filter(e=>e!=='a@example.test')}))};await ok(await access(req('/api/safe-access',removal,'','PUT')));state.td=false;assert.equal((await ok(await documents(req('/api/safe-documents',null,'a.a.a')))).documents.length,0);assert.equal((await ok(await documents(req('/api/safe-documents',null,'p.p.p')))).documents.length,1);
  assert.equal((await session(req('/api/safe-session',null,'p.p.p','DELETE','https://evil.test'))).status,403);assert.equal((await session(req('/api/safe-session',null,'p.p.p','DELETE'))).status,200);assert.equal(state.logout,1);
  assert(!JSON.stringify(await ok(await session(req('/api/safe-session',null,'x.x.x')))).includes('partner@example.test'));
 
- // One-use private invitations: guests choose an email; only the TD issues links.
- assert.equal((await invitations(req('/api/safe-invitations',{action:'create',safeId:'TG01'}))).status,401);
- state.td=true;
- assert.equal((await invitations(req('/api/safe-invitations',{action:'create',safeId:'TG01'},'','POST','https://evil.test'))).status,403);
- const issue=async safeId=>ok(await invitations(req('/api/safe-invitations',{action:'create',safeId})));
- const link=await issue('TG01'),inviteToken=new URL(link.url).hash.split('=')[1];
- assert(!JSON.stringify(state.db.get('traveler-safe-access/assignments').data).includes(inviteToken),'Only token hashes stored');
- state.td=false;
- assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:inviteToken},'u.u.u'))).status,401);
- assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:inviteToken},'b.b.b'))).status,409,'Cannot connect another Safe');
- await ok(await invitations(req('/api/safe-invitations',{action:'claim',token:inviteToken},'x.x.x')));
- assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:inviteToken},'x.x.x'))).status,410,'One use only');
- assert.equal((await ok(await session(req('/api/safe-session',null,'x.x.x')))).safeId,'TG01');
- assert.equal(state.db.get('traveler-safe-accounts/tg01').data.key,oldKey,'Claim preserves encryption key');
- state.td=true;
- const expired=await issue('TG02'),expiredToken=new URL(expired.url).hash.split('=')[1];
- const settings=state.db.get('traveler-safe-access/assignments').data;for(const i of Object.values(settings.invitations))i.expiresAt=0;
- state.td=false;assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:expiredToken},'x.x.x'))).status,410);
- state.td=true;const preserved=await issue('TG02');admin=await ok(await access(req('/api/safe-access')));await ok(await access(req('/api/safe-access',{revision:admin.revision,rosterRevision:admin.rosterRevision,guests:admin.guests.map(g=>({id:g.id,emails:g.emails}))},'','PUT')));assert(Object.keys(state.db.get('traveler-safe-access/assignments').data.invitations).length>0,'Email editing preserves outstanding invitations');
- state.td=true;const replaced=await issue('TG02'),newLink=await issue('TG02');state.td=false;
- assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:new URL(replaced.url).hash.split('=')[1]},'x.x.x'))).status,410);
- state.td=true;await ok(await invitations(req('/api/safe-invitations',{action:'revoke',safeId:'TG02'})));state.td=false;
- assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:new URL(newLink.url).hash.split('=')[1]},'x.x.x'))).status,410);
- console.log('PASS private Safe invitations: TD issuance, CSRF, hashed tokens, verified identity, one-use claims, expiration, revocation, replacement, cross-Safe protection and preserved encryption key.');
+ // Verified accounts provision a private Safe automatically, without activation.
+ const personal=await ok(await session(req('/api/safe-session',null,'x.x.x')));assert.equal(personal.authenticated,true);assert.equal(personal.displayName,'My Safe');assert.equal(personal.safeId,'');
+ const personalAgain=await ok(await session(req('/api/safe-session',null,'x.x.x')));assert.equal(personalAgain.username,personal.username);
+ assert.equal((await ok(await documents(req('/api/safe-documents',null,'x.x.x')))).documents.length,0);
+ assert.equal((await documents(req('/api/safe-documents?id='+docId,null,'x.x.x'))).status,404,'Personal Safe cannot see another owner’s file');
+ await ok(await documents(req('/api/safe-documents',{name:'Personal.pdf',type:'application/pdf',data:plain.toString('base64'),revision:null},'x.x.x')));
+ assert.equal((await ok(await documents(req('/api/safe-documents',null,'x.x.x')))).documents.length,1);
+ assert.equal((await ok(await documents(req('/api/safe-documents',null,'b.b.b')))).documents.length,0);
+ const before=personal.username;people['x.x.x'].email='new-preferred@example.test';assert.equal((await ok(await session(req('/api/safe-session',null,'x.x.x')))).username,before,'Stable verified identity retains its Safe when email changes');
+ assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:'z'.repeat(43)},'x.x.x'))).status,410);
+ console.log('PASS automatic Safe: verified login provisions one private account, repeat login/email change retain it, isolation and encryption remain, and activation/invitation endpoint is retired.');
  console.log('PASS Safe email/Google authorization: verified visitor tokens, no operator/legacy-PIN fallback, TD-only email grants, shared access, subject binding, immediate revocation, account isolation, existing encrypted file/key/plan migration, CSRF, revisions, nickname, document CRUD and activity limits.');
 }finally{globalThis.fetch=realFetch;await rm(temp,{recursive:true,force:true});}

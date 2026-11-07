@@ -4,7 +4,7 @@ import {getIdentityConfig} from '@netlify/identity';
 import {assignedGuest} from './safe-roster';
 export const safeStore=(name:string)=>getStore({name:'traveler-safe-'+name,consistency:'strong'});
 export const digest=(value:string)=>createHash('sha256').update(value).digest('hex');
-export type SafeAccount={id:string;username:string;safeId:string;guestId:string;nickname:string;key:string;version:string;auth:'identity'};
+export type SafeAccount={id:string;username:string;safeId:string;guestId:string;nickname:string;key:string;version:string;auth:'identity';identityId?:string};
 export type SafeIdentity={id:string;email:string};
 export type SafeAccess={safeId:string;guestId:string;emails:string[];subjects:Record<string,string>};
 export type SafeAccessSettings={safes:Record<string,SafeAccess>;invitations?:Record<string,{safeId:string;guestId:string;expiresAt:number}>};
@@ -20,13 +20,25 @@ export async function safeIdentityUser(request:Request):Promise<SafeIdentity|nul
  const user=await r.json(),email=normalizeEmail(user.email);if(typeof user.id!=='string'||!user.id||!email||!(user.confirmed_at||user.email_confirmed_at))return null;
  return {id:user.id,email};
 }
+async function personalSafe(user:SafeIdentity):Promise<SafeAccount>{
+ const accounts=safeStore('accounts'),name='id-'+digest(user.id);
+ for(let attempt=0;attempt<3;attempt++){
+  const record=await accounts.getWithMetadata(name,{type:'json'}),old=record?.data as SafeAccount|undefined;
+  if(old){if(old.identityId!==user.id||!old.id||!/^[a-f0-9]{64}$/.test(old.key))throw Error('This Safe needs assistance.');return old;}
+  const account:SafeAccount={id:randomUUID(),username:name,safeId:'',guestId:'',nickname:'',key:randomBytes(32).toString('hex'),version:randomUUID(),auth:'identity',identityId:user.id};
+  if((await accounts.setJSON(name,account,{onlyIfNew:true})).modified)return account;
+ }
+ throw Error('Your Safe changed. Please try again.');
+}
 export async function safeSession(request:Request,verified?:SafeIdentity|null):Promise<SafeAccount|null>{
  const user=verified===undefined?await safeIdentityUser(request):verified;if(!user)return null;
+ const personal=await safeStore('accounts').getWithMetadata('id-'+digest(user.id),{type:'json'});if(personal)return personalSafe(user);
  for(let attempt=0;attempt<3;attempt++){
   const accessStore=safeStore('access'),record=await accessStore.getWithMetadata('assignments',{type:'json'}),settings=record?.data as SafeAccessSettings|undefined;
-  const matches=Object.values(settings?.safes||{}).filter(s=>s.emails.includes(user.email));if(matches.length!==1)return null;
+  const matches=Object.values(settings?.safes||{}).filter(s=>s.emails.includes(user.email)||Object.values(s.subjects).includes(user.id));if(matches.length===0)return personalSafe(user);if(matches.length!==1)return null;
   const access=matches[0],guest=await assignedGuest(access.safeId);if(!guest||guest.id!==access.guestId)return null;
   if(access.subjects[user.email]&&access.subjects[user.email]!==user.id)return null;
+  if(!access.emails.includes(user.email))return null;
   if(!access.subjects[user.email]){
    const next={...settings,safes:{...settings!.safes,[access.safeId]:{...access,subjects:{...access.subjects,[user.email]:user.id}}}};
    if(!(await accessStore.setJSON('assignments',next,{onlyIfMatch:record!.etag})).modified)continue;

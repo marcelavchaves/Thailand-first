@@ -1,3 +1,9 @@
+## November 7, 2026 · Reusable suitcase tutorial
+
+Restored the supplied Singapore tutorial’s suitcase arrival/unpacking and dark green-and-gold interactive player. Added current itinerary instructions without departure dates or a named TD across tutorials, printable guides, installation videos and FAQs.
+
+Prototype Safe now opens automatically after verified email/password or Google sign-in, without PIN, invitation, activation or Connect screens. Existing linked contents and encryption keys are preserved. Personal Safes are isolated by verified Identity subject.
+
 ## November 7, 2026 · Updated app guides
 
 Replaced the older tour help with a captioned two-minute animated tutorial, chapter controls, transcript and twelve-page printable guide for November 16–December 1, 2026. Updated FAQs, phone installation videos and saved tutorial links. Guides describe the Safe flow available in this edition.
