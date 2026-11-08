@@ -1,3 +1,10 @@
+## Review · Original destination booklets under Handouts
+
+- Adds Bangkok, Chiang Mai, Cambodia, Vietnam and Ho Chi Minh City with the original printed pages in reading order. Chiang Mai remains a cover/back-page preview pending its PDF export.
+- Adds a full-screen reader with swiping, zoom, page chooser, keyboard controls and a remembered page for each booklet.
+- Starts the five supplied booklets shown. Each has its own saved Hide booklet / Show booklet control in TD Suitcase → Documents & menus → Handouts; saved choices, replacements and deletions are preserved.
+- Preserves the prototype’s PDF upload/booklet tools and other existing features. Prepared for a draft review deploy only.
+
 ## November 7, 2026 · Prototype sharing tutorial
 
 Updated the prototype video, chapter menu, captions, transcript and printable guide for Safe item sharing and the removed Safe-name controls. Added real sample views of invitations, document sharing, plan permissions, editing and stopping sharing. Retained the stable suitcase player and existing app tabs. Live tutorial unchanged.

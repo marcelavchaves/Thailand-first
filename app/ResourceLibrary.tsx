@@ -1,5 +1,7 @@
 'use client';
 import {createContext,useContext,useEffect,useState,useCallback,type ReactNode} from 'react';
+import {BookletButton} from './BookletViewer';
+import booklets from '../shared/booklets.json';
 import {useTDSession} from './TDSession';
 import BrandIcon from './BrandIcon';
 import {uploadBooklet} from '../lib/booklet-upload';
@@ -17,6 +19,7 @@ export function ResourceProvider({children}:{children:ReactNode}){
 }
 export function ResourceSlot({id,title,group='guides',children,icon='book',caption='Xavier will share this when it’s ready.'}:{id:string;title:string;group?:string;children?:ReactNode;icon?:string;caption?:string}){
  const {items,loaded,error,reload}=useResources();const {authenticated,refresh}=useTDSession();const item=items[id];
+ const originalBooklet=booklets.some(b=>b.id===id);
  const displayTitle=(item?.title||title).replace(/^Today[’']s schedule$/, 'Schedule');
  const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[preview,setPreview]=useState(false),[editing,setEditing]=useState(false),[name,setName]=useState(title);
  async function change(action:string,file?:File,layout?:BookletLayout){setBusy(true);setMessage('');try{
@@ -37,7 +40,7 @@ export function ResourceSlot({id,title,group='guides',children,icon='book',capti
  {!visible&&!authenticated&&<p className="release-caption">{error||caption}</p>}
  {visible&&content}
  {authenticated&&<div className="release-controls" data-pdf-exclude><p>{visible?'Visible to travelers':item?.deleted?'Deleted — hidden from travelers':'Hidden from travelers'}</p><fieldset disabled={busy||!loaded}>
- {!item?.deleted&&<><button type="button" onClick={()=>void change(visible?'hide':'reveal')}>{visible?(item?.booklet?'Hide booklet':'Hide'):(item?.booklet?'Show booklet to travelers':'Reveal to travelers')}</button>{group==='handouts'&&item?.file&&item.type==='application/pdf'&&!item.booklet&&<button type="button" onClick={()=>void change('booklet')}>Make interactive booklet</button>}<button type="button" onClick={()=>setPreview(!preview)}>{preview?'Close preview':'Preview / edit'}</button><button type="button" onClick={()=>{setName(item?.title||title);setEditing(!editing);}}>Update title</button>{group!=='schedules'&&<label className="upload-resource">Upload replacement<input type="file" accept="application/pdf,image/jpeg,image/png,image/webp" onChange={e=>{const f=e.target.files?.[0];if(f)void change('upload',f);e.target.value='';}}/></label>}<button type="button" onClick={()=>{if(confirm(`Delete ${item?.title||title}? It will be hidden from travelers.`))void change('delete');}}>Delete</button></>}
+ {!item?.deleted&&<><button type="button" onClick={()=>void change(visible?'hide':'reveal')}>{visible?(item?.booklet||originalBooklet?'Hide booklet':'Hide'):(item?.booklet||originalBooklet?'Show booklet to travelers':'Reveal to travelers')}</button>{group==='handouts'&&item?.file&&item.type==='application/pdf'&&!item.booklet&&<button type="button" onClick={()=>void change('booklet')}>Make interactive booklet</button>}<button type="button" onClick={()=>setPreview(!preview)}>{preview?'Close preview':'Preview / edit'}</button><button type="button" onClick={()=>{setName(item?.title||title);setEditing(!editing);}}>Update title</button>{group!=='schedules'&&<label className="upload-resource">Upload replacement<input type="file" accept="application/pdf,image/jpeg,image/png,image/webp" onChange={e=>{const f=e.target.files?.[0];if(f)void change('upload',f);e.target.value='';}}/></label>}<button type="button" onClick={()=>{if(confirm(`Delete ${item?.title||title}? It will be hidden from travelers.`))void change('delete');}}>Delete</button></>}
  {item?.deleted&&<button type="button" onClick={()=>void change('restore')}>Restore as hidden</button>}
  {item?.booklet&&!item.deleted&&<label>Booklet page layout<select value={item.bookletLayout||'auto'} onChange={e=>void change('booklet-layout',undefined,e.target.value as BookletLayout)}><option value="auto">Automatic · split wide two-page sheets</option><option value="single">One complete PDF page per turn</option><option value="spread">Split sheets · left page then right page</option><option value="spread-reversed">Split sheets · right page then left page</option></select><small>Changing the layout hides the booklet for a new preview.</small></label>}
  {editing&&<form onSubmit={e=>{e.preventDefault();void change('rename');}}><label>Title<input required maxLength={120} value={name} onChange={e=>setName(e.target.value)}/></label><button>Save title</button></form>}
@@ -49,4 +52,7 @@ export function ResourceGroup({group}:{group:string}){
  return <>{Object.values(items).filter(x=>x.group===group&&x.id.startsWith('custom-')&&(authenticated||!x.booklet||x.visible&&!x.deleted)).map(x=><ResourceSlot key={x.id} id={x.id} title={x.title} group={group}/>)}{authenticated&&<><button className="add-resource" onClick={()=>setNewId('custom-'+crypto.randomUUID())}>{group==='handouts'?'＋ Add handout / booklet':'＋ Add a document'}</button>{newId&&!items[newId]&&<ResourceSlot id={newId} title="New document" group={group}/>}</>}</>;
 }
 
-export function Handouts(){const {items,loaded,error}=useResources();const {authenticated}=useTDSession();const entries=Object.values(items).filter(x=>x.group==='handouts'&&!x.deleted&&(authenticated||x.visible));return <>{!loaded&&<p>{error||'Checking handouts…'}</p>}<ResourceGroup group="handouts"/></>;}
+export function Handouts(){
+ const {items,loaded,error}=useResources();const {authenticated}=useTDSession();
+ return <>{!loaded&&<p>{error||'Checking handouts…'}</p>}{loaded&&booklets.filter(b=>{const e=items[b.id];return authenticated||e?.visible===true&&!e.deleted;}).map(b=><ResourceSlot key={b.id} id={b.id} title={b.title} group="handouts"><BookletButton booklet={b}/></ResourceSlot>)}<ResourceGroup group="handouts"/></>;
+}

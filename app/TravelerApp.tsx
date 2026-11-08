@@ -1,4 +1,6 @@
 "use client";
+import {BookletButton} from './BookletViewer';
+import booklets from '../shared/booklets.json';
 import {Handouts} from './ResourceLibrary';
 import {ResourceProvider, ResourceSlot, ResourceGroup, useResources} from "./ResourceLibrary";
 import BrandIcon from "./BrandIcon";
@@ -1953,6 +1955,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
       </section>}
       {tab === "gallery" && <WondercaseGallery/>}
       {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day} editor/>} groups={[{id:'handouts',title:'Handouts'},{id:'maps',title:'Maps'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
+       ...booklets.map(b=>({id:b.id,title:b.title,group:'handouts',content:<BookletButton booklet={b}/>})),
        {id:'guide-singapore',title:'Singapore Guide',group:'guides',content:<span/>},
        {id:'guide-java',title:'Java Guide',group:'guides',content:<XavierJavaGuide/>},
        {id:'guide-bali',title:'Bali Guide',group:'guides',content:<XavierBaliGuide/>},

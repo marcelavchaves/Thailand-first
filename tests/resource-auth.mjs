@@ -50,6 +50,22 @@ assert.equal((await meta(handout.id)).status,404);assert.equal((await handler(re
 assert.equal((await handler(request(cookie,{...map,action:'booklet',revision:mapEntry.revision}))).status,400);
 assert.equal((await handler(request(cookie,{...handout,action:'delete',revision:book.revision}))).status,200);assert.equal((await meta(handout.id,true)).status,404);assert.equal((await file(handout.id,true)).status,404);
 assert.equal((await (await handler(request())).json()).items[handout.id],undefined);
+// Supplied originals are shown by default, but saved per-booklet choices always win.
+const originals=(await import('../shared/booklets.json',{with:{type:'json'}})).default;
+for(const booklet of originals){
+ const initial=(await (await handler(request(cookie))).json()).items[booklet.id];
+ assert.equal(initial.visible,true);assert.equal(initial.group,'handouts');
+ const command={id:booklet.id,title:booklet.title,group:'handouts',action:'hide',revision:initial.revision||null};
+ assert.equal((await handler(request('',command))).status,401);
+ assert.equal((await handler(request(cookie,command))).status,200);
+ let saved=(await (await handler(request(cookie))).json()).items[booklet.id];
+ assert.equal(saved.visible,false);
+ assert.equal((await (await handler(request())).json()).items[booklet.id].visible,false);
+ assert.equal((await handler(request(cookie,{...command,action:'reveal',revision:saved.revision}))).status,200);
+ saved=(await (await handler(request(cookie))).json()).items[booklet.id];assert.equal(saved.visible,true);
+ assert.equal((await handler(request(cookie,{...command,revision:null}))).status,409);
+}
+console.log('PASS: all five supplied booklets default shown; authenticated per-booklet hide/show persists, guest writes rejected and stale changes conflict.');
 await passwordSessionCookie(request(cookie));assert.equal(await hasTDSession(request(cookie)),false);
 assert.equal((await handler(request(cookie,b))).status,401);
 console.log('Resource authorization: anonymous writes, CSRF, session, reveal, conflicts, delete/logout, and booklet hidden-upload, direct URL protection, metadata privacy, conversion and replacement checks passed.');

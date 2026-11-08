@@ -1,0 +1,65 @@
+[
+  {
+    "title": "Bangkok",
+    "subtitle": "The City of Angels",
+    "id": "booklet-bangkok",
+    "pages": [
+      "/documents/booklets/bangkok-0.jpg",
+      "/documents/booklets/bangkok-1.jpg",
+      "/documents/booklets/bangkok-2.jpg",
+      "/documents/booklets/bangkok-3.jpg"
+    ],
+    "partial": false,
+    "slug": "bangkok"
+  },
+  {
+    "title": "Chiang Mai",
+    "subtitle": "The Kingdom of Lanna",
+    "id": "booklet-chiang-mai",
+    "pages": [
+      "/documents/booklets/chiang-mai-0.jpg",
+      "/documents/booklets/chiang-mai-1.jpg"
+    ],
+    "partial": true,
+    "slug": "chiang-mai"
+  },
+  {
+    "title": "Cambodia",
+    "subtitle": "From Angkor to the present",
+    "id": "booklet-cambodia",
+    "pages": [
+      "/documents/booklets/cambodia-0.jpg",
+      "/documents/booklets/cambodia-1.jpg",
+      "/documents/booklets/cambodia-2.jpg",
+      "/documents/booklets/cambodia-3.jpg"
+    ],
+    "partial": false,
+    "slug": "cambodia"
+  },
+  {
+    "title": "Vietnam",
+    "subtitle": "Resilience, war and renewal",
+    "id": "booklet-vietnam",
+    "pages": [
+      "/documents/booklets/vietnam-0.jpg",
+      "/documents/booklets/vietnam-1.jpg",
+      "/documents/booklets/vietnam-2.jpg",
+      "/documents/booklets/vietnam-3.jpg"
+    ],
+    "partial": false,
+    "slug": "vietnam"
+  },
+  {
+    "title": "Ho Chi Minh City",
+    "subtitle": "A city that never stands still",
+    "id": "booklet-ho-chi-minh",
+    "pages": [
+      "/documents/booklets/ho-chi-minh-0.jpg",
+      "/documents/booklets/ho-chi-minh-1.jpg",
+      "/documents/booklets/ho-chi-minh-2.jpg",
+      "/documents/booklets/ho-chi-minh-3.jpg"
+    ],
+    "partial": false,
+    "slug": "ho-chi-minh"
+  }
+]
