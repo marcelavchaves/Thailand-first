@@ -101,14 +101,56 @@
     "title": "Your private Traveler Safe",
     "subtitle": "Sign in and you are in",
     "panel": [
-      "Use your preferred email or Google",
-      "Your Safe opens automatically",
-      "Your documents · your calendar plans"
+      "Email/password or Google",
+      "Automatic access · no PIN or Safe name",
+      "Private documents · saved activities"
     ],
     "steps": [
-      "Open Traveler Safe and sign in with your preferred email and password, or Google. Confirm your email if you are creating a new email account.",
-      "Your private Safe opens automatically. There is no PIN, invitation, activation or Connect step. Keep using the same account on future visits.",
-      "Upload personal PDFs or photos and add calendar plans. Previously linked Safe contents stay available. Sign out when finished; downloaded files remain on your device."
+      "Sign in to Traveler Safe with your preferred email and password, or Google. New email accounts confirm their email first.",
+      "Your Safe opens automatically. There is no PIN, activation step or Safe name to set. Keep using the same account.",
+      "Upload a document or save a personal activity. Use Share beside a saved item to invite another guest. The rest of your Safe stays private."
+    ]
+  },
+  {
+    "title": "Safe · Share a selected item",
+    "subtitle": "Use the recipient’s sign-in email",
+    "panel": [
+      "Share beside a document or saved activity",
+      "Enter the recipient’s sign-in email",
+      "Plans: view only or view and edit"
+    ],
+    "steps": [
+      "Choose Share beside a document or saved activity, then enter the other guest’s sign-in email.",
+      "Documents allow viewing and downloading. For plans, choose View only or View and edit this plan.",
+      "Send the invitation to their Safe. It appears inside the app; no email is sent. Only the chosen item and its updates are shared."
+    ]
+  },
+  {
+    "title": "Safe · Accept and use shared items",
+    "subtitle": "Sharing → Invitations → Accept",
+    "panel": [
+      "Open Shared with me & invitations",
+      "Accept an invitation you recognize",
+      "View or edit according to permission"
+    ],
+    "steps": [
+      "Sign in with the email used for the invitation. Open Shared with me & invitations, then choose Accept.",
+      "Accepted documents and plans appear under Shared with me. Download a document or open a shared plan.",
+      "View-only plans cannot be edited. With editing permission, choose Edit shared plan and save your changes. Other activities stay private."
+    ]
+  },
+  {
+    "title": "Safe · Manage or stop sharing",
+    "subtitle": "You stay in control of the selected item",
+    "panel": [
+      "Shared by me → Stop sharing",
+      "Recipients may remove shared items",
+      "Downloaded copies cannot be recalled"
+    ],
+    "steps": [
+      "Under Shared by me, choose Stop sharing to end future access. Removing the original item also makes it unavailable.",
+      "People authorized to use the recipient’s Safe can access accepted items. Recipients can remove shared items from that Safe.",
+      "Stopping sharing cannot erase copies already downloaded. Use Refresh shared items or Refresh plans to see current information."
     ]
   },
   {

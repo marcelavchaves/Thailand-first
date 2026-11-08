@@ -1,3 +1,7 @@
+## November 7, 2026 · Prototype sharing tutorial
+
+Updated the prototype video, chapter menu, captions, transcript and printable guide for Safe item sharing and the removed Safe-name controls. Added real sample views of invitations, document sharing, plan permissions, editing and stopping sharing. Retained the stable suitcase player and existing app tabs. Live tutorial unchanged.
+
 ## November 7, 2026 · Prototype Safe item sharing
 
 Added document and plan sharing by verified sign-in email. Recipients accept invitations inside their Safe. Documents are view/download only; individual plans support view-only or editing access. Owners can stop sharing, recipients can remove shared items, and source deletion ends access. Removed Safe name/nickname controls and retired nickname updates. Prototype only; live is unchanged.

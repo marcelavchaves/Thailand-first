@@ -122,5 +122,5 @@ for old in pages.glob('page-*.jpg'):
 
 from html import escape
 options='<option value="0">00 · Suitcase opening</option>'+''.join(f'<option value="{19+i*duration}">{i+1:02} · {escape(ch["title"])}</option>' for i,ch in enumerate(chapters))
-player=(root/'assets/tutorial/player-template.html').read_text().replace('__CHAPTER_OPTIONS__',options)
+player=(root/'assets/tutorial/player-template.html').read_text().replace('__CHAPTER_OPTIONS__',options).replace('__DURATION__',f'{(19+len(chapters)*duration)//60}:{(19+len(chapters)*duration)%60:02}')
 (root/'public/tutorial/wondercase-interactive.html').write_text(player)

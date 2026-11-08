@@ -87,8 +87,8 @@
   <section class="player" aria-label="Tutorial video player">
     <div class="video-wrap">
     <div class="arrival" id="arrival" aria-label="Wondercase suitcase rolls in from the left"><div class="roll-object" id="rollObject"><span class="wheel left" aria-hidden="true"></span><span class="wheel right" aria-hidden="true"></span><img src="/tutorial/closed-suitcase.png" alt="Closed Wondercase suitcase with luggage tag"></div></div>
-    <video id="video" playsinline preload="auto" poster="/tutorial/intro-poster.jpg?v=real-tabs-7" aria-label="Wondercase animated app tutorial">
-      <track id="captions" kind="captions" src="/tutorial/traveler-tutorial.vtt?v=real-tabs-7" srclang="en" label="English captions">
+    <video id="video" playsinline preload="auto" poster="/tutorial/intro-poster.jpg?v=safe-sharing-8" aria-label="Wondercase animated app tutorial">
+      <track id="captions" kind="captions" src="/tutorial/traveler-tutorial.vtt?v=safe-sharing-8" srclang="en" label="English captions">
       Your browser does not support this video. Download the MP4 from this folder.
     </video>
     <button id="startTutorial" class="start-overlay" type="button" aria-label="Let our journey begin; play tutorial" hidden>▶ Let our journey begin!</button>
@@ -99,7 +99,7 @@
       <div class="progress-row">
         <span class="time" id="elapsed">0:00</span>
         <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek through tutorial">
-        <span class="time" id="duration">3:19</span>
+        <span class="time" id="duration">4:13</span>
       </div>
       <div class="buttons">
         <button id="back" type="button" aria-label="Back 10 seconds">↶ 10s</button>
@@ -121,11 +121,11 @@
   </section>
   <section class="chapters">
     <label for="chapter">Jump to a section</label>
-    <select id="chapter"><option value="0">00 · Suitcase opening</option><option value="19">01 · Welcome to Wondercase</option><option value="37">02 · Install on your phone</option><option value="55">03 · Home · Daily schedule</option><option value="73">04 · Maps · Explore the journey</option><option value="91">05 · Essentials · Travel information</option><option value="109">06 · Gallery · Shared memories</option><option value="127">07 · The Group · Fellow travelers</option><option value="145">08 · Your private Traveler Safe</option><option value="163">09 · More · Learn and get help</option><option value="181">10 · Help whenever you need it</option></select>
+    <select id="chapter"><option value="0">00 · Suitcase opening</option><option value="19">01 · Welcome to Wondercase</option><option value="37">02 · Install on your phone</option><option value="55">03 · Home · Daily schedule</option><option value="73">04 · Maps · Explore the journey</option><option value="91">05 · Essentials · Travel information</option><option value="109">06 · Gallery · Shared memories</option><option value="127">07 · The Group · Fellow travelers</option><option value="145">08 · Your private Traveler Safe</option><option value="163">09 · Safe · Share a selected item</option><option value="181">10 · Safe · Accept and use shared items</option><option value="199">11 · Safe · Manage or stop sharing</option><option value="217">12 · More · Learn and get help</option><option value="235">13 · Help whenever you need it</option></select>
   </section>
   <details class="release-notes"><summary>How to use this tutorial</summary><p>The suitcase rolls in when the page opens. Let’s Unpack starts the opening, and the “Let our journey begin!” button on the instruction card starts the walkthrough. You can pause, replay or choose a chapter. This guide works for any departure and assigned TD.</p></details>
   <p class="hint">The suitcase rolls in automatically and waits for Let’s Unpack. The instruction card waits for Let our journey begin. Space: play or pause · ← / →: skip 10 seconds · Speed buttons work on iPhone, Android, and desktop browsers.</p>
-<p class="hint"><a style="color:var(--gold)" href="/tutorial/traveler-tutorial.mp4?v=real-tabs-7" download>Download video</a> · <a style="color:var(--gold)" href="/instruction-booklet" target="_top">Illustrated guide</a> · <a style="color:var(--gold)" href="/" target="_top">Back to Wondercase</a></p></main>
+<p class="hint"><a style="color:var(--gold)" href="/tutorial/traveler-tutorial.mp4?v=safe-sharing-8" download>Download video</a> · <a style="color:var(--gold)" href="/instruction-booklet" target="_top">Illustrated guide</a> · <a style="color:var(--gold)" href="/" target="_top">Back to Wondercase</a></p></main>
 
 <script>
 (() => {
@@ -145,7 +145,7 @@
   const gateAt = 6.7;
   const walkthroughAt = 19;
   let phase = 'closed';
-  video.src = '/tutorial/traveler-tutorial.mp4?v=real-tabs-7';
+  video.src = '/tutorial/traveler-tutorial.mp4?v=safe-sharing-8';
   video.load();
   let settled = false;
   const settle = () => {
