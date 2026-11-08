@@ -24,6 +24,7 @@ def wrap(d,t,x,y,w,n,color=INK,b=False):
 fps=12;duration=18
 proc=subprocess.Popen(['ffmpeg','-y','-f','rawvideo','-vcodec','rawvideo','-pix_fmt','rgb24','-s','720x1280','-r',str(fps),'-i','-','-an','-c:v','libx264','-preset','fast','-crf','23','-pix_fmt','yuv420p','-movflags','+faststart',str(root/'public/tutorial/traveler-tutorial.mp4')],stdin=subprocess.PIPE,stderr=subprocess.DEVNULL)
 from tutorial_opening import render_opening
+from tutorial_app_views import app_view
 render_opening(proc,fps,root,out)
 vtt=['WEBVTT','','00:00:00.000 --> 00:00:19.000','Let’s unpack your travel companion. Pause, choose a chapter or set your speed.','']
 def stamp(t):
@@ -47,6 +48,9 @@ for i,ch in enumerate(chapters):
  words=(ch['title']+'. '+' '.join(ch['steps'])).split();cues=[words[k:k+10] for k in range(0,len(words),10)]
  for k,words in enumerate(cues):vtt.extend([f'{stamp(19+i*duration+k*duration/len(cues))} --> {stamp(19+i*duration+(k+1)*duration/len(cues))}',' '.join(words),''])
  for frame in range(duration*fps):
+  screen=app_view(i,frame,fps,root)
+  if screen is not None:
+   proc.stdin.write(screen.tobytes());continue
   pic=im.copy();draw=ImageDraw.Draw(pic);j=min(2,int(frame/(duration*fps/3)));yy=329+j*70
   draw.rounded_rectangle((57,yy-3,663,yy+60),radius=12,outline=GOLD,width=3+int(2*(1+math.sin(frame/fps*4))/2))
   draw.rectangle((36,1251,684,1257),fill='#dce1d8');draw.rectangle((36,1251,36+648*(i+frame/(duration*fps))/len(chapters),1257),fill=GOLD)
