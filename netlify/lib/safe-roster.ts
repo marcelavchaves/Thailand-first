@@ -1,3 +1,4 @@
+import {guestCardFeatures,type GuestCardFeatures} from '../../lib/guest-card-features';
 import {getStore} from '@netlify/blobs';
 import legacy from '../../app/guests.json';
 import {assignSafeIds,type SafeAssignments} from '../../lib/safe-ids';
@@ -5,7 +6,7 @@ import {cleanGuests,type Guest} from '../../lib/guest-roster';
 import {GUEST_IMPORT_VERSION} from "../../shared/tour-import.mjs";
 export const GUEST_LIST_VERSION=GUEST_IMPORT_VERSION;
 export const GUEST_ORDER_VERSION="ic2026-left-column-then-right-v1";
-export type RosterData={guests:Guest[];revealed:boolean;safeAssignments?:SafeAssignments;guestListVersion?:string;guestOrderVersion?:string};
+export type RosterData={guestCardFeatures?:GuestCardFeatures;guests:Guest[];revealed:boolean;safeAssignments?:SafeAssignments;guestListVersion?:string;guestOrderVersion?:string};
 export function rosterData(data?:RosterData|null){
  // Publish the supplied list once, retaining matching guest/profile IDs and
  // every previously issued Safe ID. Later TD edits, hides and removals win.
@@ -20,7 +21,7 @@ export function rosterData(data?:RosterData|null){
   const ranks=new Map(legacy.map((guest,index)=>[normalize(guest.name),index]));
   guests=[...guests].sort((a,b)=>(ranks.get(normalize(a.name))??legacy.length)-(ranks.get(normalize(b.name))??legacy.length));
  }
- return {guestOrderVersion:GUEST_ORDER_VERSION,...assignSafeIds(guests,data?.safeAssignments),revealed:importing||data?.revealed===true,guestListVersion:GUEST_LIST_VERSION};
+ return {guestCardFeatures:guestCardFeatures(data?.guestCardFeatures),guestOrderVersion:GUEST_ORDER_VERSION,...assignSafeIds(guests,data?.safeAssignments),revealed:importing||data?.revealed===true,guestListVersion:GUEST_LIST_VERSION};
 }
 // Persist assignments before Safe activation. Conditional writes protect concurrent roster edits.
 export async function assignedGuest(safeId:string){

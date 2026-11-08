@@ -28,3 +28,25 @@ body=await(await call()).json();assert.equal(body.guests[0].safeId,'TG03');asser
 assert.equal((await call({revealed:false,revision:body.revision})).status,200);
 globalThis.rosterTest.td=false;body=await(await call()).json();assert.equal(body.guests.length,0);assert.equal(body.guestCount,2);assert.equal(body.revealed,false);
 console.log('PASS: permanent IDs survive reordering/removal, new IDs are not recycled, hidden lists return no personal data.');
+
+// Feature controls are global, TD-only, revision protected and independent.
+globalThis.rosterTest.td=true;
+body=await(await call()).json();
+assert.deepEqual(body.guestCardFeatures,{safe:false,mealChoices:false});
+assert.equal((await call({guestCardFeatures:{safe:!false},revision:body.revision})).status,200);
+body=await(await call()).json();assert.deepEqual(body.guestCardFeatures,{safe:!false,mealChoices:false});
+assert.equal((await call({guestCardFeatures:{mealChoices:!false},revision:body.revision},'https://evil.test')).status,403);
+assert.equal((await call({guestCardFeatures:{safe:'yes'},revision:body.revision})).status,400);
+assert.equal((await call({guestCardFeatures:{unknown:true},revision:body.revision})).status,400);
+assert.equal((await call({guestCardFeatures:{mealChoices:!false},revision:'stale'})).status,409);
+globalThis.rosterTest.td=false;
+assert.equal((await call({guestCardFeatures:{safe:false},revision:body.revision})).status,401);
+assert.deepEqual((await(await call()).json()).guestCardFeatures,{safe:!false,mealChoices:false});
+globalThis.rosterTest.td=true;
+assert.equal((await call({revealed:true,revision:body.revision})).status,200);
+body=await(await call()).json();assert.deepEqual(body.guestCardFeatures,{safe:!false,mealChoices:false});
+assert.equal((await call({guests:body.guests,revision:body.revision})).status,200);
+body=await(await call()).json();assert.deepEqual(body.guestCardFeatures,{safe:!false,mealChoices:false});
+assert.equal((await call({guestCardFeatures:{mealChoices:!false},revision:body.revision})).status,200);
+body=await(await call()).json();assert.deepEqual(body.guestCardFeatures,{safe:!false,mealChoices:!false});
+console.log('PASS: guest card defaults, independent toggles, public visibility, TD authorization, validation, stale writes and preservation across roster edits.');
