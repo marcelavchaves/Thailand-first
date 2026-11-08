@@ -3,6 +3,7 @@ import {useEffect,useState,useRef} from 'react';
 import {useTDSession} from './TDSession';
 import {type Guest} from '../lib/guest-roster';
 import {guestDisplayName} from '../lib/hotel-manifest';
+import {guestCardFeatures,type GuestCardFeatures} from '../lib/guest-card-features';
 import ClassicSafeIcon from './ClassicSafeIcon';
 import GuestRosterManager from './GuestRosterManager';
 import './guest-roster.css';
@@ -11,6 +12,8 @@ export default function GuestProfiles({directorMode=false}:{directorMode?:boolea
  const {authenticated}=useTDSession();
  const [guests,setGuests]=useState<Guest[]>([]);
  const [revision,setRevision]=useState<string|null>(null);
+ const [cardFeatures,setCardFeatures]=useState<GuestCardFeatures>({safe:false,mealChoices:false});
+ const [featureBusy,setFeatureBusy]=useState(false);
  const [loaded,setLoaded]=useState(false);
  const [revealed,setRevealed]=useState(false),[guestCount,setGuestCount]=useState(0),[visibilityBusy,setVisibilityBusy]=useState(false),[preview,setPreview]=useState(false);
  const managing=authenticated&&directorMode&&!preview;
@@ -30,9 +33,15 @@ export default function GuestProfiles({directorMode=false}:{directorMode?:boolea
   document.body.style.overflow='hidden';
   return()=>{element.close();document.body.style.overflow=previousOverflow;};
  },[selectedId]);
- async function load(){try{const [r,list]=await Promise.all([fetch('/api/guest-profiles',{cache:'no-store'}),fetch('/api/guest-roster',{cache:'no-store'})]);if(!r.ok||!list.ok)throw Error();const roster=await list.json();setProfiles(await r.json());setGuests(roster.guests);setRevealed(roster.revealed===true);setGuestCount(roster.guestCount||0);setRevision(roster.revision||null);setLoaded(true);}catch{setMessage('Guest updates are temporarily unavailable. Please reload to try again.');}}
+ async function load(){try{const [r,list]=await Promise.all([fetch('/api/guest-profiles',{cache:'no-store'}),fetch('/api/guest-roster',{cache:'no-store'})]);if(!r.ok||!list.ok)throw Error();const roster=await list.json();setProfiles(await r.json());setGuests(roster.guests);setCardFeatures(guestCardFeatures(roster.guestCardFeatures));setRevealed(roster.revealed===true);setGuestCount(roster.guestCount||0);setRevision(roster.revision||null);setLoaded(true);}catch{setMessage('Guest updates are temporarily unavailable. Please reload to try again.');}}
  useEffect(()=>{setLoaded(false);setGuests([]);setProfiles({});setSelectedId(null);void load();const timer=setInterval(()=>void load(),15000);return()=>clearInterval(timer);},[authenticated]);
  useEffect(()=>{if(hidden)setSelectedId(null);},[hidden]);
+ async function updateCardFeature(feature:keyof GuestCardFeatures,enabled:boolean){
+  setFeatureBusy(true);setMessage('');
+  try{const r=await fetch('/api/guest-roster',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({guestCardFeatures:{[feature]:enabled},revision})});const result=await r.json();if(!r.ok)throw Error(result.error);await load();setMessage(`${feature==='safe'?'Safe':'Meal choices'} ${enabled?'enabled':'disabled'} on all guest cards.`);}
+  catch(e){setMessage(e instanceof Error?e.message:'Unable to update guest card features.');await load();}
+  finally{setFeatureBusy(false);}
+ }
  async function visibility(next:boolean){setVisibilityBusy(true);setMessage('');try{const r=await fetch('/api/guest-roster',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({revealed:next,revision})});const b=await r.json();if(!r.ok)throw Error(b.error);await load();setMessage(next?'Guest list revealed to travelers.':'Guest list hidden from travelers.');}catch(e){setMessage(e instanceof Error?e.message:'Unable to change visibility.');await load();}finally{setVisibilityBusy(false);}}
  async function save(id:string,action:string,values:object={}){
   setMessage('Saving…');
@@ -48,7 +57,8 @@ export default function GuestProfiles({directorMode=false}:{directorMode?:boolea
 <p role="status">{message}</p></div>;}
  return <article className="guests guests-after-travelers">
   <h2>Our Travelers</h2>
-  {authenticated&&directorMode&&<><section className="guest-visibility" aria-label="Guest list visibility"><h3>Reveal to travelers</h3><p className="guest-visibility-state">Currently {revealed?'Revealed':'Hidden'}</p><div className="guest-visibility-switch"><button type="button" disabled={!loaded||visibilityBusy} aria-pressed={!revealed} onClick={()=>void visibility(false)}>🔒 Hidden</button><button type="button" disabled={!loaded||visibilityBusy} aria-pressed={revealed} onClick={()=>void visibility(true)}>Revealed</button></div><p>Names, photos, hometowns and guest details stay private until you reveal them. You can hide the list again at any time.</p><button className="guest-preview-button" type="button" onClick={()=>{setPreview(!preview);setSelectedId(null);}}>{preview?'← Back to guest management':'Preview traveler view'}</button>{preview&&<small>Traveler preview · {revealed?'Revealed':'Hidden'}</small>}</section></>}
+  {authenticated&&directorMode&&<><section className="guest-visibility" aria-label="Guest list visibility"><h3>Reveal to travelers</h3><p className="guest-visibility-state">Currently {revealed?'Revealed':'Hidden'}</p><div className="guest-visibility-switch"><button type="button" disabled={!loaded||visibilityBusy||featureBusy} aria-pressed={!revealed} onClick={()=>void visibility(false)}>🔒 Hidden</button><button type="button" disabled={!loaded||visibilityBusy||featureBusy} aria-pressed={revealed} onClick={()=>void visibility(true)}>Revealed</button></div><p>Names, photos, hometowns and guest details stay private until you reveal them. You can hide the list again at any time.</p><button className="guest-preview-button" type="button" onClick={()=>{setPreview(!preview);setSelectedId(null);}}>{preview?'← Back to guest management':'Preview traveler view'}</button>{preview&&<small>Traveler preview · {revealed?'Revealed':'Hidden'}</small>}</section></>}
+  {authenticated&&directorMode&&<section className="guest-visibility" aria-label="Guest card features"><h3>Guest card features</h3><p>Enable or disable these links on all traveler guest cards. Saved documents, plans and meal selections are kept.</p>{([['safe','Safe'],['mealChoices','Meal choices']] as const).map(([feature,label])=><div key={feature}><h4>{label}</h4><p>Currently {cardFeatures[feature]?'Enabled':'Disabled'}</p><div className="guest-visibility-switch"><button type="button" disabled={!loaded||featureBusy||visibilityBusy} aria-pressed={!cardFeatures[feature]} onClick={()=>void updateCardFeature(feature,false)}>Disabled</button><button type="button" disabled={!loaded||featureBusy||visibilityBusy} aria-pressed={cardFeatures[feature]} onClick={()=>void updateCardFeature(feature,true)}>Enabled</button></div></div>)}<p role="status">{message}</p></section>}
   {hidden&&<div className="guest-reveal-notice"><span aria-hidden="true">🔒</span><div><strong>A little wonder is on its way</strong><p>You will soon meet your fellow travelers</p></div></div>}
 
   
@@ -60,7 +70,7 @@ export default function GuestProfiles({directorMode=false}:{directorMode?:boolea
    <button type="button" className="guest-photo-button" aria-label={`View ${guest.name}’s profile`} aria-haspopup="dialog" onClick={()=>setSelectedId(guest.id)}>{p.photo?<img className="guest-photo" src={p.photo} alt={guest.name} width={240} height={240}/>:<div className="guest-photo guest-photo-placeholder" aria-label="Photo coming soon"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-2a8 8 0 0 1 16 0v2"/></svg></div>}</button>
    <button type="button" className="guest-details guest-details-button" aria-label={`Read ${guest.name}’s profile`} onClick={()=>setSelectedId(guest.id)}><strong>{guestDisplayName(guest)}</strong><p className="guest-origin">{guest.origin}</p>
 
-   </button><div className="guest-workspace-actions"><a className="guest-safe-link" href="/traveler-safe" aria-label="Open your private Traveler Safe" title="Your private Traveler Safe" data-pdf-exclude><ClassicSafeIcon/><span>Safe</span></a>{process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&<a className="guest-safe-link guest-meal-link" href={`/meal-choices?guest=${encodeURIComponent(guest.id)}`} aria-label={`Open ${guest.name}’s meal choices`} data-pdf-exclude><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="12" r="6"/><path d="M3 3v6m3-6v6M3 6h3M4.5 9v12M21 3c-3 2-3 7 0 9v9"/></svg><span>Meal choices</span></a>}</div></li>;})}</ul><p role="status" data-pdf-exclude>{message}</p>
+   </button>{(cardFeatures.safe||(cardFeatures.mealChoices&&process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'))&&<div className="guest-workspace-actions">{cardFeatures.safe&&<a className="guest-safe-link" href="/traveler-safe" aria-label="Open your private Traveler Safe" title="Your private Traveler Safe" data-pdf-exclude><ClassicSafeIcon/><span>Safe</span></a>}{cardFeatures.mealChoices&&process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'&&<a className="guest-safe-link guest-meal-link" href={`/meal-choices?guest=${encodeURIComponent(guest.id)}`} aria-label={`Open ${guest.name}’s meal choices`} data-pdf-exclude><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="12" r="6"/><path d="M3 3v6m3-6v6M3 6h3M4.5 9v12M21 3c-3 2-3 7 0 9v9"/></svg><span>Meal choices</span></a>}</div>}</li>;})}</ul><p role="status" data-pdf-exclude>{message}</p>
   <dialog ref={dialog} className="guest-profile-dialog" aria-labelledby="guest-profile-title" data-pdf-exclude onClose={()=>setSelectedId(null)} onClick={event=>{if(event.target===event.currentTarget){const r=event.currentTarget.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)event.currentTarget.close();}}}>
    <button type="button" className="guest-profile-close" autoFocus onClick={()=>dialog.current?.close()} aria-label="Close guest profile">Close ×</button>
    {selectedGuest&&<div className="guest-profile-content">
