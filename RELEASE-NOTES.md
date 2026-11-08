@@ -1,3 +1,7 @@
+## November 7, 2026 · Prototype Safe item sharing
+
+Added document and plan sharing by verified sign-in email. Recipients accept invitations inside their Safe. Documents are view/download only; individual plans support view-only or editing access. Owners can stop sharing, recipients can remove shared items, and source deletion ends access. Removed Safe name/nickname controls and retired nickname updates. Prototype only; live is unchanged.
+
 ## November 7, 2026 · Explain each real app tab
 
 The restored suitcase tutorial now shows the actual Home, Maps, Essentials, Gallery, The Group and More screens, then explains what travelers can see and do there. Captures use mocked API responses, sample guest information and anonymous TD contact details. Kept the stable player and did not add a practice navigation or change app tabs.

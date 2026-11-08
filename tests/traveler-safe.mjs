@@ -11,8 +11,8 @@ const realFetch=globalThis.fetch;const people={
 };
 globalThis.fetch=async(url,opts)=>{assert.equal(url,'https://identity.test/user');const token=opts.headers.Authorization.replace('Bearer ','');assert.notEqual(token,'operator-token');return people[token]?Response.json(people[token]):Response.json({error:'Expired'}, {status:401});};
 try{
- await build({stdin:{contents:`export {default as session} from './netlify/functions/safe-session.mts';export {default as access} from './netlify/functions/safe-access.mts';export {default as invitations} from './netlify/functions/safe-invitations.mts';export {default as documents} from './netlify/functions/safe-documents.mts';export {default as plans} from './netlify/functions/safe-plans.mts';export {GUEST_IMPORT_VERSION} from './shared/tour-import.mjs';`,resolveDir:process.cwd(),loader:'ts'},outfile:join(temp,'test.mjs'),bundle:true,platform:'node',format:'esm',external:['sharp'],plugins:[{name:'mock',setup(b){b.onResolve({filter:/^@netlify\/(blobs|identity)$|\/td-auth$/},a=>({path:a.path,namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path.endsWith('identity')?`export const getIdentityConfig=()=>({url:'https://identity.test',token:'operator-token'});export async function getUser(){throw Error('Operator must not be used as a visitor')}export async function logout(){globalThis.safeTest.logout++}`:a.path.endsWith('/td-auth')?`export async function hasTDSession(){return globalThis.safeTest.td}export function sameOrigin(r){return r.headers.get('origin')===new URL(r.url).origin}`:mock}));}}]});
- const {session,access,invitations,documents,plans,GUEST_IMPORT_VERSION}=await import(join(temp,'test.mjs'));const origin='https://prototype.test';const req=(path,body=null,token='',method=body?'POST':'GET',requestOrigin=origin)=>new Request(origin+path,{method,headers:{Origin:requestOrigin,Cookie:token.startsWith('__Host')?token:token?'nf_jwt='+token:''},body:body?JSON.stringify(body):undefined});
+ await build({stdin:{contents:`export {default as session} from './netlify/functions/safe-session.mts';export {default as access} from './netlify/functions/safe-access.mts';export {default as invitations} from './netlify/functions/safe-invitations.mts';export {default as documents} from './netlify/functions/safe-documents.mts';export {default as plans} from './netlify/functions/safe-plans.mts';export {default as sharing} from './netlify/functions/safe-sharing.mts';export {GUEST_IMPORT_VERSION} from './shared/tour-import.mjs';`,resolveDir:process.cwd(),loader:'ts'},outfile:join(temp,'test.mjs'),bundle:true,platform:'node',format:'esm',external:['sharp'],plugins:[{name:'mock',setup(b){b.onResolve({filter:/^@netlify\/(blobs|identity)$|\/td-auth$/},a=>({path:a.path,namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path.endsWith('identity')?`export const getIdentityConfig=()=>({url:'https://identity.test',token:'operator-token'});export async function getUser(){throw Error('Operator must not be used as a visitor')}export async function logout(){globalThis.safeTest.logout++}`:a.path.endsWith('/td-auth')?`export async function hasTDSession(){return globalThis.safeTest.td}export function sameOrigin(r){return r.headers.get('origin')===new URL(r.url).origin}`:mock}));}}]});
+ const {session,access,invitations,documents,plans,sharing,GUEST_IMPORT_VERSION}=await import(join(temp,'test.mjs'));const origin='https://prototype.test';const req=(path,body=null,token='',method=body?'POST':'GET',requestOrigin=origin)=>new Request(origin+path,{method,headers:{Origin:requestOrigin,Cookie:token.startsWith('__Host')?token:token?'nf_jwt='+token:''},body:body?JSON.stringify(body):undefined});
  const ok=async r=>{assert.equal(r.status,200,await r.clone().text());return r.json();};const seed=(store,key,data,etag='seed')=>state.db.set(store+'/'+key,{data:structuredClone(data),etag});
  const guests=[1,2].map(n=>({id:`00000000-0000-4000-8000-00000000000${n}`,name:'Sample Guest '+n,origin:'',bio:'',phone:'',email:'',social:'',shareContact:false,safeId:'TG0'+n}));
  seed('guest-profiles','roster',{guests,guestListVersion:GUEST_IMPORT_VERSION,guestOrderVersion:'ic2026-left-column-then-right-v1',revealed:true,safeAssignments:{byGuest:Object.fromEntries(guests.map(g=>[g.id,g.safeId])),next:3}});
@@ -23,11 +23,11 @@ try{
  assert.equal((await access(req('/api/safe-access'))).status,401);state.td=true;let admin=await ok(await access(req('/api/safe-access')));const update={revision:admin.revision,rosterRevision:admin.rosterRevision,guests:[{id:guests[0].id,emails:['a@example.test','partner@example.test']},{id:guests[1].id,emails:['b@example.test']}]};
  assert.equal((await access(req('/api/safe-access',update,'','PUT','https://evil.test'))).status,403);let bad=structuredClone(update);bad.guests[1].emails=['A@example.test'];assert.equal((await access(req('/api/safe-access',bad,'','PUT'))).status,400);await ok(await access(req('/api/safe-access',update,'','PUT')));assert.equal((await access(req('/api/safe-access',update,'','PUT'))).status,409);state.td=false;
  for(const token of ['','u.u.u','bad.bad.bad'])assert.equal((await documents(req('/api/safe-documents',null,token))).status,401);
- let a=await ok(await session(req('/api/safe-session',null,'a.a.a')));assert.equal(a.safeId,'TG01');assert.equal(a.displayName,'Our adventures');let migrated=state.db.get('traveler-safe-accounts/tg01').data;assert.equal(migrated.id,oldId);assert.equal(migrated.key,oldKey);assert.equal(migrated.auth,'identity');assert.equal(migrated.hash,undefined);assert.equal(migrated.recoveryHash,undefined);
+ let a=await ok(await session(req('/api/safe-session',null,'a.a.a')));assert.equal(a.safeId,'TG01');assert.equal(a.displayName,'My Safe');let migrated=state.db.get('traveler-safe-accounts/tg01').data;assert.equal(migrated.id,oldId);assert.equal(migrated.key,oldKey);assert.equal(migrated.auth,'identity');assert.equal(migrated.hash,undefined);assert.equal(migrated.recoveryHash,undefined);
  const download=await documents(req('/api/safe-documents?id='+docId,null,'a.a.a'));assert.equal(download.status,200);assert(Buffer.from(await download.arrayBuffer()).equals(plain));assert.equal((await ok(await plans(req('/api/safe-plans?date=2026-11-16',null,'a.a.a')))).activities[0].title,'Existing personal plan');
  assert.equal((await documents(req('/api/safe-documents',null,'s.s.s'))).status,401);assert.equal((await ok(await session(req('/api/safe-session?requestSafe=TG02',null,'a.a.a')))).safeId,'TG01');
  assert.equal((await ok(await documents(req('/api/safe-documents',null,'p.p.p')))).documents.length,1);assert.equal((await ok(await documents(req('/api/safe-documents',null,'b.b.b')))).documents.length,0);assert.equal((await documents(req('/api/safe-documents?id='+docId,null,'b.b.b'))).status,404);
- assert.equal((await session(req('/api/safe-session',{nickname:'Renamed'},'a.a.a','PATCH','https://evil.test'))).status,403);await ok(await session(req('/api/safe-session',{nickname:'Renamed'},'a.a.a','PATCH')));
+ assert.equal((await session(req('/api/safe-session',{nickname:'Renamed'},'a.a.a','PATCH','https://evil.test'))).status,403);assert.equal((await session(req('/api/safe-session',{nickname:'Renamed'},'a.a.a','PATCH'))).status,405);
  const activities=Array.from({length:4},(_,i)=>({...activity,id:randomUUID(),title:'Activity '+i}));assert.equal((await plans(req('/api/safe-plans?date=2026-11-17',{activities,revision:null},'a.a.a'))).status,400);await ok(await plans(req('/api/safe-plans?date=2026-11-14',{activities,revision:null},'a.a.a')));
  const payload={name:'New.pdf',type:'application/pdf',data:plain.toString('base64'),revision:'seed'};assert.equal((await documents(req('/api/safe-documents',payload,'a.a.a','POST','https://evil.test'))).status,403);await ok(await documents(req('/api/safe-documents',payload,'a.a.a')));const docs=await ok(await documents(req('/api/safe-documents',null,'a.a.a')));assert.equal(docs.documents.length,2);
  assert.equal((await documents(req('/api/safe-documents?id='+docId,{revision:'stale'},'a.a.a','DELETE'))).status,409);await ok(await documents(req('/api/safe-documents?id='+docId,{revision:docs.revision},'a.a.a','DELETE')));
@@ -46,6 +46,63 @@ try{
  assert.equal((await ok(await documents(req('/api/safe-documents',null,'b.b.b')))).documents.length,0);
  const before=personal.username;people['x.x.x'].email='new-preferred@example.test';assert.equal((await ok(await session(req('/api/safe-session',null,'x.x.x')))).username,before,'Stable verified identity retains its Safe when email changes');
  assert.equal((await invitations(req('/api/safe-invitations',{action:'claim',token:'z'.repeat(43)},'x.x.x'))).status,410);
+
+ // Item-level sharing never grants access to another Safe or its other items.
+ const shareReq=(body,token='p.p.p',method='POST',requestOrigin=origin)=>sharing(req('/api/safe-sharing',body,token,method,requestOrigin));
+ const listShares=async token=>ok(await sharing(req('/api/safe-sharing',null,token)));
+ const ownerDoc=state.db.get('traveler-safe-documents/'+oldId+'/index').data.documents[0];
+ assert.equal((await sharing(req('/api/safe-sharing'))).status,401);
+ assert.equal((await shareReq({action:'create',kind:'document',itemId:ownerDoc.id,email:'b@example.test',permission:'view'},'u.u.u')).status,401);
+ assert.equal((await shareReq({action:'create',kind:'document',itemId:ownerDoc.id,email:'b@example.test',permission:'view'},'p.p.p','POST','https://evil.test' )).status,403);
+ assert.equal((await shareReq({action:'create',kind:'document',itemId:ownerDoc.id,email:'b@example.test',permission:'edit'})).status,400);
+ assert.equal((await shareReq({action:'create',kind:'document',itemId:ownerDoc.id,email:'partner@example.test',permission:'view'})).status,400);
+ assert.equal((await shareReq({action:'create',kind:'document',itemId:randomUUID(),email:'b@example.test',permission:'view'})).status,404);
+ assert.equal((await shareReq({action:'create',kind:'document',itemId:ownerDoc.id,email:'b@example.test',permission:'view'},'x.x.x')).status,404,'Knowing a foreign file ID never allows forwarding it');
+ const invitation=await ok(await shareReq({action:'create',kind:'document',itemId:ownerDoc.id,email:' B@example.test ',permission:'view'}));
+ assert.equal((await shareReq({action:'create',kind:'document',itemId:ownerDoc.id,email:'b@example.test',permission:'view'})).status,409);
+ let inbox=await listShares('b.b.b');assert.equal(inbox.incoming.length,1);assert.equal(inbox.incoming[0].title,ownerDoc.name);
+ assert.equal((await sharing(req('/api/safe-sharing?id='+invitation.id+'&download=1',null,'b.b.b'))).status,404,'No bytes before acceptance');
+ assert.equal((await sharing(req('/api/safe-sharing?id='+invitation.id,null,'x.x.x'))).status,404,'Stranger cannot enumerate item');
+ assert.equal((await shareReq({action:'accept',id:invitation.id,version:inbox.incoming[0].version},'x.x.x')).status,403);
+ await ok(await shareReq({action:'accept',id:invitation.id,version:inbox.incoming[0].version},'b.b.b'));
+ const sharedFile=await sharing(req('/api/safe-sharing?id='+invitation.id+'&download=1',null,'b.b.b'));assert.equal(sharedFile.status,200);assert(Buffer.from(await sharedFile.arrayBuffer()).equals(plain),'Original encrypted document decrypts only after acceptance');
+ assert.equal((await documents(req('/api/safe-documents?id='+ownerDoc.id,null,'b.b.b'))).status,404);
+ people['r.r.r']={id:'identity-recipient-partner',email:'recipient-partner@example.test',confirmed_at:'2026-11-01'};
+ const destinationAccess=state.db.get('traveler-safe-access/assignments').data.safes.TG02;destinationAccess.emails.push('recipient-partner@example.test');destinationAccess.subjects['recipient-partner@example.test']='identity-recipient-partner';
+ const destinationPartner=await sharing(req('/api/safe-sharing?id='+invitation.id+'&download=1',null,'r.r.r'));assert.equal(destinationPartner.status,200,'Accepted access is available to the recipient Safe’s authorized members');
+ assert.equal((await documents(req('/api/safe-documents?id='+ownerDoc.id,null,'r.r.r'))).status,404,'Shared access still does not open the sender Safe');
+
+ assert(!JSON.stringify(await listShares('b.b.b')).includes(oldKey),'No encryption key returned');
+ let sent=(await listShares('p.p.p')).outgoing.find(s=>s.id===invitation.id);
+ assert.equal((await shareReq({action:'revoke',id:sent.id,version:sent.version},'b.b.b')).status,403);
+ await ok(await shareReq({action:'revoke',id:sent.id,version:sent.version}));
+ assert.equal((await sharing(req('/api/safe-sharing?id='+invitation.id+'&download=1',null,'b.b.b'))).status,404,'Revocation blocks future downloads');
+ const otherActivity={...activity,id:randomUUID(),title:'Unshared private plan',note:'Do not disclose this note'};
+ seed('traveler-safe-plans',oldId+'/2026-11-16',{activities:[activity,otherActivity]},'plan-source');
+ let planInvite=await ok(await shareReq({action:'create',kind:'plan',itemId:activity.id,date:'2026-11-16',email:'b@example.test',permission:'view'}));
+ inbox=await listShares('b.b.b');let pending=inbox.incoming.find(s=>s.id===planInvite.id);await ok(await shareReq({action:'accept',id:pending.id,version:pending.version},'b.b.b'));
+ let detail=await ok(await sharing(req('/api/safe-sharing?id='+planInvite.id,null,'b.b.b')));assert.equal(detail.activity.id,activity.id);assert(!JSON.stringify(detail).includes(otherActivity.title));assert(!JSON.stringify(detail).includes(otherActivity.note));
+ assert.equal((await shareReq({id:planInvite.id,revision:detail.revision,activity:{...activity,title:'Not allowed'}},'b.b.b','PUT')).status,403);
+ sent=(await listShares('p.p.p')).outgoing.find(s=>s.id===planInvite.id);await ok(await shareReq({action:'revoke',id:sent.id,version:sent.version}));
+ planInvite=await ok(await shareReq({action:'create',kind:'plan',itemId:activity.id,date:'2026-11-16',email:'b@example.test',permission:'edit'}));
+ pending=(await listShares('b.b.b')).incoming.find(s=>s.id===planInvite.id);await ok(await shareReq({action:'accept',id:pending.id,version:pending.version},'b.b.b'));
+ detail=await ok(await sharing(req('/api/safe-sharing?id='+planInvite.id,null,'b.b.b')));
+ assert.equal((await shareReq({id:planInvite.id,revision:'stale',activity},'b.b.b','PUT')).status,409);
+ assert.equal((await shareReq({id:planInvite.id,revision:detail.revision,activity},'x.x.x','PUT')).status,403);
+ assert.equal((await shareReq({id:planInvite.id,revision:detail.revision,activity},'b.b.b','PUT','https://evil.test' )).status,403);
+ await ok(await shareReq({id:planInvite.id,revision:detail.revision,activity:{...activity,id:otherActivity.id,title:'Together for coffee'}},'b.b.b','PUT'));
+ let savedPlan=state.db.get('traveler-safe-plans/'+oldId+'/2026-11-16').data.activities;assert.equal(savedPlan[0].id,activity.id);assert.equal(savedPlan[0].title,'Together for coffee');assert.deepEqual(savedPlan[1],otherActivity,'Other private plans are never overwritten');
+ pending=(await listShares('b.b.b')).incoming.find(s=>s.id===planInvite.id);await ok(await shareReq({action:'decline',id:pending.id,version:pending.version},'b.b.b'));
+ assert.equal((await sharing(req('/api/safe-sharing?id='+planInvite.id,null,'b.b.b'))).status,404);
+ assert.equal((await shareReq({id:planInvite.id,revision:detail.revision,activity},'b.b.b','PUT')).status,403,'Leaving removes edit access');
+ // Deleted source items cannot be downloaded or recreated from stale invitations.
+ const deletedInvite=await ok(await shareReq({action:'create',kind:'document',itemId:ownerDoc.id,email:'b@example.test',permission:'view'}));
+ seed('traveler-safe-documents',oldId+'/index',{documents:[]},'deleted-source');
+ pending=(await listShares('b.b.b')).incoming.find(s=>s.id===deletedInvite.id);assert.equal(pending.available,false);
+ assert.equal((await shareReq({action:'accept',id:pending.id,version:pending.version},'b.b.b')).status,404);
+ assert.equal((await shareReq({action:'accept',id:pending.id,version:'wrong'},'b.b.b')).status,409);
+ const sessionSummary=await ok(await session(req('/api/safe-session',null,'p.p.p')));assert(!('nickname' in sessionSummary));
+ console.log('PASS item sharing: recipient acceptance, email normalization, encrypted downloads, no foreign Safe access, view/edit permissions, selected-plan-only edits, CSRF, stale revisions, immediate revocation, leaving, source deletion and retired names.');
  console.log('PASS automatic Safe: verified login provisions one private account, repeat login/email change retain it, isolation and encryption remain, and activation/invitation endpoint is retired.');
- console.log('PASS Safe email/Google authorization: verified visitor tokens, no operator/legacy-PIN fallback, TD-only email grants, shared access, subject binding, immediate revocation, account isolation, existing encrypted file/key/plan migration, CSRF, revisions, nickname, document CRUD and activity limits.');
+ console.log('PASS Safe email/Google authorization: verified visitor tokens, no operator/legacy-PIN fallback, TD-only email grants, shared access, subject binding, immediate revocation, account isolation, existing encrypted file/key/plan migration, CSRF, revisions, retired nickname UI/API, document CRUD and activity limits.');
 }finally{globalThis.fetch=realFetch;await rm(temp,{recursive:true,force:true});}
