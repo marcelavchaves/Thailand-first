@@ -1,3 +1,7 @@
+## November 7, 2026 · Explain each real app tab
+
+The restored suitcase tutorial now shows the actual Home, Maps, Essentials, Gallery, The Group and More screens, then explains what travelers can see and do there. Captures use mocked API responses, sample guest information and anonymous TD contact details. Kept the stable player and did not add a practice navigation or change app tabs.
+
 ## November 7, 2026 · Restore previous tutorial
 
 Restored the prior suitcase tutorial with the Thailand colors, fonts and compass artwork. Removed the experimental tab walkthrough. Existing practice-tour links now open the restored tutorial. All other app features remain unchanged.

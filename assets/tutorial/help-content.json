@@ -10,7 +10,7 @@
     "steps": [
       "Open the app using your TD’s link. Travelers do not need a TD login to explore the app.",
       "Follow the itinerary from Hanoi through Vietnam and Cambodia to Thailand. Your departure’s dates appear in the app.",
-      "Use the tabs at the bottom to explore. This guide works for any departure and any assigned TD."
+      "The tutorial shows the app’s own tabs with sample guest information, then explains each one. Your own dates, contacts and updates appear in the app."
     ]
   },
   {
@@ -28,7 +28,7 @@
     ]
   },
   {
-    "title": "Your daily schedule",
+    "title": "Home · Daily schedule",
     "subtitle": "Home is your starting point",
     "panel": [
       "Choose a date or use the day arrows",
@@ -42,7 +42,7 @@
     ]
   },
   {
-    "title": "Explore with the TD’s maps",
+    "title": "Maps · Explore the journey",
     "subtitle": "The big map stays above the city tiles",
     "panel": [
       "Tap a city name or marker",
@@ -56,7 +56,7 @@
     ]
   },
   {
-    "title": "Essentials for the journey",
+    "title": "Essentials · Travel information",
     "subtitle": "Hotels, flights, guides and handouts",
     "panel": [
       "Essentials → Hotels / Flights",
@@ -70,7 +70,7 @@
     ]
   },
   {
-    "title": "Join our photo gallery",
+    "title": "Gallery · Shared memories",
     "subtitle": "Your gallery membership is separate",
     "panel": [
       "Gallery opens the shared gallery",
@@ -84,7 +84,7 @@
     ]
   },
   {
-    "title": "The Group and meal choices",
+    "title": "The Group · Fellow travelers",
     "subtitle": "Find your card and select your meals",
     "panel": [
       "The Group → your guest card",
@@ -112,17 +112,17 @@
     ]
   },
   {
-    "title": "Discover more",
+    "title": "More · Learn and get help",
     "subtitle": "History, language and feedback",
     "panel": [
-      "More → Learn More",
-      "Trivia beside Language lessons",
-      "Help & Tutorials · Help Wondercase Grow"
+      "Recommended reading and travel ideas",
+      "Learn more → Trivia and Language",
+      "Help & Tutorials · Feedback"
     ],
     "steps": [
-      "Open More → Learn More for historical trivia about places on this itinerary.",
-      "Choose the Language lessons tile for useful local phrases.",
-      "Use Help Wondercase Grow to share feedback. Return on the same browser and device to update it."
+      "Open More for recommended reading, travel ideas and extra information.",
+      "Choose Learn more for historical trivia and the Language lessons tile.",
+      "Help & Tutorials has guides and installation help. Use Help Wondercase Grow to share feedback."
     ]
   },
   {
