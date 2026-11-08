@@ -1,3 +1,7 @@
+## Approved prototype release · Destination handout booklets
+
+Publishes the reviewed full-screen booklet collection to the regular Thailand prototype address. All five supplied booklets default to shown, with saved per-booklet TD hide/show controls. Chiang Mai retains its cover/back-page preview pending a PDF export.
+
 ## Review · Original destination booklets under Handouts
 
 - Adds Bangkok, Chiang Mai, Cambodia, Vietnam and Ho Chi Minh City with the original printed pages in reading order. Chiang Mai remains a cover/back-page preview pending its PDF export.
