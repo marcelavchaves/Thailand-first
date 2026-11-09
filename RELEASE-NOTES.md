@@ -1,3 +1,9 @@
+## Booklet swipe repair
+
+- Handles touch, pen and mouse swipes across the complete fitted-page reading area, including the margins beside a page on wide screens.
+- Captures an in-progress drag, prevents browser panning from interrupting page turns, and keeps taps, buttons, pinch zoom and the separate enlarged-page view working.
+- Verifies page turns with browser-generated touch gestures and mouse drags rather than synthetic touch-handler events alone.
+
 ## Approved prototype release · Destination handout booklets
 
 Publishes the reviewed full-screen booklet collection to the regular Thailand prototype address. All five supplied booklets default to shown, with saved per-booklet TD hide/show controls. Chiang Mai retains its cover/back-page preview pending a PDF export.
