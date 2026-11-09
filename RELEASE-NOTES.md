@@ -1,3 +1,7 @@
+## Cover tiles for Handouts
+
+Displays the supplied destination booklets as a two-column grid of cover images without extra titles or descriptions. Covers open the existing full-screen reader. Saved visibility and replacements are respected; the TD Suitcase retains its management controls.
+
 ## Booklet swipe repair
 
 - Handles touch, pen and mouse swipes across the complete fitted-page reading area, including the margins beside a page on wide screens.

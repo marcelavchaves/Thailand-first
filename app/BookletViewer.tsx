@@ -3,9 +3,9 @@ import {useEffect,useRef,useState,type PointerEvent} from 'react';
 import {createPortal} from 'react-dom';
 import './booklet-viewer.css';
 type Booklet={id:string;title:string;subtitle:string;pages:string[];partial:boolean};
-export function BookletButton({booklet}:{booklet:Booklet}){
+export function BookletButton({booklet,coverOnly=false}:{booklet:Booklet;coverOnly?:boolean}){
  const [open,setOpen]=useState(false);
- return <><button className="booklet-card" onClick={()=>setOpen(true)} aria-label={`Read ${booklet.title} booklet`}><img src={booklet.pages[0]} alt={`${booklet.title} original booklet cover`} loading="lazy"/><span><strong>{booklet.title}</strong><span>{booklet.subtitle}</span><small>{booklet.partial?'Cover & back-page preview':`${booklet.pages.length} pages · Original illustrated booklet`}</small><b>Open full-screen booklet →</b></span></button>{open&&<BookletReader booklet={booklet} onClose={()=>setOpen(false)}/>}</>;
+ return <><button className={coverOnly?"booklet-cover-tile":"booklet-card"} onClick={()=>setOpen(true)} aria-label={`Read ${booklet.title} booklet`}><img src={booklet.pages[0]} alt={`${booklet.title} original booklet cover`} loading="lazy"/>{!coverOnly&&<span><strong>{booklet.title}</strong><span>{booklet.subtitle}</span><small>{booklet.partial?'Cover & back-page preview':`${booklet.pages.length} pages · Original illustrated booklet`}</small><b>Open full-screen booklet →</b></span>}</button>{open&&<BookletReader booklet={booklet} onClose={()=>setOpen(false)}/>}</>;
 }
 function BookletReader({booklet:b,onClose}:{booklet:Booklet;onClose:()=>void}){
  const dialog=useRef<HTMLDialogElement>(null),gesture=useRef<{id:number;x:number;y:number}|null>(null),swiped=useRef(0);

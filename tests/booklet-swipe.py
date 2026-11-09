@@ -29,8 +29,8 @@ with sync_playwright() as p:
   route.fulfill(json=body)
  ctx.route('**/api/**',api);page=ctx.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
  def handouts():
-  page.goto(base+'/?tab=hotels');page.get_by_role('button',name='Handouts',exact=True).click();page.locator('.booklet-card').first.wait_for()
- handouts();page.locator('.booklet-card').first.click()
+  page.goto(base+'/?tab=hotels');page.get_by_role('button',name='Handouts',exact=True).click();page.locator('.booklet-cover-tile').first.wait_for()
+ handouts();page.locator('.booklet-cover-tile').first.click()
  page.get_by_role('button',name='Go to Cover',exact=True).click()
  cdp=ctx.new_cdp_session(page)
  def swipe(x1,y1,x2,y2):
@@ -51,12 +51,12 @@ with sync_playwright() as p:
  page.get_by_role('button',name='Next page',exact=True).click();assert '2 of 4' in current()
  page.get_by_role('button',name='Pages',exact=True).click();page.locator('.booklet-page-chooser button').first.click();assert '1 of 4' in current()
  page.get_by_role('button',name='＋ Zoom',exact=True).click();assert page.locator('.booklet-zoom').is_visible();page.keyboard.press('Escape')
- page.keyboard.press('Escape');page.set_viewport_size({'width':1200,'height':800});page.locator('.booklet-card').first.click()
+ page.keyboard.press('Escape');page.set_viewport_size({'width':1200,'height':800});page.locator('.booklet-cover-tile').first.click()
  swipe(1100,400,850,410);assert '2 of 4' in current(),current()
  swipe(80,400,330,410);assert '1 of 4' in current(),current()
  # A gesture that starts on the page can end outside its bounds.
  page.mouse.move(800,400);page.mouse.down();page.mouse.move(30,410,steps=10);page.mouse.up();assert '2 of 4' in current()
- page.keyboard.press('Escape');page.locator('.booklet-card').first.click();expect(page.locator('.booklet-reader-footer>span')).to_contain_text('2 of 4')
+ page.keyboard.press('Escape');page.locator('.booklet-cover-tile').first.click();expect(page.locator('.booklet-reader-footer>span')).to_contain_text('2 of 4')
  assert not errors,errors
  browser.close();server.shutdown()
  print('PASS: real browser touch and mouse swipes forward/back, landscape margins, capture outside page, vertical/short gestures, taps, buttons, zoom, chooser and remembered position.')

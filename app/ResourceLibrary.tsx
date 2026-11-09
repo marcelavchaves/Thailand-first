@@ -53,6 +53,7 @@ export function ResourceGroup({group}:{group:string}){
 }
 
 export function Handouts(){
- const {items,loaded,error}=useResources();const {authenticated}=useTDSession();
- return <>{!loaded&&<p>{error||'Checking handouts…'}</p>}{loaded&&booklets.filter(b=>{const e=items[b.id];return authenticated||e?.visible===true&&!e.deleted;}).map(b=><ResourceSlot key={b.id} id={b.id} title={b.title} group="handouts"><BookletButton booklet={b}/></ResourceSlot>)}<ResourceGroup group="handouts"/></>;
+ const {items,loaded,error}=useResources();
+ const visible=booklets.filter(b=>items[b.id]?.visible===true&&!items[b.id]?.deleted);
+ return <>{!loaded&&<p>{error||'Checking handouts…'}</p>}{loaded&&<div className="handout-cover-grid">{visible.filter(b=>!items[b.id]?.file).map(b=><BookletButton key={b.id} booklet={b} coverOnly/>)}</div>}{loaded&&visible.filter(b=>items[b.id]?.file).map(b=><ResourceSlot key={b.id} id={b.id} title={b.title} group="handouts"/>)}<ResourceGroup group="handouts"/></>;
 }
