@@ -14,7 +14,7 @@ const appIcon="/icons/kingdoms-dragons-live-192.png";
 export const metadata: Metadata = {
   title: pretour ? `${appName} · Pre-Tour Review` : testing ? `${appName} · Test` : appName,
   robots: pretour || testing ? { index: false, follow: false } : undefined,
-  description: "Your 16-day Vietnam, Cambodia & Thailand travel companion · xxx edition.",
+  description: "Your 16-day Vietnam, Cambodia & Thailand travel companion · 499th Edition.",
   applicationName: appName,
   manifest: "/manifest-live-v028.webmanifest",
   appleWebApp: { capable: true, title: appName, statusBarStyle: "default" },

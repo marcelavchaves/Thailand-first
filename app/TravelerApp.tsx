@@ -1073,7 +1073,7 @@ function TravelJournal({ date }: { date: number }) {
     <section className="journal-card">
       <div className="journal-heading">
         <div>
-          <span className="eyebrow">xxx edition</span>
+          <span className="eyebrow">499th Edition</span>
           <h2>Today’s Memories</h2>
         </div>
         <span className="journal-book">✦</span>
@@ -1778,7 +1778,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           <div className="wondercase-titles">
             <strong>{tab==="info"?<a className="wondercase-admin-entry" href="/master-admin" aria-label="Open Master Admin login">WONDERCASE</a>:"WONDERCASE"}</strong>
             <small>Vietnam, Cambodia &amp; Thailand</small>
-            <span>xxx Edition</span>
+            <span>499th Edition</span>
           </div>
         </div>
       </header>

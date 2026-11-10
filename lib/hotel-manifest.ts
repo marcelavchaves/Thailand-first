@@ -1,4 +1,5 @@
 import hotels from '../app/hotels.json';
+export const LIVE_MANIFEST_SITE_ID='2207afda-0a2b-4b67-a708-91c325bd214a';
 export const MANIFEST_SITE_ID='c1f3ce92-834f-4a1e-a84b-1551409ddb7b';
 export const manifestHotels=hotels.map((h,i)=>({id:`hotel-${i}`,name:h.name,arrival:dateFor(h.checkin),departure:dateFor(h.checkout)}));
 function dateFor(day:number){return new Date(Date.UTC(2026,10,11+day)).toISOString().slice(0,10);}
@@ -9,10 +10,10 @@ export type HotelManifest={tourName:string;tourNumber:string;director:string;sta
 export const blankEntry=():RoomEntry=>({room:'',bed:'',notes:'',important:''});
 export const preferredIn=(name:string)=>name.match(/\(([^)]+)\)/)?.[1]?.trim()||'';
 export const guestDisplayName=(g:{name:string;preferredName?:string})=>g.preferredName&&!g.name.includes(`(${g.preferredName})`)?`${g.name} (${g.preferredName})`:g.name;
-export function manifestDefaults(roster:{id:string;name:string}[],saved?:HotelManifest|null):HotelManifest{
+export function manifestDefaults(roster:{id:string;name:string;preferredName?:string;roomGroup?:string}[],saved?:HotelManifest|null):HotelManifest{
  const numbers=new Set(Object.values(saved?.guests||{}).map(g=>g.number));let next=1;
- const guests=Object.fromEntries(roster.map(g=>{while(numbers.has(String(next).padStart(3,'0')))next++;const value=saved?.guests[g.id]||{number:String(next++).padStart(3,'0'),preferredName:preferredIn(g.name),travelGroup:''};return [g.id,{notes:'',important:'',dietary:'',...value}];}));
- return {tourName:'Vietnam, Cambodia & Thailand',tourNumber:'',director:'Xavier Brunelle',start:'2026-11-16',end:'2026-12-01',nonSmoking:true,staffRoom:true,...saved,guests,hotels:Object.fromEntries(manifestHotels.map(h=>[h.id,{arrival:h.arrival,departure:h.departure,notes:'',important:'',...saved?.hotels[h.id],entries:Object.fromEntries(roster.map(g=>[g.id,saved?.hotels[h.id]?.entries[g.id]||blankEntry()]))}]))};
+ const guests=Object.fromEntries(roster.map(g=>{while(numbers.has(String(next).padStart(3,'0')))next++;const value=saved?.guests[g.id]||{number:String(next++).padStart(3,'0'),preferredName:g.preferredName??preferredIn(g.name),travelGroup:''};return [g.id,{notes:'',important:'',dietary:'',...value}];}));
+ return {tourName:'Vietnam, Cambodia & Thailand',tourNumber:'',director:'Xavier Brunelle',start:'2026-11-16',end:'2026-12-01',nonSmoking:true,staffRoom:true,...saved,guests,hotels:Object.fromEntries(manifestHotels.map(h=>[h.id,{arrival:h.arrival,departure:h.departure,notes:'',important:'',...saved?.hotels[h.id],entries:Object.fromEntries(roster.map(g=>[g.id,saved?.hotels[h.id]?.entries[g.id]||{...blankEntry(),room:g.roomGroup||''}]))}]))};
 }
 export function cleanManifest(value:unknown,roster:{id:string}[]):HotelManifest{
  if(!value||typeof value!=='object')throw Error('Check the manifest.');const v=value as any;

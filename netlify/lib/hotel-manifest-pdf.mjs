@@ -1,12 +1,12 @@
 import PDFDocument from 'pdfkit';
 import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
-import {roomGroups,guestDisplayName,manifestHotels} from '../../lib/hotel-manifest';
+import {hotelManifestReport} from '../../lib/hotel-manifest-report';
 export async function hotelManifestPdf(data,hotel,roster){
  const body=await readFile(join(process.cwd(),'scripts/fonts/DejaVuSans.ttf')),bold=await readFile(join(process.cwd(),'scripts/fonts/DejaVuSans-Bold.ttf'));
  const doc=new PDFDocument({size:'A4',layout:'landscape',margin:32,font:body,bufferPages:true,info:{Title:'Hotel guest manifest',Author:'Wondercase'}}),chunks=[];
  const done=new Promise((resolve,reject)=>{doc.on('data',c=>chunks.push(c));doc.on('end',()=>resolve(Buffer.concat(chunks)));doc.on('error',reject);});doc.registerFont('Body',body);doc.registerFont('Bold',bold);
- const sheet=data.hotels[hotel],name=manifestHotels.find(h=>h.id===hotel).name,groups=roomGroups(data,hotel,roster),left=32,width=doc.page.width-64,bottom=doc.page.height-38;
+ const report=hotelManifestReport(data,hotel,roster),left=32,width=doc.page.width-64,bottom=doc.page.height-38;
  const widths=[48,210,95,95,width-448],xs=widths.map((_,i)=>left+widths.slice(0,i).reduce((a,b)=>a+b,0)),green='#4F6B5D',red='#B42318';let y=0,page=0;
  function text(value,x,top,w,size=9,font='Body',color='#222'){
   doc.font(font).fontSize(size);const measured=doc.widthOfString(String(value));if(measured>w)doc.fontSize(size*w/measured);doc.fillColor(color).text(String(value),x,top,{lineBreak:false});
@@ -21,11 +21,9 @@ export async function hotelManifestPdf(data,hotel,roster){
  }
  function header(){
   if(page)doc.addPage();page++;
-  text('WONDERCASE · HOTEL GUEST MANIFEST',left,26,width,17,'Bold',green);text(name,left,51,width,13,'Bold');
-  text(`${data.tourName} · Tour number: ${data.tourNumber||'Not specified'} · Tour director: ${data.director}`,left,72,width,9);
-  text(`Hotel arrival: ${sheet.arrival} · Departure: ${sheet.departure} · Tour dates: ${data.start} to ${data.end}`,left,88,width,9);
-  y=108;if(data.nonSmoking){text('Non-smoking rooms requested for all guests unless otherwise noted.',left,y,width,8);y+=17;}
-  doc.rect(left,y,width,26).fill('#EEF1E9');['Guest #','Full name (preferred name)','Room type','Bed type','Notes'].forEach((h,i)=>text(h,xs[i]+6,y+8,widths[i]-12,8,'Bold',green));y+=26;
+  text(report.title,left,26,width,17,'Bold',green);text(report.hotel,left,51,width,13,'Bold');
+  y=72;for(const line of report.meta){text(line,left,y,width,9);y+=17;}y+=2;
+  doc.rect(left,y,width,26).fill('#EEF1E9');report.columns.forEach((h,i)=>text(h,xs[i]+6,y+8,widths[i]-12,8,'Bold',green));y+=26;
  }
  function row(cells,{notesRed=true,boldName=true}={}){
   const lines=cells.map((v,i)=>wrap(v,widths[i]-12,i===1&&boldName?'Bold':'Body')),total=Math.max(1,...lines.map(l=>l.length));let offset=0;
@@ -38,17 +36,8 @@ export async function hotelManifestPdf(data,hotel,roster){
   }
  }
  header();
- if(sheet.notes||sheet.important)row(['—','Hotel notes','','',[sheet.notes,sheet.important&&`IMPORTANT: ${sheet.important}`].filter(Boolean).join('\n')]);
- for(const group of groups)for(const guest of group.guests){
-  const details=data.guests[guest.id],entry=sheet.entries[guest.id];
-  const companions=details.travelGroup?groups.filter(other=>other.key!==group.key&&other.guests.some(g=>data.guests[g.id].travelGroup===details.travelGroup)):[];
-  const travel=details.travelGroup?`Traveling together: ${details.travelGroup}${companions.length?' · Traveling with room group '+companions.map(other=>`${other.key} (${other.guests.filter(g=>data.guests[g.id].travelGroup===details.travelGroup).map(g=>`${data.guests[g.id].number} ${guestDisplayName({...g,preferredName:data.guests[g.id].preferredName||g.preferredName})}`).join('; ')})`).join('; '):''}`:'';
-  const notes=[details.dietary&&`Dietary restrictions: ${details.dietary}`,details.notes,details.important&&`IMPORTANT: ${details.important}`,entry.notes,entry.important&&`IMPORTANT: ${entry.important}`,travel].filter(Boolean).join('\n')||'—';
-  row([details.number,guestDisplayName({...guest,preferredName:details.preferredName||guest.preferredName}),`${group.type}\nRoom group ${group.key}`,entry.bed==='Two beds'?'Two Beds':entry.bed||'Not specified',notes]);
- }
- if(data.staffRoom)row(['—',`${data.director} · TD (staff)`,'Single','Not specified','Staff room']);
- const counts=[1,2,3,4].map(n=>groups.filter(g=>g.guests.length===n).length),summary=`Summary: ${counts[0]} Singles, ${counts[1]} Doubles, ${counts[2]} Triples, ${counts[3]} Quads = ${roster.length} guests${data.staffRoom?' plus 1 staff single room':''}.`;
- if(y+30>bottom)header();text(summary,left,y+13,width,9,'Bold',green);
+ for(const cells of report.rows)row(cells);
+ if(y+30>bottom)header();text(report.summary,left,y+13,width,9,'Bold',green);
  const pages=doc.bufferedPageRange().count;for(let i=0;i<pages;i++){doc.switchToPage(i);text(`Prepared ${new Date().toISOString().slice(0,10)} · Page ${i+1} of ${pages}`,left,doc.page.height-23,width,7,'Body','#555');}
  doc.end();await done;return Buffer.concat(chunks);
 }
