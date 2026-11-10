@@ -11,7 +11,7 @@ globalThis.Date=class extends RealDate{constructor(...args){super(...(args.lengt
 globalThis.Netlify={env:{get:k=>k==='SITE_ID'?state.site:k==='MEAL_PIN_ENCRYPTION_KEY'?'a'.repeat(64):k==='PROTOTYPE_TD_SETUP_HASH'?createHash('sha256').update('b'.repeat(64)).digest('hex'):k==='PROTOTYPE_TD_SETUP_EXPIRES'||k==='PROTOTYPE_TD_RESET_EXPIRES'?'2026-12-01T00:00:00Z':k==='PROTOTYPE_TD_RESET_HASH'?createHash('sha256').update('c'.repeat(64)).digest('hex'):undefined}};
 const storage=`export function getStore({name}){const s=globalThis.mealTest;if(!s.stores.has(name))s.stores.set(name,new Map());const map=s.stores.get(name);return {get:async k=>structuredClone(map.get(k)?.data??null),getWithMetadata:async k=>{if(s.beforeRead)await s.beforeRead(name,k,map);return structuredClone(map.get(k)??null)},setJSON:async(k,data,options={})=>{const old=map.get(k);if(options.onlyIfNew&&old||options.onlyIfMatch&&options.onlyIfMatch!==old?.etag)return {modified:false};const etag=String(++s.sequence);map.set(k,{data:structuredClone(data),etag});return {modified:true,etag}},delete:async k=>map.delete(k)}}`;
 try{
- await build({stdin:{contents:'export {default as handler} from "./netlify/functions/meal-choices.mts";export {default as setup} from "./netlify/functions/prototype-td-setup.mts"; export {menus,MEAL_DEADLINE,mealReport} from "./lib/meal-choices";',resolveDir:root,loader:'ts'},outfile:join(temp,'bundle.mjs'),bundle:true,platform:'node',format:'esm',external:['pdfkit'],plugins:[{name:'test-storage',setup(b){b.onResolve({filter:/^@netlify\/blobs$|\/td-auth$/},a=>({path:a.path,namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},a=>({contents:a.path.endsWith('/td-auth')?'export async function hasTDSession(){return globalThis.mealTest.td} export function sameOrigin(r){return r.headers.get("origin")===new URL(r.url).origin} export async function tdPasswordConfigured(){return !!globalThis.mealTest.stores.get("td-credentials")?.get("password")} export async function resetTDPassword(next){globalThis.mealTest.stores.get("td-credentials").set("password",{data:{reset:true},etag:"reset"});return true} export async function passwordSessionCookie(){return "test-setup-cookie=1; Secure; HttpOnly"}':storage}));}}]});
+ await build({stdin:{contents:'export {default as handler} from "./netlify/functions/meal-choices.mts";export {default as setup} from "./netlify/functions/prototype-td-setup.mts"; export {menus,MEAL_DEADLINE,mealReport} from "./lib/meal-choices";',resolveDir:root,loader:'ts'},outfile:join(temp,'bundle.mjs'),bundle:true,platform:'node',format:'esm',external:['pdfkit','sharp'],plugins:[{name:'test-storage',setup(b){b.onResolve({filter:/^@netlify\/blobs$|\/td-auth$/},a=>({path:a.path,namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},a=>({contents:a.path.endsWith('/td-auth')?'export async function hasTDSession(){return globalThis.mealTest.td} export function sameOrigin(r){return r.headers.get("origin")===new URL(r.url).origin} export async function tdPasswordConfigured(){return !!globalThis.mealTest.stores.get("td-credentials")?.get("password")} export async function resetTDPassword(next){globalThis.mealTest.stores.get("td-credentials").set("password",{data:{reset:true},etag:"reset"});return true} export async function passwordSessionCookie(){return "test-setup-cookie=1; Secure; HttpOnly"}':storage}));}}]});
  const {handler,setup,menus,MEAL_DEADLINE,mealReport}=await import(join(temp,'bundle.mjs'));
  const req=(method='GET',body=null,query='',cookie='',origin='https://prototype.test')=>new Request('https://prototype.test/api/meal-choices'+query,{method,headers:{origin,'Content-Type':'application/json','x-nf-client-connection-ip':'192.0.2.1',cookie},body:body?JSON.stringify(body):undefined});
  const call=async(method,body,query='',cookie='')=>{if(method==='PUT'&&body&&!Object.hasOwn(body,'guestId')){const token=cookie.split('=')[1];const session=token?state.stores.get('meal-choices-v1')?.get('session/'+createHash('sha256').update(token).digest('hex'))?.data:null;body={...body,guestId:session?.guestId};}return handler(req(method,body,query,cookie));};
@@ -21,6 +21,7 @@ try{
  const [a,b]=initial.guests;
  assert.equal((await call('GET',null,'?action=td')).status,401);
  assert.equal((await call('GET',null,'?action=export&format=csv')).status,401);
+ assert.equal((await call('GET',null,'?action=export&format=pdf&layout=guest-table')).status,401);
  const deadlines={...initial.deadlines,vedana:'2026-11-16T10:30:00.000Z',farewell:'2026-11-17T12:00:00.000Z'};
  assert.equal((await call('POST',{action:'update-deadlines',deadlines,revision:null})).status,401);
  state.td=true;
@@ -101,6 +102,15 @@ try{
  response=await call('GET',null,'?action=export&format=csv&meal=vedana');assert.equal(response.status,200);const csv=await response.text();assert(csv.includes(a.name));assert(csv.includes('Peanut allergy'));assert(!csv.includes('New dietary note'));assert(!csv.includes('Lakorn'));assert(csv.includes('Deadline (Hanoi time)'));
  response=await call('GET',null,'?action=export&format=csv&meal=farewell');assert((await response.text()).includes("'=HYPERLINK"));
  for(const format of ['xlsx','pdf']){response=await call('GET',null,'?action=export&format='+format+'&meal=vedana');assert.equal(response.status,200);const bytes=Buffer.from(await response.arrayBuffer());assert(bytes.subarray(0,4).equals(Buffer.from(format==='pdf'?'%PDF':'PK\x03\x04')));await writeFile('/tmp/meal-test-export.'+format,bytes);}
+ const sharp=(await import('sharp')).default;
+ const photo=await sharp({create:{width:40,height:50,channels:3,background:'#4F6B5D'}}).jpeg().toBuffer();
+ state.stores.get('guest-profiles').set('guest/'+a.id,{data:{photo:'data:image/jpeg;base64,'+photo.toString('base64')},etag:'photo'});
+ response=await call('GET',null,'?action=export&format=pdf&layout=guest-table&meal=vedana');assert.equal(response.status,200);
+ assert.match(response.headers.get('content-disposition'),/landscape-guests.pdf/);
+ await writeFile('/tmp/meal-guest-table-handler.pdf',Buffer.from(await response.arrayBuffer()));
+ assert.equal((await call('GET',null,'?action=export&format=csv&layout=guest-table')).status,400);
+ assert.equal((await call('GET',null,'?action=export&format=pdf&layout=invalid')).status,400);
+
  const historyCount=state.stores.get('meal-choices-v1').get('choice/'+a.id).data.audit.length;
  await ok(await call('POST',{action:'replace-link',guestId:a.id}));state.td=false;
  assert.equal((await ok(await call('GET',null,'',cookie))).guest,null);
