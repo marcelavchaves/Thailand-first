@@ -1771,9 +1771,9 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
       )}
       <header className="topbar">
         <div className="wondercase-lockup">
-          <WondercaseMark />
+          {tab==="info"?<a className="wondercase-logo-admin" href="/master-admin" aria-label="Open Master Admin login"><WondercaseMark/></a>:<WondercaseMark/>}
           <div className="wondercase-titles">
-            <strong><a className="wondercase-admin-entry" href="/master-admin">WONDERCASE</a></strong>
+            <strong>{tab==="info"?<a className="wondercase-admin-entry" href="/master-admin" aria-label="Open Master Admin login">WONDERCASE</a>:"WONDERCASE"}</strong>
             <small>Vietnam, Cambodia &amp; Thailand</small>
             <span>xxx Edition</span>
           </div>
