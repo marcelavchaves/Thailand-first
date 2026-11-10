@@ -5,3 +5,5 @@
 
 /* Tauck sign-up order reads down the left column, then the right. */
 .guest-list.guest-grid{grid-auto-flow:column}
+
+.roster-manager select{width:100%;min-width:0;padding:10px;border:1px solid var(--line);border-radius:5px;color:var(--brand-green);background:#fff;font:inherit}.roster-room-groups{margin:18px 0;padding:12px;border:1px solid var(--line);border-radius:8px}.roster-room-members{max-height:300px;overflow:auto;background:white;padding:8px}.roster-room-members label{flex-direction:row;align-items:flex-start;gap:10px}.roster-room-members input{width:18px;height:18px;flex-shrink:0}.roster-room-members small{display:block}.roster-manager .roster-remove{color:#923f35}@media(max-width:600px){.roster-edit-grid{grid-template-columns:1fr}}

@@ -4,7 +4,7 @@ import {GUEST_IMPORT_VERSION} from '../shared/tour-import.mjs';
 const mock=`export function getStore(){return {getWithMetadata:async k=>globalThis.rosterTest.data.get(k)||null,setJSON:async(k,data,o)=>{const old=globalThis.rosterTest.data.get(k);if(globalThis.rosterTest.race||o.onlyIfNew&&old||o.onlyIfMatch&&old?.etag!==o.onlyIfMatch)return {modified:false};const etag=String(++globalThis.rosterTest.seq);globalThis.rosterTest.data.set(k,{data:structuredClone(data),etag});return {modified:true,etag};}}}`;
 await build({entryPoints:['netlify/functions/guest-roster.mts'],outfile:'.pdf-build/roster-test.mjs',bundle:true,platform:'node',format:'esm',plugins:[{name:'mock',setup(b){b.onResolve({filter:/td-auth|^@netlify\/blobs$/},a=>({path:a.path,namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path.includes('td-auth')?`export async function hasTDSession(){return globalThis.rosterTest.td};export function sameOrigin(r){return r.headers.get('origin')===new URL(r.url).origin}`:mock,loader:'js'}));}}]});
 await build({entryPoints:['lib/guest-roster.ts'],outfile:'.pdf-build/roster-parser.mjs',bundle:true,platform:'node',format:'esm'});
-const {default:handler}=await import('../.pdf-build/roster-test.mjs');const {parseGuestText,cleanGuests}=await import('../.pdf-build/roster-parser.mjs');
+const {default:handler}=await import('../.pdf-build/roster-test.mjs');const {parseGuestText,cleanGuests,assignGuestRoomGroup,guestDisplayName}=await import('../.pdf-build/roster-parser.mjs');
 globalThis.rosterTest={data:new Map([['roster',{data:{guests:[],revealed:false,guestListVersion:GUEST_IMPORT_VERSION},etag:'initial-empty'}]]),seq:0,td:false};
 const call=(body,origin='https://test.example')=>handler(new Request('https://test.example/api/guest-roster',{method:body===undefined?'GET':'POST',headers:{Origin:origin},body:body===undefined?undefined:JSON.stringify(body)}));
 let guests=parseGuestText('Name,Hometown,Bio,Phone,Email,Social link\nTest One,"Boston, MA",Likes books,+15555550101,one@example.test,https://example.test/one\nTest Two,London,Likes walking,,,');assert.equal(guests.length,2);assert.equal(guests[0].origin,'Boston, MA');assert.equal(guests[0].shareContact,false);
@@ -50,3 +50,27 @@ body=await(await call()).json();assert.deepEqual(body.guestCardFeatures,{safe:!f
 assert.equal((await call({guestCardFeatures:{mealChoices:!false},revision:body.revision})).status,200);
 body=await(await call()).json();assert.deepEqual(body.guestCardFeatures,{safe:!false,mealChoices:!false});
 console.log('PASS: guest card defaults, independent toggles, public visibility, TD authorization, validation, stale writes and preservation across roster edits.');
+
+// Loaded-roster editing: names, preferred names, room groups, add and delete.
+body=await(await call()).json();const originalSafe=body.guests[0].safeId;
+let edited=assignGuestRoomGroup(body.guests,null,'Room A',body.guests.map(g=>g.id));
+edited[0]={...edited[0],name:'Updated Full Name',preferredName:'Preferred'};
+assert.equal((await call({guests:edited,revision:body.revision})).status,200);
+body=await(await call()).json();assert.equal(body.guests[0].safeId,originalSafe);assert.equal(body.guests[0].preferredName,'Preferred');assert.equal(body.guests[0].roomGroup,'Room A');assert.equal(guestDisplayName(body.guests[0]),'Updated Full Name (Preferred)');
+globalThis.rosterTest.td=false;const publicRoster=await(await call()).json();assert.equal(publicRoster.guests[0].preferredName,'Preferred');assert(!('roomGroup' in publicRoster.guests[0]));
+globalThis.rosterTest.td=true;
+const grouped=assignGuestRoomGroup(body.guests,'Room A','Renamed room',[body.guests[0].id]);assert.equal(grouped[1].roomGroup,'');assert.equal(grouped[0].roomGroup,'Renamed room');
+assert.throws(()=>assignGuestRoomGroup(body.guests,null,'Room A',[body.guests[0].id]));
+assert.throws(()=>assignGuestRoomGroup(body.guests,null,'New',[]));assert.throws(()=>assignGuestRoomGroup(body.guests,null,'New',['unknown']));
+assert.throws(()=>assignGuestRoomGroup(body.guests,null,'New',[body.guests[0].id,body.guests[0].id]));
+assert.throws(()=>cleanGuests([{...body.guests[0],preferredName:'X'.repeat(81)}]));assert.throws(()=>cleanGuests([{...body.guests[0],roomGroup:'X'.repeat(61)}]));
+const five=parseGuestText('One Guest|City\nTwo Guest|City\nThree Guest|City\nFour Guest|City\nFive Guest|City');
+assert.throws(()=>cleanGuests(five.map(g=>({...g,roomGroup:'One room'}))));assert.throws(()=>assignGuestRoomGroup(five,null,'One room',five.map(g=>g.id)));
+const extra={...parseGuestText('Added Traveler|City')[0],preferredName:'New',roomGroup:''};
+assert.equal((await call({guests:[...grouped,extra],revision:body.revision})).status,200);
+body=await(await call()).json();assert.equal(body.guests.length,3);assert.equal(body.guests[2].preferredName,'New');
+const extraSafe=body.guests[2].safeId;
+assert.equal((await call({guests:[body.guests[0],body.guests[2]],revision:body.revision})).status,200);
+body=await(await call()).json();assert.equal(body.guests.length,2);assert.equal(body.guests[1].safeId,extraSafe);assert.equal(body.guests[0].safeId,originalSafe);
+assert.equal((await call({guests:five.map(g=>({...g,roomGroup:'Too many'})),revision:body.revision})).status,400);
+console.log('PASS: loaded guest edits, preferred-name display/validation, private room groups, group membership edits, max occupancy, add/delete and permanent IDs.');
