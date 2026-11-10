@@ -2,7 +2,7 @@ import type {Config} from '@netlify/functions';import {randomUUID,randomBytes,cr
 type Doc={id:string;name:string;type:string;size:number;created:string};
 const reply=(body:unknown,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','Vary':'Cookie'}});
 export default async function handler(request:Request){try{
- const account=await safeSession(request);if(!account)return reply({error:'Unlock Traveler Safe first.'},401);
+ const account=await safeSession(request);if(!account)return reply({error:'Sign in to Traveler Safe first.'},401);
  const store=safeStore('documents'),indexKey=`${account.id}/index`;const record=await store.getWithMetadata(indexKey,{type:'json'});const docs:Doc[]=(record?.data as any)?.documents||[];
  const id=new URL(request.url).searchParams.get('id');
  if(request.method==='GET'){

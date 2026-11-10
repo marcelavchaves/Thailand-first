@@ -1670,7 +1670,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
   useEffect(() => {
     setNow(new Date());
     const timer = window.setInterval(() => setNow(new Date()), 1000);
-    if(/(?:invite_token|recovery_token|confirmation_token|access_token)=/.test(window.location.hash)){window.location.replace('/master-admin'+window.location.hash);return()=>window.clearInterval(timer);}
+    if(/(?:invite_token|recovery_token|confirmation_token|access_token)=/.test(window.location.hash)){window.location.replace((sessionStorage.getItem('wondercase-auth-target')==='safe'?'/traveler-safe':'/master-admin')+window.location.hash);return()=>window.clearInterval(timer);}
     const params = new URLSearchParams(window.location.search);
     const requestedDay = Number(params.get('day'));
     if (requestedDay >= 1 && requestedDay <= 16) setSelected(requestedDay + 4);

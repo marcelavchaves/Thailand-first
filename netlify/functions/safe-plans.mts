@@ -1,7 +1,7 @@
 import type {Config} from '@netlify/functions';import {safeSession,safeStore} from '../lib/safe-auth';import {safeDates,validateActivities} from '../../lib/safe-plans';
 const reply=(body:unknown,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','Vary':'Cookie'}});
 export default async function handler(request:Request){try{const account=await safeSession(request);if(!account)return reply({error:'Unlock Traveler Safe first.'},401);
- const date=new URL(request.url).searchParams.get('date');if(!date||!safeDates.includes(date))return reply({error:'Choose a day from October 1–18.'},400);
+ const date=new URL(request.url).searchParams.get('date');if(!date||!safeDates.includes(date))return reply({error:'Choose a day from November 14 – December 3, 2026.'},400);
  const store=safeStore('plans'),key=`${account.id}/${date}`;const record=await store.getWithMetadata(key,{type:'json'});
  if(request.method==='GET')return reply({activities:(record?.data as any)?.activities||[],revision:record?.etag||null});
  if(request.method!=='POST')return reply({error:'Method not allowed.'},405);if(request.headers.get('origin')!==new URL(request.url).origin)return reply({error:'Open this action from the app.'},403);
