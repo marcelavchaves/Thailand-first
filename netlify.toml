@@ -35,3 +35,6 @@
 
 [functions."meal-choices"]
   included_files = ["scripts/fonts/**"]
+
+[functions."hotel-manifest"]
+  included_files = ["scripts/fonts/**"]

@@ -10,6 +10,7 @@ import useXavierPhoto from './useXavierPhoto';
 import './td-suitcase.css';
 import WondercaseMark from './WondercaseMark';
 import GuestProfiles from './GuestProfiles';
+import HotelManifest from './HotelManifest';
 import MealChoicesAdmin from './MealChoicesAdmin';
 
 type Day={date:number;title:string;events:[string,string][];note:string};
@@ -24,7 +25,7 @@ export default function TDSuitcase({days,dateLabel,announcement,resources,groups
   <header className="td-suitcase-heading"><WondercaseMark/><div><span className="eyebrow">WONDERCASE · K&D103</span><h1>TD Suitcase</h1><p>{authenticated?(masterAdmin?'Master Admin':'Xavier’s tour workspace'):'Tour director sign-in'}</p></div></header>
   {!authenticated?<div className="td-locked"><h2>Everything for your tour, in one place.</h2><p>Sign in to share announcements, adjust each day’s schedule and prepare documents for your travelers.</p><TDLogin open onClose={onBack} onSignedIn={()=>{}}/>{configured===null&&<button onClick={()=>void refresh()}>Check connection</button>}</div>:<>
    <TDLogin open={false} onClose={()=>{}}/>{masterAdmin&&<p><a className="td-back" href="/master-admin">Master Admin · Reset TD password →</a></p>}
-   <nav className="td-workspace-nav" aria-label="TD Suitcase sections">{[['announcements','Announcements'],['schedule','Daily schedule'],['documents','Documents & menus'],['maps','Maps'],['travelers','Travelers'],['account','My account'],...(process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'?[['meal-choices','Meal choices']]:[])].map(([id,title])=><button key={id} aria-pressed={section===id} onClick={()=>setSection(id)}>{title}</button>)}</nav>
+   <nav className="td-workspace-nav" aria-label="TD Suitcase sections">{[['announcements','Announcements'],['schedule','Daily schedule'],['documents','Documents & menus'],['maps','Maps'],['travelers','Travelers'],['hotel-manifests','Hotel manifests'],['account','My account'],...(process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'?[['meal-choices','Meal choices']]:[])].map(([id,title])=><button key={id} aria-pressed={section===id} onClick={()=>setSection(id)}>{title}</button>)}</nav>
    {(section==='announcements'||section==='schedule')&&<label className="td-day-picker">Journey day<select value={dayId} onChange={e=>setDayId(Number(e.target.value))}>{days.map((d,i)=><option key={d.date} value={d.date}>Day {i+1} · {dateLabel(d.date)} · {d.title}</option>)}</select></label>}
    {(section==='announcements'||section==='schedule')&&<DayOptions day={dayId}/>}
    {section==='announcements'&&<div key={`note-${dayId}`}><p className="td-hint">Prepare an announcement for the selected day, then use the show/hide option to release it.</p>{announcement(dayId)}</div>}
@@ -32,6 +33,7 @@ export default function TDSuitcase({days,dateLabel,announcement,resources,groups
    {section==='documents'&&<div><h2>Documents &amp; menus</h2><p className="td-hint">Upload PDFs or images up to 3 MB. New uploads stay hidden until you reveal them. Add handouts as needed; this collection starts empty. Revealed documents appear in Essentials under the matching collection or hotel; the Maps collection appears in the Map tab.</p><label className="td-day-picker">Collection<select value={group} onChange={e=>setGroup(e.target.value)}>{groups.map(g=><option key={g.id} value={g.id}>{g.title}</option>)}</select></label>{error&&<p role="alert">{error} <button onClick={()=>void reload()}>Try again</button></p>}{loaded&&<p className="td-hint">{Object.values(items).filter(i=>i.group===group&&i.visible&&!i.deleted).length} released in this collection</p>}{resources.filter(r=>r.group===group).map(r=><ResourceSlot key={r.id} id={r.id} title={r.title} group={r.group}>{r.content}</ResourceSlot>)}<ResourceGroup key={group} group={group}/></div>}
    {section==='maps'&&<CityMapUploads/>}
    {section==='meal-choices'&&<MealChoicesAdmin/>}
+   {section==='hotel-manifests'&&<HotelManifest/>}
    {section==='travelers'&&<div><h2>Traveler profiles</h2><GuestProfiles directorMode/></div>}
    {section==='account'&&(masterAdmin?<div><h2>Master admin</h2><p>Manage your account and reset Xavier’s password from your admin workspace.</p><a href="/master-admin">Open master-admin workspace →</a></div>:<TDAccount/>)}
   </>}
