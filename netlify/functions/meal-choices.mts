@@ -1,3 +1,4 @@
+import {withCurrentDietary} from '../lib/guest-dietary';
 import type {Config} from '@netlify/functions';
 import {getStore} from '@netlify/blobs';
 import {createHash,randomBytes,randomInt,scryptSync,timingSafeEqual,createCipheriv,createDecipheriv} from 'node:crypto';
@@ -30,7 +31,7 @@ const protection=async(id:string)=>await store().get('protection/'+id,{type:'jso
 const validPin=(pin:unknown,p:Protection)=>typeof pin==='string'&&/^\d{4}$/.test(pin)&&!!p.salt&&!!p.hash&&timingSafeEqual(scryptSync(pin,p.salt,64),Buffer.from(p.hash,'hex'));
 type Access={hash:string;version:string;encrypted:Credential['encrypted']};
 function travelerSubmission(value:unknown,visibility?:MealVisibility){
- if(!value)return null;const {audit,...submission}=value as MealSubmission;
+ if(!value)return null;const {audit,dietarySynced,...submission}=value as MealSubmission;
  if(!visibility)return submission;
  const visible=(entries:Record<string,unknown>)=>Object.fromEntries(Object.entries(entries).filter(([id])=>visibility[id]));
  return {...submission,selections:visible(submission.selections),...(submission.mealStates?{mealStates:visible(submission.mealStates)}:{})};
@@ -74,7 +75,7 @@ async function generateLink(id:string,replace=false){
  if(!saved.modified)throw Error('The private link changed in another window. Refresh before trying again.');return true;
 }
 async function report(guests:{id:string;name:string}[]):Promise<MealReportGuest[]>{
- return Promise.all(guests.map(async g=>({id:g.id,name:g.name,pinReady:!!(await protection(g.id))?.protected,accessReady:!!await store().get('access/'+g.id,{type:'json'}),submission:await store().get('choice/'+g.id,{type:'json'}) as MealSubmission|null})));
+ return Promise.all(guests.map(async g=>({id:g.id,name:g.name,pinReady:!!(await protection(g.id))?.protected,accessReady:!!await store().get('access/'+g.id,{type:'json'}),submission:await withCurrentDietary(g.id,await store().get('choice/'+g.id,{type:'json'}) as MealSubmission|null)})));
 }
 export default async function handler(request:Request){
  try{
@@ -111,12 +112,12 @@ export default async function handler(request:Request){
     if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
     const guest=guests.find(g=>g.id===url.searchParams.get('guestId'));if(!guest)return reply({error:'Choose a current traveler.'},400);
     const choice=await store().getWithMetadata('choice/'+guest.id,{type:'json'});
-    return reply({...metadata(settings),guest,submission:travelerSubmission(choice?.data),revision:choice?.etag||null});
+    return reply({...metadata(settings),guest,submission:travelerSubmission(await withCurrentDietary(guest.id,choice?.data as MealSubmission|null)),revision:choice?.etag||null});
    }
    if(action!=='traveler')return reply({error:'Not found.'},404);
    const guest=await authenticatedGuest(request,guests),td=await hasTDSession(request);
    const choice=guest?await store().getWithMetadata('choice/'+guest.id,{type:'json'}):null;
-   return reply({...metadata(settings),td,guests:revealed?await Promise.all(guests.map(async g=>({id:g.id,name:g.name,protected:!!(await protection(g.id))?.protected}))):[],guest:guest?{id:guest.id,name:guest.name,protected:!!(await protection(guest.id))?.protected}:null,submission:travelerSubmission(choice?.data,td?undefined:settings.visibility),revision:choice?.etag||null});
+   return reply({...metadata(settings),td,guests:revealed?await Promise.all(guests.map(async g=>({id:g.id,name:g.name,protected:!!(await protection(g.id))?.protected}))):[],guest:guest?{id:guest.id,name:guest.name,protected:!!(await protection(guest.id))?.protected}:null,submission:travelerSubmission(guest?await withCurrentDietary(guest.id,choice?.data as MealSubmission|null):null,td?undefined:settings.visibility),revision:choice?.etag||null});
   }
   if(request.method==='DELETE'){
    const token=tokenOf(request);if(token)await store().delete('session/'+hash(token));
@@ -268,7 +269,7 @@ export default async function handler(request:Request){
   }
   const allSubmitted=menus.every(m=>mealStates[m.id]?.status==='submitted');
   const entry:MealAuditEntry={id:randomBytes(16).toString('hex'),at:now,actor:guest.actor,action:body.action,meals:targets.map(id=>({menuId:id,before:{choices:old?.selections[id]||{},state:mealState(old,id)},after:{choices:selections[id],state:mealStates[id]}}))};
-  const submission:MealSubmission={selections,mealStates,dietary:clean.dietary,status:allSubmitted?'submitted':'draft',updatedAt:now,submittedAt:allSubmitted?now:null,audit:[...(old?.audit||[]),entry]};
+  const submission:MealSubmission={dietarySynced:true,selections,mealStates,dietary:clean.dietary,status:allSubmitted?'submitted':'draft',updatedAt:now,submittedAt:allSubmitted?now:null,audit:[...(old?.audit||[]),entry]};
   const saved=await store().setJSON('choice/'+guest.id,submission,previous?{onlyIfMatch:previous.etag}:{onlyIfNew:true});
   if(!saved.modified)return reply({error:'Your choices changed in another window. Reload before saving.'},409);
   return reply({submission:travelerSubmission(submission,canEditHidden?undefined:settings.visibility),revision:saved.etag,...metadata(settings)});

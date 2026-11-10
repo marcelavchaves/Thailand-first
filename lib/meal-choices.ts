@@ -7,7 +7,7 @@ export type Selections=Record<string,Record<string,string>>;
 export const MEAL_PINS_REQUIRED=false;
 export type MealState={status:'draft'|'submitted';dietary:string;updatedAt:string;submittedAt:string|null};
 export type MealAuditEntry={id:string;at:string;actor:{type:'traveler-link'|'td'|'public'|'pin'|'td-paper';label:string};action:'save'|'submit';meals:{menuId:string;before:{choices:Record<string,string>;state:MealState|null};after:{choices:Record<string,string>;state:MealState}}[]};
-export type MealSubmission={selections:Selections;dietary:string;status:'draft'|'submitted';updatedAt:string;submittedAt:string|null;mealStates?:Record<string,MealState>;audit?:MealAuditEntry[]};
+export type MealSubmission={dietarySynced?:boolean;selections:Selections;dietary:string;status:'draft'|'submitted';updatedAt:string;submittedAt:string|null;mealStates?:Record<string,MealState>;audit?:MealAuditEntry[]};
 export type MealDeadlines=Record<string,string>;
 export type MealVisibility=Record<string,boolean>;
 export const defaultMealVisibility=():MealVisibility=>Object.fromEntries(menus.map(m=>[m.id,true]));
