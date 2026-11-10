@@ -23,9 +23,9 @@ export default function TDSuitcase({days,dateLabel,announcement,resources,groups
  const {items,loaded,error,reload}=useResources();
  return <section className="td-suitcase section">
   <button className="td-back" onClick={onBack}>← Back to the journey</button>
-  <header className="td-suitcase-heading"><WondercaseMark/><div><span className="eyebrow">WONDERCASE · K&D103</span><h1>TD Suitcase</h1><p>{authenticated?(masterAdmin?'Marcela · Master admin':'Xavier’s tour workspace'):'Tour director sign-in'}</p></div></header>
+  <header className="td-suitcase-heading"><WondercaseMark/><div><span className="eyebrow">WONDERCASE · K&D103</span><h1>TD Suitcase</h1><p>{authenticated?(masterAdmin?'Master Admin':'Xavier’s tour workspace'):'Tour director sign-in'}</p></div></header>
   {!authenticated?<div className="td-locked"><h2>Everything for your tour, in one place.</h2><p>Sign in to share announcements, adjust each day’s schedule and prepare documents for your travelers.</p><TDLogin open onClose={onBack} onSignedIn={()=>{}}/>{configured===null&&<button onClick={()=>void refresh()}>Check connection</button>}</div>:<>
-   <TDLogin open={false} onClose={()=>{}}/>
+   <TDLogin open={false} onClose={()=>{}}/>{masterAdmin&&<p><a className="td-back" href="/master-admin">Master Admin · Reset TD password →</a></p>}
    <nav className="td-workspace-nav" aria-label="TD Suitcase sections">{[['announcements','Announcements'],['schedule','Daily schedule'],['documents','Documents & menus'],['maps','Maps'],['travelers','Travelers'],['hotel-manifests','Hotel manifests'],['account','My account'],...(process.env.NEXT_PUBLIC_MEAL_CHOICES==='true'?[['meal-choices','Meal choices']]:[])].map(([id,title])=><button key={id} aria-pressed={section===id} onClick={()=>setSection(id)}>{title}</button>)}</nav>
    {(section==='announcements'||section==='schedule')&&<label className="td-day-picker">Journey day<select value={dayId} onChange={e=>setDayId(Number(e.target.value))}>{days.map((d,i)=><option key={d.date} value={d.date}>Day {i+1} · {dateLabel(d.date)} · {d.title}</option>)}</select></label>}
    {(section==='announcements'||section==='schedule')&&<DayOptions day={dayId}/>}
