@@ -1,5 +1,6 @@
 import menus from '../app/meal-menus.json';
 export {menus};
+export const PROTOTYPE_SITE_ID='c1f3ce92-834f-4a1e-a84b-1551409ddb7b';
 export const MEAL_SITE_IDS=['c1f3ce92-834f-4a1e-a84b-1551409ddb7b','2207afda-0a2b-4b67-a708-91c325bd214a'];
 export const WELCOME_DINNER_AT='2026-11-16T19:00:00+07:00';
 export const MEAL_DEADLINE=new Date(Date.parse(WELCOME_DINNER_AT)-30*60*1000).toISOString();

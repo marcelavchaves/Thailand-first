@@ -22,7 +22,8 @@ function workbook(report:Report){const sheets=tables(report);return zip([
  ...sheets.map((s,i)=>({name:`xl/worksheets/sheet${i+1}.xml`,data:`<?xml version="1.0"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${(i===0?[25,35,25,18,25,45,55,18,25]:[25,18,45,12]).map((width,c)=>`<col min="${c+1}" max="${c+1}" width="${width}" customWidth="1"/>`).join('')}</cols><sheetData>${s.rows.map((row,n)=>`<row r="${n+1}">${row.map((v,c)=>`<c r="${String.fromCharCode(65+c)}${n+1}" s="${n===0?1:0}" t="${typeof v==='number'?'n':'inlineStr'}">${typeof v==='number'?`<v>${v}</v>`:`<is><t xml:space="preserve">${xml(v)}</t></is>`}</c>`).join('')}</row>`).join('')}</sheetData></worksheet>`}))
 ]);}
 
-export async function exportMeals(report:Report,format:string,meal:string){
+export async function exportMeals(report:Report,format:string,meal:string,guestTable?:{id:string;name:string;number:number;photo?:string|null}[]){
+ if(guestTable){const {renderMealGuestTablePdf}=await import('./meal-guest-table-pdf.mjs');return {bytes:await renderMealGuestTablePdf(report,guestTable),type:'application/pdf'};}
  if(format==='csv')return {bytes:Buffer.from('\ufeff'+tables(report).map(t=>[t.name,...t.rows.map(row=>row.map(csvCell).join(','))].join('\r\n')).join('\r\n\r\n')),type:'text/csv; charset=utf-8'};
  if(format==='xlsx')return {bytes:workbook(report),type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'};
  const {renderMealPdf}=await import('./meal-report-pdf.mjs');
