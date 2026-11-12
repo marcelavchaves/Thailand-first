@@ -71,7 +71,13 @@ export async function renderMealGuestTablePdf(report, guests){
     });
     const image=photos.get(guest.id),photoX=xs[4]+(widths[4]-50)/2;
     if(image)doc.image(image,photoX,y+7,{fit:[50,50],align:'center',valign:'center'});
-    else text('No photo',xs[4]+5,y+26,widths[4]-10,8);
+    else {
+     // Friendly vector photo placeholder: a framed landscape, sun and sparkle.
+     const px=photoX,py=y+7;doc.save();doc.roundedRect(px,py,50,50,9).fill('#EEF1E9');
+     doc.lineWidth(1.3).strokeColor(green).roundedRect(px+8,py+12,34,27,4).stroke();
+     doc.circle(px+18,py+21,3).fill(gold);doc.strokeColor(green).lineJoin('round').moveTo(px+10,py+35).lineTo(px+21,py+26).lineTo(px+28,py+32).lineTo(px+33,py+28).lineTo(px+40,py+35).stroke();
+     doc.strokeColor(gold).lineWidth(1.5).moveTo(px+39,py+5).lineTo(px+39,py+11).moveTo(px+36,py+8).lineTo(px+42,py+8).stroke();doc.restore();
+    }
     y+=height;offset+=count;
     if(offset<total)startPage(menu,false);
    }

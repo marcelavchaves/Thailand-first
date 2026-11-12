@@ -99,8 +99,11 @@ try{
  saved=await ok(await call('PUT',{action:'submit',selections:changed,dietary:'=HYPERLINK("bad")\nNew dietary note',revision:saved.revision},'',cookie));
  assert.equal(saved.submission.selections.vedana.main,selections.vedana.main);assert.equal(saved.submission.mealStates.vedana.dietary,'Peanut allergy');assert.equal(saved.submission.mealStates.farewell.dietary,'=HYPERLINK("bad")\nNew dietary note');assert.equal(saved.submission.status,'submitted');
  state.td=true;
- response=await call('GET',null,'?action=export&format=csv&meal=vedana');assert.equal(response.status,200);const csv=await response.text();assert(csv.includes(a.name));assert(csv.includes('Peanut allergy'));assert(!csv.includes('New dietary note'));assert(!csv.includes('Lakorn'));assert(csv.includes('Deadline (Hanoi time)'));
- response=await call('GET',null,'?action=export&format=csv&meal=farewell');assert((await response.text()).includes("'=HYPERLINK"));
+ const snapshot=()=>JSON.stringify([...state.stores].flatMap(([name,map])=>[...map].map(([key,value])=>[name,key,value])).sort((a,b)=>(a[0]+'/'+a[1]).localeCompare(b[0]+'/'+b[1])));
+ const retained=snapshot();
+ response=await call('GET',null,'?action=export&format=csv&meal=vedana');assert.equal(response.status,307);assert.match(response.headers.get('location'),/format=xlsx/);
+ response=await call('GET',null,'?action=export&format=xlsx&meal=vedana');assert.equal(response.status,200);const excel=(Buffer.from(await response.arrayBuffer())).toString();assert(excel.includes(a.name));assert(excel.includes('Peanut allergy'));assert(!excel.includes('New dietary note'));assert(!excel.includes('Lakorn'));assert(excel.includes('Deadline (Hanoi time)'));
+ response=await call('GET',null,'?action=export&format=xlsx&meal=farewell');assert((Buffer.from(await response.arrayBuffer())).toString().includes('=HYPERLINK(&quot;bad&quot;)'));
  for(const format of ['xlsx','pdf']){response=await call('GET',null,'?action=export&format='+format+'&meal=vedana');assert.equal(response.status,200);const bytes=Buffer.from(await response.arrayBuffer());assert(bytes.subarray(0,4).equals(Buffer.from(format==='pdf'?'%PDF':'PK\x03\x04')));await writeFile('/tmp/meal-test-export.'+format,bytes);}
  const sharp=(await import('sharp')).default;
  const photo=await sharp({create:{width:40,height:50,channels:3,background:'#4F6B5D'}}).jpeg().toBuffer();
@@ -110,6 +113,8 @@ try{
  await writeFile('/tmp/meal-guest-table-handler.pdf',Buffer.from(await response.arrayBuffer()));
  assert.equal((await call('GET',null,'?action=export&format=csv&layout=guest-table')).status,400);
  assert.equal((await call('GET',null,'?action=export&format=pdf&layout=invalid')).status,400);
+
+ const retainedMealRecords=JSON.parse(retained).filter(row=>row[0]==='meal-choices-v1');assert.deepEqual(JSON.parse(snapshot()).filter(row=>row[0]==='meal-choices-v1'),retainedMealRecords,'Exports preserve existing submissions, notes, deadlines, protection, sessions and audit records');
 
  const historyCount=state.stores.get('meal-choices-v1').get('choice/'+a.id).data.audit.length;
  await ok(await call('POST',{action:'replace-link',guestId:a.id}));state.td=false;
@@ -186,7 +191,7 @@ try{
  state.td=false;const noneShown=await ok(await call('GET',null,'',cookie));assert.equal(Object.keys(noneShown.submission.selections).length,0);assert.equal(noneShown.locked,true);assert.equal((await call('PUT',{action:'submit',selections,dietary:'No released meals',revision:noneShown.revision},'',cookie)).status,403);
  assert.equal((await call('POST',{action:'clear-pin',guestId:a.id})).status,401);
  state.td=true;await ok(await call('POST',{action:'clear-pin',guestId:a.id}));assert.deepEqual(state.stores.get('meal-choices-v1').get('choice/'+a.id).data,hiddenTD);state.td=false;
- state.site='2207afda-0a2b-4b67-a708-91c325bd214a';assert.equal((await call('GET')).status,404);
+ state.site='2207afda-0a2b-4b67-a708-91c325bd214a';assert.equal((await call('GET')).status,200);
  state.site='c1f3ce92-834f-4a1e-a84b-1551409ddb7b';
  assert.equal((await setup(req('POST',{token:'c'.repeat(64),password:'Some long test password'}))).status,403);
  assert.equal((await setup(req('POST',{token:'b'.repeat(64),password:'short'}))).status,400);
@@ -200,5 +205,5 @@ try{
  state.now=RealDate.parse('2026-12-02T00:00:00Z');
  assert.equal((await setup(req('POST',{mode:'reset',token:'c'.repeat(64),password:'New long password'}))).status,403);
  assert.equal((await setup(req('POST',{token:'b'.repeat(64),password:'Some long test password'}))).status,403);
- console.log('PASS real handler: prototype isolation, private-link scope/rotation, revoked name-only sessions, server-authored change history, TD-only deadline management/exports, per-meal submission and exact cutoff, closed selections/allergies preserved, legacy migration, stale-write protection, CSRF, CSV/XLSX/PDF, TD-only reviewed paper import with history/cutoff/CAS, TD meal visibility with hidden-choice preservation, and one-time TD setup.');
+ console.log('PASS real handler: prototype isolation, private-link scope/rotation, revoked name-only sessions, server-authored change history, TD-only deadline management/exports, per-meal submission and exact cutoff, closed selections/allergies preserved, legacy migration, stale-write protection, CSRF, CSV-to-Excel compatibility, XLSX/PDF, landscape photo reports and data retention, TD-only reviewed paper import with history/cutoff/CAS, TD meal visibility with hidden-choice preservation, and one-time TD setup.');
 }finally{globalThis.Date=RealDate;await rm(temp,{recursive:true,force:true});}

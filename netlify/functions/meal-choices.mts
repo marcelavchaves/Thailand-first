@@ -4,7 +4,7 @@ import {getStore} from '@netlify/blobs';
 import {createHash,randomBytes,randomInt,scryptSync,timingSafeEqual,createCipheriv,createDecipheriv} from 'node:crypto';
 import {hasTDSession,sameOrigin} from '../lib/td-auth';
 import {rosterData,type RosterData} from '../lib/safe-roster';
-import {menus,MEAL_DEADLINE,WELCOME_DINNER_AT,PROTOTYPE_SITE_ID,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,defaultMealVisibility,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealVisibility,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
+import {menus,MEAL_DEADLINE,WELCOME_DINNER_AT,MEAL_SITE_IDS,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,defaultMealVisibility,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealVisibility,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
 import {exportMeals} from '../lib/meal-exports';
 const store=()=>getStore({name:'meal-choices-v1',consistency:'strong'});
 const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
@@ -79,7 +79,7 @@ async function report(guests:{id:string;name:string}[]):Promise<MealReportGuest[
 }
 export default async function handler(request:Request){
  try{
-  if((Netlify.env.get('SITE_ID')||process.env.SITE_ID)!==PROTOTYPE_SITE_ID)return reply({error:'Not found.'},404);
+  if(!MEAL_SITE_IDS.includes(Netlify.env.get('SITE_ID')||process.env.SITE_ID||''))return reply({error:'Not found.'},404);
   const url=new URL(request.url),action=url.searchParams.get('action')||'traveler';
   if(!['GET','POST','PUT','DELETE'].includes(request.method))return reply({error:'Method not allowed.'},405);
   if(request.method!=='GET'&&!sameOrigin(request))return reply({error:'Open this action from the app.'},403);
@@ -90,10 +90,11 @@ export default async function handler(request:Request){
     if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
     const data=await report(guests);
     if(action==='export'){
-     const format=url.searchParams.get('format')||'csv',meal=url.searchParams.get('meal')||'all';
+     const format=url.searchParams.get('format')||'xlsx',meal=url.searchParams.get('meal')||'all';
      if(!['csv','xlsx','pdf'].includes(format)||meal!=='all'&&!menus.some(m=>m.id===meal))return reply({error:'Choose an available export.'},400);
      const layout=url.searchParams.get('layout');
      if(layout!==null&&(layout!=='guest-table'||format!=='pdf'))return reply({error:'Choose a PDF guest table export.'},400);
+     if(format==='csv')return new Response(null,{status:307,headers:{Location:`/api/meal-choices?action=export&format=xlsx&meal=${encodeURIComponent(meal)}`,'Cache-Control':'no-store'}});
      let exported;
      try{
       const guestTable=layout==='guest-table'?await Promise.all(guests.map(async(g,index)=>{const profile=await getStore({name:'guest-profiles',consistency:'strong'}).get(`guest/${g.id}`,{type:'json'}) as {photo?:string}|null;return {id:g.id,name:g.name,number:index+1,photo:profile?.photo};})):undefined;
@@ -102,7 +103,7 @@ export default async function handler(request:Request){
      catch(error){
       const code=error&&typeof error==='object'&&'code' in error?String(error.code):'EXPORT_FAILED';
       console.error('Meal report export failed',{format,code});
-      return reply({error:format==='pdf'?'The meal PDF could not be created. CSV and Excel exports are still available.':'The meal report could not be created. Please try again.'},503);
+      return reply({error:format==='pdf'?'The meal PDF could not be created. Excel export is still available.':'The meal report could not be created. Please try again.'},503);
      }
      return new Response(new Uint8Array(exported.bytes),{headers:{'Content-Type':exported.type,'Content-Disposition':`attachment; filename="meal-choices-${meal}${layout==='guest-table'?'-landscape-guests':''}.${format}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
     }
@@ -223,7 +224,7 @@ export default async function handler(request:Request){
     settings={...settings,deadlines,revision:saved.etag||null};
     return reply({ok:true,message:'Meal deadlines saved.',...metadata(settings)});
    }
-   if(!MEAL_PINS_REQUIRED)return reply({error:'Traveler meal PINs are paused on the prototype.'},409);
+   if(!MEAL_PINS_REQUIRED)return reply({error:'Traveler meal PINs are currently paused.'},409);
    if(body.action==='generate-missing'){
     let count=0;for(const g of guests)if(await generate(g.id))count++;
     return reply({ok:true,message:`${count} new traveler PIN${count===1?'':'s'} generated. Existing PINs were kept.`});

@@ -20,7 +20,7 @@ for(const meal of ['vedana','all']){
   }
   images+=(await page.getOperatorList()).fnArray.filter(x=>x===OPS.paintImageXObject).length;
  }
- assert(images>0,'Embedded guest photo');for(const value of ['Guest #','Guest full name','Meal choices','Allergies / restrictions','Sample Full Name','Severe peanut allergy','No photo','LAST_NOTE_WORD','Status: draft','Status: not started','Sample Traveler 34'])assert(text.includes(value),value);
+ assert(images>0,'Embedded guest photo');assert(!text.includes('No photo'),'Missing photos use a vector icon');for(const value of ['Guest #','Guest full name','Meal choices','Allergies / restrictions','Sample Full Name','Severe peanut allergy','LAST_NOTE_WORD','Status: draft','Status: not started','Sample Traveler 34'])assert(text.includes(value),value);
  if(meal==='all')for(const menu of menus){assert(text.includes(menu.title));for(const course of menu.courses)assert(text.includes(course.title+':'),course.title);}
  console.log('PASS landscape',meal,pdf.numPages,'pages: photos, no-photo fallback, line breaks, long notes, statuses, all guests and page bounds.');
 }
