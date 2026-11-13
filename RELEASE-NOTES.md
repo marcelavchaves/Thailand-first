@@ -1,3 +1,7 @@
+## Handouts parity and supplied Ho Chi Minh City PDF
+
+Stores the supplied original IC Oh Chi Minh.pdf and its four booklet pages under the existing Ho Chi Minh City cover, preserving a single tile and saved visibility choices.
+
 ## Cover tiles for Handouts
 
 Displays the supplied destination booklets as a two-column grid of cover images without extra titles or descriptions. Covers open the existing full-screen reader. Saved visibility and replacements are respected; the TD Suitcase retains its management controls.

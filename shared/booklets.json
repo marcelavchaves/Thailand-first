@@ -60,6 +60,8 @@
       "/documents/booklets/ho-chi-minh-3.jpg"
     ],
     "partial": false,
-    "slug": "ho-chi-minh"
+    "slug": "ho-chi-minh",
+    "sourcePdf": "/documents/booklets/ho-chi-minh.pdf",
+    "sourceSha256": "96572f2409774340a084d78657aaa4094d390b1ad767e69b054d31d8e72bee7f"
   }
 ]
