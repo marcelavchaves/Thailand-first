@@ -1,3 +1,9 @@
+## Handouts parity and supplied Ho Chi Minh City PDF
+
+Brings live Handouts up to the prototype: cover-only tiles, the full-screen reader with touch/mouse swiping, zoom, page chooser and remembered position, plus PDF booklet uploads and saved TD hide/show controls. Ports only Handouts features.
+
+Stores the supplied original IC Oh Chi Minh.pdf and its four booklet pages under the existing Ho Chi Minh City cover, preserving a single tile and saved visibility choices.
+
 ## November 7, 2026 · Explain each real app tab
 
 The restored suitcase tutorial now shows the actual Home, Maps, Essentials, Gallery, The Group and More screens, then explains what travelers can see and do there. Captures use mocked API responses, sample guest information and anonymous TD contact details. Kept the stable player and did not add a practice navigation or change app tabs.
