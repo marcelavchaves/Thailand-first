@@ -1,3 +1,4 @@
+import hotelBooklets from './hotel-booklets.json' with {type:'json'};
 import booklets from './booklets.json' with {type:'json'};
 // Publish Xavier’s supplied official Vietnam, Cambodia & Thailand schedules.
 // TD edits/hides saved with this version take precedence after the import.
@@ -6,6 +7,7 @@ export const TOUR_IMPORT_VERSION='vct-ic2026-official-2026-11-06-v1';
 /** @param {Record<string, any>} entries @returns {Record<string, any>} */
 export function importedReleaseEntries(entries={}){
  const result={...entries};
+ for(const b of hotelBooklets){if(!Object.hasOwn(entries,b.id))result[b.id]={id:b.id,title:b.title,group:b.group,visible:true,deleted:false};}
  // Seed only missing booklets; saved TD hide/show, replacements and deletions win.
  for(const b of booklets){if(!Object.hasOwn(entries,b.id))result[b.id]={id:b.id,title:b.title,group:'handouts',visible:true,deleted:false};}
  for(let day=5;day<=20;day++){

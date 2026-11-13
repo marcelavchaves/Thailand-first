@@ -1,3 +1,7 @@
+## Prototype · Rosewood Bangkok Sense Spa Menu 2026
+
+Adds the supplied PDF under Rosewood Bangkok’s documents as a 24-page booklet. Splits the inside two-page spreads in reading order, keeps all treatment text and pricing, and fits the cover/back artwork to portrait pages by removing blank space. Includes the original PDF, full-screen reader, swipe/zoom/page chooser and remembered reading position. Starts shown and supports the existing TD hide/show controls. Prototype only.
+
 ## Handouts parity and supplied Ho Chi Minh City PDF
 
 Stores the supplied original IC Oh Chi Minh.pdf and its four booklet pages under the existing Ho Chi Minh City cover, preserving a single tile and saved visibility choices.

@@ -2,6 +2,7 @@
 import {createContext,useContext,useEffect,useState,useCallback,type ReactNode} from 'react';
 import {BookletButton} from './BookletViewer';
 import booklets from '../shared/booklets.json';
+import hotelBooklets from '../shared/hotel-booklets.json';
 import {useTDSession} from './TDSession';
 import BrandIcon from './BrandIcon';
 import {uploadBooklet} from '../lib/booklet-upload';
@@ -19,7 +20,7 @@ export function ResourceProvider({children}:{children:ReactNode}){
 }
 export function ResourceSlot({id,title,group='guides',children,icon='book',caption='Xavier will share this when it’s ready.'}:{id:string;title:string;group?:string;children?:ReactNode;icon?:string;caption?:string}){
  const {items,loaded,error,reload}=useResources();const {authenticated,refresh}=useTDSession();const item=items[id];
- const originalBooklet=booklets.some(b=>b.id===id);
+ const originalBooklet=[...booklets,...hotelBooklets].some(b=>b.id===id);
  const displayTitle=(item?.title||title).replace(/^Today[’']s schedule$/, 'Schedule');
  const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[preview,setPreview]=useState(false),[editing,setEditing]=useState(false),[name,setName]=useState(title);
  async function change(action:string,file?:File,layout?:BookletLayout){setBusy(true);setMessage('');try{

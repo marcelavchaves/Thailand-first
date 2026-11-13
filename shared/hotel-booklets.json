@@ -1,0 +1,38 @@
+[
+  {
+    "id": "booklet-rosewood-sense-spa-2026",
+    "title": "Sense Spa Menu 2026",
+    "subtitle": "Sense, A Rosewood Spa \u00b7 Rosewood Bangkok",
+    "group": "hotel-6",
+    "pages": [
+      "/documents/rosewood-spa/page-01.jpg",
+      "/documents/rosewood-spa/page-02.jpg",
+      "/documents/rosewood-spa/page-03.jpg",
+      "/documents/rosewood-spa/page-04.jpg",
+      "/documents/rosewood-spa/page-05.jpg",
+      "/documents/rosewood-spa/page-06.jpg",
+      "/documents/rosewood-spa/page-07.jpg",
+      "/documents/rosewood-spa/page-08.jpg",
+      "/documents/rosewood-spa/page-09.jpg",
+      "/documents/rosewood-spa/page-10.jpg",
+      "/documents/rosewood-spa/page-11.jpg",
+      "/documents/rosewood-spa/page-12.jpg",
+      "/documents/rosewood-spa/page-13.jpg",
+      "/documents/rosewood-spa/page-14.jpg",
+      "/documents/rosewood-spa/page-15.jpg",
+      "/documents/rosewood-spa/page-16.jpg",
+      "/documents/rosewood-spa/page-17.jpg",
+      "/documents/rosewood-spa/page-18.jpg",
+      "/documents/rosewood-spa/page-19.jpg",
+      "/documents/rosewood-spa/page-20.jpg",
+      "/documents/rosewood-spa/page-21.jpg",
+      "/documents/rosewood-spa/page-22.jpg",
+      "/documents/rosewood-spa/page-23.jpg",
+      "/documents/rosewood-spa/page-24.jpg"
+    ],
+    "partial": false,
+    "sourcePdf": "/documents/rosewood-spa/rosewood-sense-spa-menu-2026.pdf",
+    "sourceSha256": "86ef5ca7ad1dbfe239155231f3045a7dfddc0d2d8b9bffc16c79f08404ea62e7",
+    "returnLabel": "Rosewood documents"
+  }
+]

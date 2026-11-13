@@ -1,6 +1,7 @@
 "use client";
 import {BookletButton} from './BookletViewer';
 import booklets from '../shared/booklets.json';
+import hotelBooklets from '../shared/hotel-booklets.json';
 import {Handouts} from './ResourceLibrary';
 import {ResourceProvider, ResourceSlot, ResourceGroup, useResources} from "./ResourceLibrary";
 import BrandIcon from "./BrandIcon";
@@ -1254,6 +1255,7 @@ function JourneyHotelResources({name}:{name:string}) {
   const hotel=hotels[hotelIndex];
   return <div className="day-hotel-resources">
                       {storytelling.filter(story => story.hotelIndex === hotelIndex).map(story => <ResourceSlot key={story.id} id={`story-${story.id}`} title={story.title} group={`hotel-${hotelIndex}`}><a href={`/storytelling.html?story=${story.id}`}>{story.title} →</a></ResourceSlot>)}
+                      {hotelBooklets.filter(b=>b.group===`hotel-${hotelIndex}`).map(b=><ResourceSlot key={b.id} id={b.id} title={b.title} group={b.group} icon="spa"><BookletButton booklet={b}/></ResourceSlot>)}
                       {hotelResources.filter(item => item.hotel === hotel.name).map(item => <ResourceSlot key={item.id} id={`menu-${item.id}`} title={item.title} group={`hotel-${hotelIndex}`} icon={item.category.includes("Spa")?"spa":"food"}><a href={`/hotel-menus.html?menu=${item.id}`}>{item.title} →</a></ResourceSlot>)}
                     </div>;
 }
@@ -1891,6 +1893,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
                   {h.address && <p className="address">{h.address}</p>}<p>{h.note}</p>
                   
                   {hotelResources.filter(item=>item.hotel===h.name).map(item=><ResourceSlot key={item.id} id={`menu-${item.id}`} title={item.title} group={`hotel-${i}`} icon={item.category.includes('Spa')?'spa':'food'}><a href={`/hotel-menus.html?menu=${item.id}`}>{item.title} →</a><p>{item.note}</p></ResourceSlot>)}
+                  {hotelBooklets.filter(b=>b.group===`hotel-${i}`).map(b=><ResourceSlot key={b.id} id={b.id} title={b.title} group={b.group} icon="spa"><BookletButton booklet={b}/></ResourceSlot>)}
                   <ResourceGroup group={`hotel-${i}`}/>
                   <div className="hotel-actions">
                     {h.website && <a href={h.website} target="_blank" rel="noreferrer">
@@ -1956,6 +1959,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
       {tab === "gallery" && <WondercaseGallery/>}
       {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day} editor/>} groups={[{id:'handouts',title:'Handouts'},{id:'maps',title:'Maps'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[
        ...booklets.map(b=>({id:b.id,title:b.title,group:'handouts',content:<BookletButton booklet={b}/>})),
+       ...hotelBooklets.map(b=>({id:b.id,title:b.title,group:b.group,content:<BookletButton booklet={b}/>})),
        {id:'guide-singapore',title:'Singapore Guide',group:'guides',content:<span/>},
        {id:'guide-java',title:'Java Guide',group:'guides',content:<XavierJavaGuide/>},
        {id:'guide-bali',title:'Bali Guide',group:'guides',content:<XavierBaliGuide/>},
