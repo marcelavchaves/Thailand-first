@@ -356,3 +356,7 @@ html,body,.app-shell{background:#fff}
 .wondercase-logo-admin{display:block;line-height:0;flex-shrink:0;color:inherit;cursor:pointer}.wondercase-logo-admin:focus-visible{outline:2px solid var(--brand-gold);outline-offset:4px;border-radius:11px}.wondercase-admin-entry[href]{cursor:pointer}
 
 .snapshot-page-tools{margin:24px 0;padding:18px;border:1px solid var(--line);border-radius:12px;background:#faf8f0}.snapshot-page-tools>summary{cursor:pointer;font-weight:600}.snapshot-page-tools label{display:grid;gap:8px;margin:14px 0}.snapshot-page-tools input,.snapshot-page-tools select{font:inherit;padding:12px;border:1px solid var(--line);border-radius:8px;min-width:0;max-width:100%;box-sizing:border-box}.snapshot-preview-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0}.snapshot-preview-canvas,.snapshot-page-tools figure img{display:block;max-width:100%;height:auto;background:white;border:1px solid var(--line);margin:18px 0}.snapshot-page-tools figure{margin:20px 0}.snapshot-page-tools figcaption{font-size:14px}
+
+/* Button labels use the same capitalization throughout Wondercase. */
+button,a.button,[role="button"],.meal-admin summary,.meal-export-links a,.meal-summary-email{text-transform:capitalize}
+.director-photo-placeholder{display:block;width:86px;height:104px;border-radius:12px;background:#e5e8de}

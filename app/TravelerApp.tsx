@@ -1265,7 +1265,7 @@ function XavierContactCard({onSuitcase}:{onSuitcase:()=>void}) {
   const portrait=useXavierPhoto();
   return <section className="director-simple">
     <div className="director-profile-heading">
-      <button type="button" className="director-photo-access" aria-label="Open tour director workspace" onClick={onSuitcase}><img className="xavier-profile-portrait" src={portrait.photo || "/images/xavier-brunelle.jpeg"} alt="Xavier Brunelle" width={86} height={104}/></button>
+      <button type="button" className="director-photo-access" aria-label="Open tour director workspace" onClick={onSuitcase}>{portrait.loaded?<img className="xavier-profile-portrait" src={portrait.photo || "/images/xavier-brunelle.jpeg"} alt="Xavier Brunelle" width={86} height={104}/>:<span className="director-photo-placeholder" role="img" aria-label="Loading current tour director photo"/>}</button>
       <div className="director-toggle">
         <span><small>Your tour director</small><strong>Xavier Brunelle</strong></span>
       </div>
