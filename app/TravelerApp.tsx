@@ -39,6 +39,7 @@ const isBaliDay = (date: number) => [11, 12, 13, 16, 17, 18].includes(date);
 import itinerary from "./itinerary.json";
 import RecommendedReading from "./RecommendedReading";
 import flightList from './internal-flights.json';
+import OfflineSnapshot from './OfflineSnapshot';
 import LearnMore from './LearnMore';
 import JourneyMaps from "./JourneyMaps";
 import WondercaseGallery from "./WondercaseGallery";
@@ -1948,7 +1949,9 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           {key:'help',title:'Help & Tutorials',icon:'book',image:'/images/more-help.svg'},
           {key:'shop',title:'Journey Shop',icon:'shop',image:'/images/more-shop.svg'},
           {key:'rating',title:'Help Wondercase Grow',icon:'feedback',image:'/images/more-grow.svg'},
-        ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={moreSection===item.key} aria-controls={`more-${item.key}`} onClick={()=>{const next=moreSection===item.key?null:item.key;sectionScrollTarget.current=next?`more-${next}`:null;setMoreSection(next);}}><img src={item.image} alt=""/><strong>{item.title}</strong><small>{item.key==='learn'?'Trivia & language':item.key==='help'?'FAQs, how-tos & tutorials':item.key==='shop'?'Coming soon':item.key==='rating'?'Your ideas help us bloom':null}</small></button>)}</div>
+          {key:'offline',title:'Offline snapshot',icon:'book',image:'/images/more-offline.svg'},
+        ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={moreSection===item.key} aria-controls={`more-${item.key}`} onClick={()=>{const next=moreSection===item.key?null:item.key;sectionScrollTarget.current=next?`more-${next}`:null;setMoreSection(next);}}><img src={item.image} alt=""/><strong>{item.title}</strong><small>{item.key==='learn'?'Trivia & language':item.key==='help'?'FAQs, how-tos & tutorials':item.key==='shop'?'Coming soon':item.key==='rating'?'Your ideas help us bloom':item.key==='offline'?'Download a dated PDF copy':null}</small></button>)}</div>
+        {moreSection==='offline'&&<OfflineSnapshot/>}
         {moreSection==='help'&&<HelpAndTutorials/>}
         {moreSection==='learn'&&<LearnMore days={days}/>}
 

@@ -38,3 +38,6 @@
 
 [functions."hotel-manifest"]
   included_files = ["scripts/fonts/**"]
+
+[functions."offline-snapshot"]
+  included_files = ["netlify/data/itinerary-content.json", "scripts/fonts/**", "public/images/**", "public/documents/**"]
