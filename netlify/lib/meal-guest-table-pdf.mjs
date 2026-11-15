@@ -4,10 +4,10 @@ import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 
 /** Landscape restaurant handoff: one guest row with individual courses on separate lines. */
-export async function renderMealGuestTablePdf(report, guests){
+export async function renderMealGuestTablePdf(report, guests, reportHeaders={}){
  const body=await readFile(join(process.cwd(),'scripts/fonts/DejaVuSans.ttf'));
  const bold=await readFile(join(process.cwd(),'scripts/fonts/DejaVuSans-Bold.ttf'));
- const doc=new PDFDocument({size:'A4',layout:'landscape',margin:32,font:body,info:{Title:'Wondercase · Guest meal choices',Author:'Wondercase'}}),chunks=[];
+ const doc=new PDFDocument({size:'A4',layout:'landscape',margin:32,font:body,info:{Title:'Tauck IC54 Meal Choices',Author:'Wondercase'}}),chunks=[];
  const ready=new Promise((resolve,reject)=>{doc.on('data',b=>chunks.push(b));doc.on('end',()=>resolve(Buffer.concat(chunks)));doc.on('error',reject);});
  doc.registerFont('Body',body);doc.registerFont('Bold',bold);
  const photos=new Map();
@@ -35,11 +35,11 @@ export async function renderMealGuestTablePdf(report, guests){
  }
  function startPage(menu,first){
   if(page)doc.addPage();page++;
-  text('WONDERCASE · Guest meal choices',left,27,width,18,'Bold');
+  text(reportHeaders[menu]||`Tauck IC54 Meal Choices · ${menu}`,left,27,width,18,'Bold');
   text(menu,left,54,width,13,'Bold');
   const row=report.rows.find(r=>r.meal===menu);
   if(row)text(row.restaurant+' · Deadline: '+new Date(row.deadline).toLocaleString('en-US',{timeZone:'Asia/Ho_Chi_Minh'})+' (Hanoi time)',left,75,width,9);
-  text('Guest numbers follow the current guest list. Draft and missing choices are labeled.'+(first?'':' · Continued'),left,92,width,8);
+  text('Guest numbers follow the current guest list.'+(first?'':' · Continued'),left,92,width,8);
   y=111;doc.rect(left,y,width,27).fill('#EEF1E9');
   headers.forEach((h,i)=>text(h,xs[i]+6,y+8,widths[i]-12,8,'Bold'));y+=27;
   text('TD restaurant report · Contains traveler information',left,doc.page.height-23,width-60,7);
@@ -52,8 +52,7 @@ export async function renderMealGuestTablePdf(report, guests){
   for(const guest of guests){
    const rows=report.rows.filter(r=>r.meal===menu&&r.travelerId===guest.id);
    const dietary=rows[0]?.dietary||'None provided';
-   const status=rows[0]?.status||'not started';
-   const cells=[String(guest.number),rows[0]?.traveler||guest.name,rows.map(r=>`${r.course}: ${r.choice}`).join('\n')+`\nStatus: ${status}`,dietary];
+   const cells=[String(guest.number),rows[0]?.traveler||guest.name,rows.map(r=>`${r.course}: ${r.choice}`).join('\n'),dietary];
    const wrapped=cells.map((v,i)=>lines(v,widths[i]-12,i===1?'Bold':'Body'));let offset=0;
    const total=Math.max(...wrapped.map(l=>l.length),1);
    while(offset<total){
