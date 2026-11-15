@@ -1949,7 +1949,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           {key:'help',title:'Help & Tutorials',icon:'book',image:'/images/more-help.svg'},
           {key:'shop',title:'Journey Shop',icon:'shop',image:'/images/more-shop.svg'},
           {key:'rating',title:'Help Wondercase Grow',icon:'feedback',image:'/images/more-grow.svg'},
-          {key:'offline',title:'Offline snapshot',icon:'book',image:'/images/more-offline.svg'},
+          {key:'offline',title:'Offline Snapshot',icon:'book',image:'/images/more-offline.svg'},
         ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={moreSection===item.key} aria-controls={`more-${item.key}`} onClick={()=>{const next=moreSection===item.key?null:item.key;sectionScrollTarget.current=next?`more-${next}`:null;setMoreSection(next);}}><img src={item.image} alt=""/><strong>{item.title}</strong><small>{item.key==='learn'?'Trivia & language':item.key==='help'?'FAQs, how-tos & tutorials':item.key==='shop'?'Coming soon':item.key==='rating'?'Your ideas help us bloom':item.key==='offline'?'Download a dated PDF copy':null}</small></button>)}</div>
         {moreSection==='offline'&&<OfflineSnapshot/>}
         {moreSection==='help'&&<HelpAndTutorials/>}
