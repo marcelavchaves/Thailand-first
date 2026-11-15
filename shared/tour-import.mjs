@@ -7,7 +7,7 @@ export const TOUR_IMPORT_VERSION='vct-ic2026-official-2026-11-06-v1';
 export function importedReleaseEntries(entries={}){
  const result={...entries};
  // Seed only missing booklets; saved TD choices are retained.
- for(const b of booklets){if(!Object.hasOwn(entries,b.id))result[b.id]={id:b.id,title:b.title,group:'handouts',visible:true,deleted:false};}
+ for(const b of booklets){if(!Object.hasOwn(entries,b.id))result[b.id]={id:b.id,title:b.title,group:'handouts',visible:false,deleted:false};}
  for(let day=5;day<=20;day++){
   const id=`schedule-${day}`,old=entries[id];
   if(old?.importVersion===TOUR_IMPORT_VERSION)continue;
