@@ -1,5 +1,5 @@
 'use client';
-import {createContext,useContext,useEffect,useState,useCallback,type ReactNode} from 'react';
+import {createContext,useContext,useEffect,useState,useCallback,useRef,type ReactNode} from 'react';
 import {BookletButton} from './BookletViewer';
 import booklets from '../shared/booklets.json';
 import {useTDSession} from './TDSession';
@@ -13,7 +13,8 @@ const Context=createContext<State>({items:{},loaded:false,error:'',reload:async(
 export function useResources(){return useContext(Context);}
 export function ResourceProvider({children}:{children:ReactNode}){
  const {authenticated}=useTDSession();const [items,setItems]=useState<Record<string,Entry>>({}),[loaded,setLoaded]=useState(false),[error,setError]=useState('');
- const reload=useCallback(async()=>{try{const r=await fetch('/api/tour-resources',{cache:'no-store'});if(!r.ok)throw Error();const d=await r.json();setItems(d.items);setLoaded(true);setError('');}catch{setItems({});setLoaded(false);setError('Connect to check the latest releases.');}},[]);
+ const generation=useRef(0);
+ const reload=useCallback(async()=>{const request=++generation.current;try{const r=await fetch(authenticated?'/api/tour-resources?manage=1':'/api/tour-resources',{cache:'no-store'});if(!r.ok)throw Error(r.status===401?'Your TD session needs to be refreshed. Sign in again to manage hidden handouts.':'Connect to check the latest releases.');const d=await r.json();if(request!==generation.current)return;setItems(d.items);setLoaded(true);setError('');}catch(e){if(request!==generation.current)return;setItems({});setLoaded(false);setError(e instanceof Error?e.message:'Connect to check the latest releases.');}},[authenticated]);
  useEffect(()=>{void reload();const focus=()=>void reload();window.addEventListener('focus',focus);const t=setInterval(focus,30000);return()=>{clearInterval(t);window.removeEventListener('focus',focus);};},[reload,authenticated]);
  return <Context.Provider value={{items,loaded,error,reload}}>{children}</Context.Provider>;
 }
