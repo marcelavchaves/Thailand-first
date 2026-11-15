@@ -12,10 +12,11 @@ const cookieName='__Host-wondercase_meals';
 const tokenOf=(r:Request)=>r.headers.get('cookie')?.match(/(?:^|;\s*)__Host-wondercase_meals=([a-f0-9]{64})(?:;|$)/)?.[1];
 const reply=(body:unknown,status=200,extra:Record<string,string>={})=>Response.json(body,{status,headers:{'Cache-Control':'no-store','Vary':'Cookie','X-Content-Type-Options':'nosniff',...extra}});
 async function deadlineSettings(){
- const [record,visible]=await Promise.all([store().getWithMetadata('settings/deadlines',{type:'json'}),store().getWithMetadata('settings/visibility',{type:'json'})]);
+ const [record,visible,heading]=await Promise.all([store().getWithMetadata('settings/deadlines',{type:'json'}),store().getWithMetadata('settings/visibility',{type:'json'}),store().getWithMetadata('settings/report-headers',{type:'json'})]);
  const saved=record?.data as {deadlines?:MealDeadlines}|undefined;
  const visibility={...defaultMealVisibility(),...(visible?.data as {visibility?:MealVisibility}|undefined)?.visibility};
- return {deadlines:{...defaultMealDeadlines(),...saved?.deadlines},revision:record?.etag||null,visibility,visibilityRevision:visible?.etag||null};
+ const headers=(heading?.data as {headers?:Record<string,string>}|undefined)?.headers||{};
+ return {reportHeaders:Object.fromEntries(menus.map(m=>[m.id,headers[m.id]||`Tauck IC54 Meal Choices · ${m.title}`])),reportHeadersRevision:heading?.etag||null,deadlines:{...defaultMealDeadlines(),...saved?.deadlines},revision:record?.etag||null,visibility,visibilityRevision:visible?.etag||null};
 }
 function metadata(settings:Awaited<ReturnType<typeof deadlineSettings>>){
  const lockedMeals=mealLocks(settings.deadlines);
@@ -98,7 +99,7 @@ export default async function handler(request:Request){
      let exported;
      try{
       const guestTable=layout==='guest-table'?await Promise.all(guests.map(async(g,index)=>{const profile=await getStore({name:'guest-profiles',consistency:'strong'}).get(`guest/${g.id}`,{type:'json'}) as {photo?:string}|null;return {id:g.id,name:g.name,number:index+1,photo:profile?.photo};})):undefined;
-      exported=await exportMeals(mealReport(data,meal,settings.deadlines),format,meal,guestTable);
+      exported=await exportMeals(mealReport(data,meal,settings.deadlines),format,meal,guestTable,Object.fromEntries(menus.map(m=>[m.title,settings.reportHeaders[m.id]])));
      }
      catch(error){
       const code=error&&typeof error==='object'&&'code' in error?String(error.code):'EXPORT_FAILED';
@@ -107,7 +108,7 @@ export default async function handler(request:Request){
      }
      return new Response(new Uint8Array(exported.bytes),{headers:{'Content-Type':exported.type,'Content-Disposition':`attachment; filename="meal-choices-${meal}${layout==='guest-table'?'-landscape-guests':''}.${format}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
     }
-    return reply({...metadata(settings),guests:data,summary:mealReport(data,'all',settings.deadlines).totals});
+    return reply({...metadata(settings),reportHeaders:settings.reportHeaders,reportHeadersRevision:settings.reportHeadersRevision,guests:data,summary:mealReport(data,'all',settings.deadlines).totals});
    }
    if(action==='paper-review'){
     if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
@@ -127,6 +128,8 @@ export default async function handler(request:Request){
   const raw=await request.text();if(raw.length>12000)return reply({error:'Meal form is too large.'},413);
   let body:any;try{body=JSON.parse(raw);}catch{return reply({error:'Check your meal form.'},400);}
   if(!body||typeof body!=='object'||Array.isArray(body))return reply({error:'Check your meal form.'},400);
+  const tdEdit=request.method==='POST'&&body.action==='td-edit';
+  if(tdEdit){if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);if(!menus.some(m=>m.id===body.menuId))return reply({error:'Choose one meal to edit.'},400);body.action='submit';}
   const paperImport=request.method==='POST'&&body.action==='paper-import';
   if(paperImport){
    if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
@@ -134,7 +137,7 @@ export default async function handler(request:Request){
    if(!Array.isArray(body.menuIds)||!body.menuIds.length||body.menuIds.length>menus.length||new Set(body.menuIds).size!==body.menuIds.length||body.menuIds.some((id:unknown)=>typeof id!=='string'||!menus.some(m=>m.id===id)))return reply({error:'Choose the meals on this paper form.'},400);
    body.action='submit';
   }
-  if(request.method==='POST'&&!paperImport){
+  if(request.method==='POST'&&!paperImport&&!tdEdit){
    if(body.action==='login'){
     const guest=guests.find(g=>g.id===body.guestId);
     if(!guest)return reply({error:'Choose a current traveler from the guest list.'},400);
@@ -182,6 +185,13 @@ export default async function handler(request:Request){
     return reply({ok:true,message:body.protected?'Your choices are now PIN-protected.':'Your choices are now public. Anyone can edit them by selecting your name.'});
    }
    if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
+   if(body.action==='update-report-headers'){
+    if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
+    const headers=body.headers;if(!headers||typeof headers!=='object'||Array.isArray(headers)||Object.keys(headers).some(id=>!menus.some(m=>m.id===id))||menus.some(m=>typeof headers[m.id]!=='string'||!headers[m.id].trim()||headers[m.id].length>180||/[\r\n]/.test(headers[m.id])))return reply({error:'Enter a one-line header of 1–180 characters for each meal.'},400);
+    const record=await store().getWithMetadata('settings/report-headers',{type:'json'});if((record?.etag||null)!==body.revision)return reply({error:'Report headers changed. Refresh before saving.'},409);
+    const clean=Object.fromEntries(menus.map(m=>[m.id,headers[m.id].trim()]));const saved=await store().setJSON('settings/report-headers',{headers:clean},record?{onlyIfMatch:record.etag}:{onlyIfNew:true});if(!saved.modified)return reply({error:'Report headers changed. Refresh before saving.'},409);
+    return reply({ok:true,reportHeaders:clean,reportHeadersRevision:saved.etag});
+   }
    if(body.action==='update-visibility'){
     if((body.revision||null)!==settings.visibilityRevision)return reply({error:'Meal visibility changed in another window. Refresh before saving.'},409);
     if(!body.visibility||typeof body.visibility!=='object'||Array.isArray(body.visibility)||Object.keys(body.visibility).length!==menus.length||menus.some(m=>typeof body.visibility[m.id]!=='boolean')||Object.keys(body.visibility).some(id=>!menus.some(m=>m.id===id)))return reply({error:'Choose shown or hidden for each meal.'},400);
@@ -238,9 +248,9 @@ export default async function handler(request:Request){
    }
    return reply({error:'Unknown action.'},400);
   }
-  const paperGuest=paperImport?guests.find(g=>g.id===body.guestId):null;
-  const guest=paperImport?(paperGuest?{...paperGuest,actor:{type:'td-paper' as const,label:'TD paper-form entry'}}:null):await authenticatedGuest(request,guests);
-  if(!guest)return reply({error:paperImport?'Choose a current traveler.':'Open your private meal link to continue.'},paperImport?400:401);
+  const paperGuest=paperImport||tdEdit?guests.find(g=>g.id===body.guestId):null;
+  const guest=paperImport||tdEdit?(paperGuest?{...paperGuest,actor:tdEdit?{type:'td' as const,label:'TD Suitcase correction'}:{type:'td-paper' as const,label:'TD paper-form entry'}}:null):await authenticatedGuest(request,guests);
+  if(!guest)return reply({error:paperImport||tdEdit?'Choose a current traveler.':'Open your private meal link to continue.'},paperImport||tdEdit?400:401);
   if(body.guestId!==guest.id)return reply({error:'The selected traveler changed in another tab. Reload and choose your name before saving.'},409);
   if(body.action!=='save'&&body.action!=='submit')return reply({error:'Choose Save draft or Submit choices.'},400);
   if(!(body.revision===null||typeof body.revision==='string'))return reply({error:'Refresh your choices before saving.'},400);
@@ -251,15 +261,15 @@ export default async function handler(request:Request){
   if(!canEditHidden&&requested!=='all'&&!settings.visibility[requested])return reply({error:'This meal is hidden by your tour director.',...metadata(settings)},403);
   let locks=mealLocks(settings.deadlines);
   if(paperImport&&body.menuIds.some((id:string)=>locks[id]))return reply({error:'A selected meal deadline has passed. Closed meals cannot be imported.',...metadata(settings)},423);
-  const targets=menus.filter(m=>(paperImport?body.menuIds.includes(m.id):requested==='all'||m.id===requested)&&(canEditHidden||settings.visibility[m.id])&&!locks[m.id]).map(m=>m.id);
+  const targets=menus.filter(m=>(paperImport?body.menuIds.includes(m.id):requested==='all'||m.id===requested)&&(canEditHidden||settings.visibility[m.id])&&(tdEdit||!locks[m.id])).map(m=>m.id);
   if(!targets.length)return reply({error:'The deadline has passed for this meal. Its choices are read-only.',...metadata(settings)},423);
   let clean;try{clean=validateSubmission(body,body.action==='submit',targets);}catch(e){return reply({error:e instanceof Error?e.message:'Check your choices.'},400);}
   const previous=await store().getWithMetadata('choice/'+guest.id,{type:'json'});
   if((previous?.etag||null)!==body.revision)return reply({error:'Your choices changed in another window. Reload before saving.'},409);
-  // Recheck settings and server time immediately before saving. Closed meals are never overwritten.
+  // Recheck cutoffs before saving. Only explicit, audited TD corrections can edit closed meals.
   settings=await deadlineSettings();locks=mealLocks(settings.deadlines);
   if(!canEditHidden&&targets.some(id=>!settings.visibility[id]))return reply({error:'A selected meal has just been hidden by your tour director. Reopen meal choices to see available meals.',...metadata(settings)},403);
-  if(targets.some(id=>locks[id]))return reply({error:'A meal deadline has just passed. Reload to continue with the remaining open meals.',...metadata(settings)},423);
+  if(!tdEdit&&targets.some(id=>locks[id]))return reply({error:'A meal deadline has just passed. Reload to continue with the remaining open meals.',...metadata(settings)},423);
   const old=previous?.data as MealSubmission|undefined;
   const selections={...old?.selections},mealStates:Record<string,MealState>={};
   for(const menu of menus){const saved=mealState(old,menu.id);if(saved)mealStates[menu.id]=saved;}
