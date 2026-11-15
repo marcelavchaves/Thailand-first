@@ -41,3 +41,5 @@
 .meal-admin details[open]>summary,.meal-choice-summary[open]>summary{margin-bottom:14px}
 .meal-choice-summary section{padding:14px 0;border-top:1px solid #ded5ba}
 .meal-choice-summary h3{font-size:18px;margin:0 0 8px}.meal-choice-summary dl>div{margin:12px 0}.meal-choice-summary dt{font-weight:600;font-size:14px}.meal-choice-summary dd{margin:5px 0;line-height:1.6}
+
+.meal-summary-email{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;border:1px solid var(--brand-green);border-radius:9px;padding:11px 16px;text-decoration:none;font-weight:600}.meal-admin .meal-actions button[aria-pressed=false]{background:white;color:var(--brand-green)}
