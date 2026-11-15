@@ -19,6 +19,13 @@ export function mealState(submission:MealSubmission|null|undefined,id:string):Me
  // Keep existing prototype submissions and their dietary notes when introducing per-meal status.
  return {status:submission.status,dietary:submission.dietary,updatedAt:submission.updatedAt,submittedAt:submission.submittedAt};
 }
+// Reports use the shared current note for every menu; submitted snapshots remain unchanged.
+export function mealDietary(submission:MealSubmission|null|undefined):string{
+ if(!submission)return '';
+ if(submission.dietarySynced||submission.dietary?.trim())return submission.dietary||'';
+ const latest=Object.values(submission.mealStates||{}).filter(s=>s.dietary?.trim()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt))[0];
+ return latest?.dietary||'';
+}
 export const mealLocks=(deadlines:MealDeadlines,now=Date.now())=>Object.fromEntries(menus.map(m=>[m.id,now>=Date.parse(deadlines[m.id])]));
 export function validateSubmission(value:unknown,complete:boolean,targets:string[]=menus.map(m=>m.id)):{selections:Selections;dietary:string}{
  if(!value||typeof value!=='object')throw Error('Check your meal choices.');
@@ -43,7 +50,7 @@ export function mealReport(guests:MealReportGuest[],menuId='all',deadlines:MealD
  const selected=menus.filter(m=>menuId==='all'||m.id===menuId);
  const rows=selected.flatMap(menu=>guests.flatMap(guest=>menu.courses.map(course=>{
   const submission=guest.submission,state=mealState(submission,menu.id),choice=course.options.find(o=>o.id===submission?.selections[menu.id]?.[course.id]);
-  return {meal:menu.title,restaurant:menu.restaurant,course:course.title,travelerId:guest.id,traveler:guest.name,choice:choice?.name||'—',dietary:state?.dietary||'',status:state?.status||'not started',submittedAt:state?.submittedAt||'',deadline:deadlines[menu.id]};
+  return {meal:menu.title,restaurant:menu.restaurant,course:course.title,travelerId:guest.id,traveler:guest.name,choice:choice?.name||'—',dietary:mealDietary(submission),status:state?.status||'not started',submittedAt:state?.submittedAt||'',deadline:deadlines[menu.id]};
  })));
  const totals=selected.flatMap(menu=>menu.courses.flatMap(course=>course.options.map(option=>({meal:menu.title,course:course.title,choice:option.name,count:guests.filter(g=>mealState(g.submission,menu.id)?.status==='submitted'&&g.submission?.selections[menu.id]?.[course.id]===option.id).length}))));
  return {rows,totals,deadlines};
