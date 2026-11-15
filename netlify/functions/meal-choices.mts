@@ -4,7 +4,7 @@ import {getStore} from '@netlify/blobs';
 import {createHash,randomBytes,randomInt,scryptSync,timingSafeEqual,createCipheriv,createDecipheriv} from 'node:crypto';
 import {hasTDSession,sameOrigin} from '../lib/td-auth';
 import {rosterData,type RosterData} from '../lib/safe-roster';
-import {menus,MEAL_DEADLINE,WELCOME_DINNER_AT,MEAL_SITE_IDS,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,defaultMealVisibility,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealVisibility,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
+import {menus,mealSubmissionSource,MEAL_DEADLINE,WELCOME_DINNER_AT,MEAL_SITE_IDS,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,defaultMealVisibility,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealVisibility,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
 import {exportMeals} from '../lib/meal-exports';
 const store=()=>getStore({name:'meal-choices-v1',consistency:'strong'});
 const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
@@ -33,6 +33,7 @@ const validPin=(pin:unknown,p:Protection)=>typeof pin==='string'&&/^\d{4}$/.test
 type Access={hash:string;version:string;encrypted:Credential['encrypted']};
 function travelerSubmission(value:unknown,visibility?:MealVisibility){
  if(!value)return null;const {audit,dietarySynced,...submission}=value as MealSubmission;
+ submission.submissionSources=Object.fromEntries(menus.filter(m=>!visibility||visibility[m.id]).map(m=>[m.id,mealSubmissionSource(value as MealSubmission,m.id)]));
  if(!visibility)return submission;
  const visible=(entries:Record<string,unknown>)=>Object.fromEntries(Object.entries(entries).filter(([id])=>visibility[id]));
  return {...submission,selections:visible(submission.selections),...(submission.mealStates?{mealStates:visible(submission.mealStates)}:{})};
@@ -75,8 +76,8 @@ async function generateLink(id:string,replace=false){
  const saved=await store().setJSON('access/'+id,{hash:hash(token),version:randomBytes(16).toString('hex'),encrypted:encryptPin(token)},current?{onlyIfMatch:current.etag}:{onlyIfNew:true});
  if(!saved.modified)throw Error('The private link changed in another window. Refresh before trying again.');return true;
 }
-async function report(guests:{id:string;name:string}[]):Promise<MealReportGuest[]>{
- return Promise.all(guests.map(async g=>({id:g.id,name:g.name,pinReady:!!(await protection(g.id))?.protected,accessReady:!!await store().get('access/'+g.id,{type:'json'}),submission:await withCurrentDietary(g.id,await store().get('choice/'+g.id,{type:'json'}) as MealSubmission|null)})));
+async function report(guests:{id:string;name:string;email?:string}[]):Promise<MealReportGuest[]>{
+ return Promise.all(guests.map(async g=>({id:g.id,name:g.name,email:g.email||'',pinReady:!!(await protection(g.id))?.protected,accessReady:!!await store().get('access/'+g.id,{type:'json'}),submission:await withCurrentDietary(g.id,await store().get('choice/'+g.id,{type:'json'}) as MealSubmission|null)})));
 }
 export default async function handler(request:Request){
  try{

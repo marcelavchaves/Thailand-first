@@ -2,6 +2,7 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {menus,MEAL_DEADLINE,defaultMealDeadlines,mealState,type MealDeadlines,type Selections,type MealSubmission} from '../lib/meal-choices';
 import './meal-choices.css';
+import MealSummary from './MealSummary';
 import BrandIcon from './BrandIcon';
 type Data={guest:{id:string;name:string;protected:boolean}|null;guests:{id:string;name:string;protected:boolean}[];submission:MealSubmission|null;revision:string|null;deadlines:MealDeadlines;serverNow:string;lockedMeals:Record<string,boolean>;locked:boolean;td:boolean;visibility?:Record<string,boolean>};
 export const mealDeadlineLabel=(deadline=MEAL_DEADLINE)=>new Date(deadline).toLocaleString('en-US',{timeZone:'Asia/Ho_Chi_Minh',month:'long',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' · Hanoi time';
@@ -87,7 +88,8 @@ export default function MealChoices(){
  })}
  </div>
 
- <details className="meal-choice-summary" key={data.guest.id}><summary>Your meal choices summary</summary><h2>{data.guest.name}</h2><p className="meal-help">{dirty?'Includes changes on this page that have not been submitted yet. Submit each meal to save its choices.':'Your saved choices, grouped by meal.'}</p>{visibleMenus.map(menu=>{const choices=isLocked(menu.id)?data.submission?.selections[menu.id]:selections[menu.id];const unsaved=!isLocked(menu.id)&&menu.courses.some(c=>(choices?.[c.id]||'')!==(data.submission?.selections[menu.id]?.[c.id]||''));return <section key={menu.id}><h3>{menu.title}</h3><p>{status(menu.id)}{unsaved?' · Unsaved changes':''}</p><dl>{menu.courses.map(course=><div key={course.id}><dt>{course.title}</dt><dd>{course.options.find(o=>o.id===choices?.[course.id])?.name||'No choice selected'}</dd></div>)}</dl><strong>Dietary restrictions or allergies</strong><p className="meal-dietary-text">{dietary||'None provided'}</p></section>;})}</details>
+ <MealSummary key={data.guest.id} name={data.guest.name} submission={data.submission} visibleIds={visibleMenus.map(m=>m.id)} selections={Object.fromEntries(visibleMenus.map(m=>[m.id,(isLocked(m.id)?data.submission?.selections[m.id]:selections[m.id])||{}]))} dietary={dietary} unsaved={dirty}/>
+
  </form><p role="status" className="meal-message">{message}</p>
 
  </>}

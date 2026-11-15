@@ -8,7 +8,7 @@ export type Selections=Record<string,Record<string,string>>;
 export const MEAL_PINS_REQUIRED=false;
 export type MealState={status:'draft'|'submitted';dietary:string;updatedAt:string;submittedAt:string|null};
 export type MealAuditEntry={id:string;at:string;actor:{type:'traveler-link'|'td'|'public'|'pin'|'td-paper';label:string};action:'save'|'submit';meals:{menuId:string;before:{choices:Record<string,string>;state:MealState|null};after:{choices:Record<string,string>;state:MealState}}[]};
-export type MealSubmission={dietarySynced?:boolean;selections:Selections;dietary:string;status:'draft'|'submitted';updatedAt:string;submittedAt:string|null;mealStates?:Record<string,MealState>;audit?:MealAuditEntry[]};
+export type MealSubmission={submissionSources?:Record<string,string>;dietarySynced?:boolean;selections:Selections;dietary:string;status:'draft'|'submitted';updatedAt:string;submittedAt:string|null;mealStates?:Record<string,MealState>;audit?:MealAuditEntry[]};
 export type MealDeadlines=Record<string,string>;
 export type MealVisibility=Record<string,boolean>;
 export const defaultMealVisibility=():MealVisibility=>Object.fromEntries(menus.map(m=>[m.id,true]));
@@ -44,7 +44,7 @@ export function validateSubmission(value:unknown,complete:boolean,targets:string
  }
  return {selections,dietary:v.dietary.trim()};
 }
-export type MealReportGuest={id:string;name:string;pinReady:boolean;accessReady?:boolean;submission:MealSubmission|null};
+export type MealReportGuest={id:string;name:string;email?:string;pinReady:boolean;accessReady?:boolean;submission:MealSubmission|null};
 export function mealReport(guests:MealReportGuest[],menuId='all',deadlines:MealDeadlines=defaultMealDeadlines()){
  if(menuId!=='all'&&!menus.some(m=>m.id===menuId))throw Error('Choose an available meal.');
  const selected=menus.filter(m=>menuId==='all'||m.id===menuId);
@@ -54,4 +54,16 @@ export function mealReport(guests:MealReportGuest[],menuId='all',deadlines:MealD
  })));
  const totals=selected.flatMap(menu=>menu.courses.flatMap(course=>course.options.map(option=>({meal:menu.title,course:course.title,choice:option.name,count:guests.filter(g=>mealState(g.submission,menu.id)?.status==='submitted'&&g.submission?.selections[menu.id]?.[course.id]===option.id).length}))));
  return {rows,totals,deadlines};
+}
+
+export function mealSubmissionSource(submission:MealSubmission|null|undefined,id:string):string{
+ const state=mealState(submission,id);if(state?.status!=='submitted')return '';
+ const entry=[...(submission?.audit||[])].reverse().find(e=>e.action==='submit'&&e.meals.some(m=>m.menuId===id&&m.after.state.submittedAt===state.submittedAt));
+ if(entry)return entry.actor.type==='td-paper'?'By scan':entry.actor.type==='td'?'Online · TD entry':'Online';
+ return submission?.submissionSources?.[id]||'Method not recorded';
+}
+export function mealSubmittedLabel(submission:MealSubmission|null|undefined,id:string):string{
+ const state=mealState(submission,id);if(state?.status!=='submitted')return state?'Draft · not submitted':'Not submitted';
+ const date=state.submittedAt&&Number.isFinite(Date.parse(state.submittedAt))?new Date(state.submittedAt).toLocaleString('en-US',{timeZone:'Asia/Ho_Chi_Minh',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' · Hanoi time':'Date not recorded';
+ return `Submitted: ${date} · ${mealSubmissionSource(submission,id)}`;
 }
