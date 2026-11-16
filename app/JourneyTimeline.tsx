@@ -19,7 +19,6 @@ export default function JourneyTimeline({day,dateLabel,events,note,previewUnavai
  return <section className="journey-timeline-panel" aria-label="Today’s journey timeline">
   {heading&&<div className="timeline-heading"><h2>{heading}</h2></div>}
   {!loaded&&<LoadingIndicator label="Checking the latest schedule…"/>}
-  {schedule.updatedAt&&<p className="timeline-updated">Updated by Xavier · {new Date(schedule.updatedAt).toLocaleString('en-US',{timeZone:'Asia/Singapore',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (Singapore / Bali time)</p>}
   <div className="timeline">{schedule.events.map(([time,text],index)=><article className="timeline-entry" key={index}><span className="timeline-time-label">{time}</span><p>{mealWording(text)}</p></article>)}</div>
   <div data-pdf-exclude>
    {authenticated&&!editing&&<button className="timeline-edit-button" disabled={!loaded} onClick={()=>{setDraft({events:schedule.events.map(e=>[...e] as Event),note:schedule.note});setMessage('');setEditing(true);}}>Edit this day’s journey</button>}
