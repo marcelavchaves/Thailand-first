@@ -4,7 +4,7 @@ import {getStore} from '@netlify/blobs';
 import {createHash,randomBytes,randomInt,scryptSync,timingSafeEqual,createCipheriv,createDecipheriv} from 'node:crypto';
 import {hasTDSession,sameOrigin} from '../lib/td-auth';
 import {rosterData,type RosterData} from '../lib/safe-roster';
-import {menus,mealSubmissionSource,MEAL_DEADLINE,WELCOME_DINNER_AT,MEAL_SITE_IDS,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,defaultMealVisibility,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealVisibility,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
+import {menus,mealDietary,mealSubmittedLabel,mealSubmissionSource,MEAL_DEADLINE,WELCOME_DINNER_AT,MEAL_SITE_IDS,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,defaultMealVisibility,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealVisibility,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
 import {exportMeals} from '../lib/meal-exports';
 const store=()=>getStore({name:'meal-choices-v1',consistency:'strong'});
 const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
@@ -95,19 +95,25 @@ export default async function handler(request:Request){
      const format=url.searchParams.get('format')||'xlsx',meal=url.searchParams.get('meal')||'all';
      if(!['csv','xlsx','pdf'].includes(format)||meal!=='all'&&!menus.some(m=>m.id===meal))return reply({error:'Choose an available export.'},400);
      const layout=url.searchParams.get('layout');
-     if(layout!==null&&(layout!=='guest-table'||format!=='pdf'))return reply({error:'Choose a PDF guest table export.'},400);
+     if(layout!==null&&(!['guest-table','guest-summaries'].includes(layout)||format!=='pdf'))return reply({error:'Choose a PDF guest table export.'},400);
      if(format==='csv')return new Response(null,{status:307,headers:{Location:`/api/meal-choices?action=export&format=xlsx&meal=${encodeURIComponent(meal)}`,'Cache-Control':'no-store'}});
      let exported;
      try{
+      if(layout==='guest-summaries'){
+       const {renderGuestSummariesPdf}=await import('../lib/meal-guest-summaries-pdf.mjs');
+       const summaries=data.map((g,index)=>({number:index+1,name:g.name,dietary:mealDietary(g.submission),meals:menus.map(m=>({title:m.title,submitted:mealSubmittedLabel(g.submission,m.id),courses:m.courses.map(c=>({title:c.title,choice:c.options.find(o=>o.id===g.submission?.selections[m.id]?.[c.id])?.name||'No choice selected'}))}))}));
+       exported={bytes:await renderGuestSummariesPdf(summaries),type:'application/pdf'};
+      }else{
       const guestTable=layout==='guest-table'?await Promise.all(guests.map(async(g,index)=>{const profile=await getStore({name:'guest-profiles',consistency:'strong'}).get(`guest/${g.id}`,{type:'json'}) as {photo?:string}|null;return {id:g.id,name:g.name,number:index+1,photo:profile?.photo};})):undefined;
       exported=await exportMeals(mealReport(data,meal,settings.deadlines),format,meal,guestTable,Object.fromEntries(menus.map(m=>[m.title,settings.reportHeaders[m.id]])));
+      }
      }
      catch(error){
       const code=error&&typeof error==='object'&&'code' in error?String(error.code):'EXPORT_FAILED';
       console.error('Meal report export failed',{format,code});
       return reply({error:format==='pdf'?'The meal PDF could not be created. Excel export is still available.':'The meal report could not be created. Please try again.'},503);
      }
-     return new Response(new Uint8Array(exported.bytes),{headers:{'Content-Type':exported.type,'Content-Disposition':`attachment; filename="meal-choices-${meal}${layout==='guest-table'?'-landscape-guests':''}.${format}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+     return new Response(new Uint8Array(exported.bytes),{headers:{'Content-Type':exported.type,'Content-Disposition':`attachment; filename="meal-choices-${meal}${layout==='guest-table'?'-landscape-guests':layout==='guest-summaries'?'-guest-summaries':''}.${format}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
     }
     return reply({...metadata(settings),reportHeaders:settings.reportHeaders,reportHeadersRevision:settings.reportHeadersRevision,guests:data,summary:mealReport(data,'all',settings.deadlines).totals});
    }
