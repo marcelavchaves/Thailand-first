@@ -756,7 +756,6 @@ function XavierDailyNote({ date, home = false, currentDay = false, headerAction,
       {visibleNote ? (
         <>
           <p className="xavier-note-copy">{visibleNote.text}</p>
-          {authenticated && <small>Updated {formatJournalDate(visibleNote.updatedAt)}</small>}
           {authenticated && <div className="announcement-whatsapp" data-pdf-exclude>
             <a className="button" href={`https://wa.me/?text=${encodeURIComponent(`*Wondercase · K&D 103*\n*Day ${tauck(date)} · ${longTripDate(date)}*\nFrom Xavier Brunelle\n\n${visibleNote.text}`)}`} target="_blank" rel="noopener noreferrer">Share announcement to WhatsApp ↗</a>
             <small>Choose the tour group in WhatsApp, then tap Send. Save any edits here before sharing.</small>
