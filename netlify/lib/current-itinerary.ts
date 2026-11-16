@@ -24,6 +24,7 @@ export async function loadCurrentContent(){
  content.data.days=content.data.days.map((day:{date:number},index:number)=>({...day,...importedSchedule(snapshot,day.date,changes[index])}));
  for(const section of content.sections)for(const block of section.blocks)if(block.directorPhoto&&director?.photo)block.photo=director.photo;
  content.guests=visibleGuests.map(g=>g.name);
+ content.guestTiles=visibleGuests.map((g,index)=>({name:g.preferredName&&!g.name.includes('('+g.preferredName+')')?g.name+' ('+g.preferredName+')':g.name,origin:g.origin,photo:publicProfiles[index].photo}));
  const guestSection=content.sections.find((section:any)=>section.title==='Our Travelers'||section.title==='The Guest List');
  if(guestSection)guestSection.blocks=visibleGuests.length?visibleGuests.flatMap((g,index)=>[
   {kind:'heading',text:g.name,guestId:g.id,photo:publicProfiles[index].photo||undefined},
