@@ -43,3 +43,5 @@
 .meal-choice-summary h3{font-size:18px;margin:0 0 8px}.meal-choice-summary dl>div{margin:12px 0}.meal-choice-summary dt{font-weight:600;font-size:14px}.meal-choice-summary dd{margin:5px 0;line-height:1.6}
 
 .meal-summary-email{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;border:1px solid var(--brand-green);border-radius:9px;padding:11px 16px;text-decoration:none;font-weight:600}.meal-admin .meal-actions button[aria-pressed=false]{background:white;color:var(--brand-green)}
+
+.meal-admin .meal-photo-option{display:flex;align-items:center;gap:10px;margin:18px 0}.meal-photo-option input{width:20px;height:20px;accent-color:var(--brand-green)}

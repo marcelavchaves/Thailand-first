@@ -67,3 +67,8 @@ export function mealSubmittedLabel(submission:MealSubmission|null|undefined,id:s
  const date=state.submittedAt&&Number.isFinite(Date.parse(state.submittedAt))?new Date(state.submittedAt).toLocaleString('en-US',{timeZone:'Asia/Ho_Chi_Minh',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' · Hanoi time':'Date not recorded';
  return `Submitted: ${date} · ${mealSubmissionSource(submission,id)}`;
 }
+
+export function hasDietaryRestrictions(note:string):boolean{
+ const normalized=note.trim().toLowerCase().replace(/[.!]+$/,'').replace(/\s+/g,' ');
+ return !!normalized&&!/^(none|none provided|no|n\/?a|not applicable|no (known )?(food )?allergies( or (dietary )?restrictions)?|no (dietary )?restrictions|no dietary restrictions or allergies)$/.test(normalized);
+}
