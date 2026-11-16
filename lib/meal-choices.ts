@@ -72,3 +72,5 @@ export function hasDietaryRestrictions(note:string):boolean{
  const normalized=note.trim().toLowerCase().replace(/[.!]+$/,'').replace(/\s+/g,' ');
  return !!normalized&&!/^(none|none provided|no|n\/?a|not applicable|no (known )?(food )?allergies( or (dietary )?restrictions)?|no (dietary )?restrictions|no dietary restrictions or allergies)$/.test(normalized);
 }
+
+export const TD_MEAL_ID='staff-tour-director';

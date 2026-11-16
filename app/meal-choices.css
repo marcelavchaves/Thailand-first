@@ -45,3 +45,7 @@
 .meal-summary-email{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;border:1px solid var(--brand-green);border-radius:9px;padding:11px 16px;text-decoration:none;font-weight:600}.meal-admin .meal-actions button[aria-pressed=false]{background:white;color:var(--brand-green)}
 
 .meal-admin .meal-photo-option{display:flex;align-items:center;gap:10px;margin:18px 0}.meal-photo-option input{width:20px;height:20px;accent-color:var(--brand-green)}
+
+.meal-export-links .pdf-download-control{min-width:0}.meal-export-links .pdf-download-control p{max-width:340px;font-size:13px}.meal-pdf-preview canvas{display:block;max-width:100%;height:auto;margin:16px auto}.meal-preview-toolbar{position:sticky;top:0;background:white;padding:12px;z-index:1;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.meal-pdf-fullscreen{position:fixed;inset:0;margin:0;z-index:10000;overflow:auto;background:white;border-radius:0}.meal-pdf-preview nav{padding:12px}
+
+.meal-pdf-preview:not(.meal-pdf-fullscreen) .meal-preview-toolbar{top:var(--app-header-height,0px)}
