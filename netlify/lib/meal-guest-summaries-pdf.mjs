@@ -1,6 +1,6 @@
 import PDFDocument from 'pdfkit';
 import {join} from 'node:path';
-/** @param {Array<{number:number,name:string,dietary:string,meals:Array<{title:string,submitted:string,courses:Array<{title:string,choice:string}>}>}>} guests */
+/** @param {Array<{number:number|string,name:string,dietary:string,meals:Array<{title:string,submitted:string,courses:Array<{title:string,choice:string}>}>}>} guests */
 export async function renderGuestSummariesPdf(guests){
  const doc=new PDFDocument({size:'A4',layout:'landscape',margins:{top:40,left:44,right:44,bottom:20},autoFirstPage:false,bufferPages:true,info:{Title:'Wondercase — Guest Meal Summaries',Author:'Wondercase'}}),chunks=[];
  const ready=new Promise((resolve,reject)=>{doc.on('data',b=>chunks.push(b));doc.on('end',()=>resolve(Buffer.concat(chunks)));doc.on('error',reject);});

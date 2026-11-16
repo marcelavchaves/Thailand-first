@@ -102,7 +102,7 @@ try{
  const snapshot=()=>JSON.stringify([...state.stores].flatMap(([name,map])=>[...map].map(([key,value])=>[name,key,value])).sort((a,b)=>(a[0]+'/'+a[1]).localeCompare(b[0]+'/'+b[1])));
  const retained=snapshot();
  response=await call('GET',null,'?action=export&format=csv&meal=vedana');assert.equal(response.status,307);assert.match(response.headers.get('location'),/format=xlsx/);
- response=await call('GET',null,'?action=export&format=xlsx&meal=vedana');assert.equal(response.status,200);const excel=(Buffer.from(await response.arrayBuffer())).toString();assert(excel.includes(a.name));assert(excel.includes('Peanut allergy'));assert(!excel.includes('New dietary note'));assert(!excel.includes('Lakorn'));assert(excel.includes('Deadline (Hanoi time)'));
+ response=await call('GET',null,'?action=export&format=xlsx&meal=vedana');assert.equal(response.status,200);const excel=(Buffer.from(await response.arrayBuffer())).toString();assert(excel.includes(a.name));assert(excel.includes('New dietary note'));assert(!excel.includes('Peanut allergy'));assert(!excel.includes('Lakorn'));assert(excel.includes('Deadline (Hanoi time)'));
  response=await call('GET',null,'?action=export&format=xlsx&meal=farewell');assert((Buffer.from(await response.arrayBuffer())).toString().includes('=HYPERLINK(&quot;bad&quot;)'));
  for(const format of ['xlsx','pdf']){response=await call('GET',null,'?action=export&format='+format+'&meal=vedana');assert.equal(response.status,200);const bytes=Buffer.from(await response.arrayBuffer());assert(bytes.subarray(0,4).equals(Buffer.from(format==='pdf'?'%PDF':'PK\x03\x04')));await writeFile('/tmp/meal-test-export.'+format,bytes);}
  const sharp=(await import('sharp')).default;

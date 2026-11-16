@@ -4,7 +4,7 @@ import {getStore} from '@netlify/blobs';
 import {createHash,randomBytes,randomInt,scryptSync,timingSafeEqual,createCipheriv,createDecipheriv} from 'node:crypto';
 import {hasTDSession,sameOrigin} from '../lib/td-auth';
 import {rosterData,type RosterData} from '../lib/safe-roster';
-import {menus,hasDietaryRestrictions,mealDietary,mealSubmittedLabel,mealSubmissionSource,MEAL_DEADLINE,WELCOME_DINNER_AT,MEAL_SITE_IDS,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,defaultMealVisibility,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealVisibility,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
+import {menus,TD_MEAL_ID,hasDietaryRestrictions,mealDietary,mealSubmittedLabel,mealSubmissionSource,MEAL_DEADLINE,WELCOME_DINNER_AT,MEAL_SITE_IDS,validateSubmission,mealReport,MEAL_PINS_REQUIRED,defaultMealDeadlines,defaultMealVisibility,mealLocks,mealState,type MealSubmission,type MealReportGuest,type MealDeadlines,type MealVisibility,type MealState,type MealAuditEntry} from '../../lib/meal-choices';
 import {exportMeals} from '../lib/meal-exports';
 const store=()=>getStore({name:'meal-choices-v1',consistency:'strong'});
 const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
@@ -90,7 +90,12 @@ export default async function handler(request:Request){
   if(request.method==='GET'){
    if(action==='td'||action==='export'){
     if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
-    const data=await report(guests);
+    const manifest=await getStore({name:'hotel-manifests-v1',consistency:'strong'}).get('manifest',{type:'json'}) as {director?:string}|null;
+    const staff={id:TD_MEAL_ID,name:(manifest?.director||'Tour Director')+' (TD)'};
+    const director=(await report([staff]))[0];
+    const participants=action==='export'&&director.submission?[...guests,staff]:guests;
+    const data=await report(participants);
+    const photoFor=async(id:string)=>id===TD_MEAL_ID?(await getStore({name:'director-profile',consistency:'strong'}).get('xavier',{type:'json'}) as {photo?:string}|null)?.photo:(await getStore({name:'guest-profiles',consistency:'strong'}).get(`guest/${id}`,{type:'json'}) as {photo?:string}|null)?.photo;
     if(action==='export'){
      const format=url.searchParams.get('format')||'xlsx',meal=url.searchParams.get('meal')||'all';
      if(!['csv','xlsx','pdf'].includes(format)||meal!=='all'&&!menus.some(m=>m.id===meal))return reply({error:'Choose an available export.'},400);
@@ -102,14 +107,14 @@ export default async function handler(request:Request){
       if(layout==='dietary-portrait'){
        const {renderDietaryPortraitPdf}=await import('../lib/meal-dietary-portrait-pdf.mjs');
        const selected=data.filter(g=>hasDietaryRestrictions(mealDietary(g.submission)));
-       const entries=await Promise.all(selected.map(async g=>{const profile=await getStore({name:'guest-profiles',consistency:'strong'}).get(`guest/${g.id}`,{type:'json'}) as {photo?:string}|null;return {name:g.name,dietary:mealDietary(g.submission),photo:profile?.photo};}));
+       const entries=await Promise.all(selected.map(async g=>{return {name:g.name,dietary:mealDietary(g.submission),photo:await photoFor(g.id)};}));
        exported={bytes:await renderDietaryPortraitPdf(entries),type:'application/pdf'};
       }else if(layout==='guest-summaries'){
        const {renderGuestSummariesPdf}=await import('../lib/meal-guest-summaries-pdf.mjs');
-       const summaries=data.map((g,index)=>({number:index+1,name:g.name,dietary:mealDietary(g.submission),meals:menus.map(m=>({title:m.title,submitted:mealSubmittedLabel(g.submission,m.id),courses:m.courses.map(c=>({title:c.title,choice:c.options.find(o=>o.id===g.submission?.selections[m.id]?.[c.id])?.name||'No choice selected'}))}))}));
+       const summaries=data.map((g,index)=>({number:g.id===TD_MEAL_ID?'TD':index+1,name:g.name,dietary:mealDietary(g.submission),meals:menus.map(m=>({title:m.title,submitted:mealSubmittedLabel(g.submission,m.id),courses:m.courses.map(c=>({title:c.title,choice:c.options.find(o=>o.id===g.submission?.selections[m.id]?.[c.id])?.name||'No choice selected'}))}))}));
        exported={bytes:await renderGuestSummariesPdf(summaries),type:'application/pdf'};
       }else{
-      const guestTable=layout==='guest-table'?await Promise.all(guests.map(async(g,index)=>{const profile=await getStore({name:'guest-profiles',consistency:'strong'}).get(`guest/${g.id}`,{type:'json'}) as {photo?:string}|null;return {id:g.id,name:g.name,number:index+1,photo:profile?.photo};})):undefined;
+      const guestTable=layout==='guest-table'?await Promise.all(participants.map(async(g,index)=>({id:g.id,name:g.name,number:g.id===TD_MEAL_ID?'TD':index+1,photo:await photoFor(g.id)}))):undefined;
       exported=await exportMeals(mealReport(data,meal,settings.deadlines),format,meal,guestTable,Object.fromEntries(menus.map(m=>[m.title,settings.reportHeaders[m.id]])),{includePhotos:url.searchParams.get('photos')==='1'});
       }
      }
@@ -120,11 +125,11 @@ export default async function handler(request:Request){
      }
      return new Response(new Uint8Array(exported.bytes),{headers:{'Content-Type':exported.type,'Content-Disposition':`attachment; filename="meal-choices-${meal}${layout==='guest-table'?'-landscape-guests':layout==='guest-summaries'?'-guest-summaries':layout==='dietary-portrait'?'-dietary-restrictions':''}.${format}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
     }
-    return reply({...metadata(settings),reportHeaders:settings.reportHeaders,reportHeadersRevision:settings.reportHeadersRevision,guests:data,summary:mealReport(data,'all',settings.deadlines).totals});
+    return reply({...metadata(settings),reportHeaders:settings.reportHeaders,reportHeadersRevision:settings.reportHeadersRevision,guests:data,director,summary:mealReport([...data,...(director.submission?[director]:[])],'all',settings.deadlines).totals});
    }
    if(action==='paper-review'){
     if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
-    const guest=guests.find(g=>g.id===url.searchParams.get('guestId'));if(!guest)return reply({error:'Choose a current traveler.'},400);
+    const guest=url.searchParams.get('guestId')===TD_MEAL_ID?{id:TD_MEAL_ID,name:'Tour Director (TD)'}:guests.find(g=>g.id===url.searchParams.get('guestId'));if(!guest)return reply({error:'Choose a current traveler.'},400);
     const choice=await store().getWithMetadata('choice/'+guest.id,{type:'json'});
     return reply({...metadata(settings),guest,submission:travelerSubmission(await withCurrentDietary(guest.id,choice?.data as MealSubmission|null)),revision:choice?.etag||null});
    }
@@ -260,8 +265,8 @@ export default async function handler(request:Request){
    }
    return reply({error:'Unknown action.'},400);
   }
-  const paperGuest=paperImport||tdEdit?guests.find(g=>g.id===body.guestId):null;
-  const guest=paperImport||tdEdit?(paperGuest?{...paperGuest,actor:tdEdit?{type:'td' as const,label:'TD Suitcase correction'}:{type:'td-paper' as const,label:'TD paper-form entry'}}:null):await authenticatedGuest(request,guests);
+  const paperGuest=paperImport||tdEdit?(tdEdit&&body.guestId===TD_MEAL_ID?{id:TD_MEAL_ID,name:'Tour Director (TD)'}:guests.find(g=>g.id===body.guestId)):null;
+  const guest=paperImport||tdEdit?(paperGuest?{...paperGuest,actor:tdEdit?{type:'td' as const,label:body.guestId===TD_MEAL_ID?'TD own meal choices':'TD Suitcase correction'}:{type:'td-paper' as const,label:'TD paper-form entry'}}:null):await authenticatedGuest(request,guests);
   if(!guest)return reply({error:paperImport||tdEdit?'Choose a current traveler.':'Open your private meal link to continue.'},paperImport||tdEdit?400:401);
   if(body.guestId!==guest.id)return reply({error:'The selected traveler changed in another tab. Reload and choose your name before saving.'},409);
   if(body.action!=='save'&&body.action!=='submit')return reply({error:'Choose Save draft or Submit choices.'},400);
