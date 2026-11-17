@@ -1,4 +1,4 @@
-const CACHE = "vietnam-cambodia-thailand-20261116-offline-reader-v1";
+const CACHE = "vietnam-cambodia-thailand-20261117-offline-reader-v2";
 const READER_CACHE = "wondercase-offline-reader-v1";
 const ASSETS = ["/", "/offline-reader", "/manifest.webmanifest", "/icon-v2-192.png", "/apple-touch-icon-v2.png"];
 const readerPath = path => ["/offline-reader", "/offline-reader/", "/offline-reader.html"].includes(path);

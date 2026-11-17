@@ -19,7 +19,7 @@ for(const day of content.data.days){for(const [time,event]of day.events){assert(
 assert(all.includes('Published announcement preserved.'));assert(all.includes('Sample Traveler'));assert(!all.includes('Historical trivia'));assert(!all.includes('Language lessons'));assert(!all.includes('Updated:'));
 const calendar=await pdf.getPage(3),links=(await calendar.getAnnotations()).filter(a=>typeof a.dest==='string'&&a.dest.startsWith('day-'));
 assert.equal(links.length,16);assert(links.find(a=>a.dest==='day-5').rect[0]>100,'Monday start has leading Sunday blank');assert(Math.abs(links.find(a=>a.dest==='day-11').rect[0]-44)<1,'Day 7 falls on Sunday');
-const toc=(await(await pdf.getPage(2)).getAnnotations()).filter(a=>a.rect[3]-a.rect[1]>50&&['journey','hotels','maps','group','help','guide'].includes(a.dest));assert.equal(toc.length,6);
+const toc=(await(await pdf.getPage(2)).getAnnotations()).filter(a=>a.rect[3]-a.rect[1]>50&&['journey','hotels','group','guide'].includes(a.dest));assert.equal(toc.length,4);assert.equal(await pdf.getDestination('maps'),null);assert.equal(await pdf.getDestination('help'),null);assert(!all.includes('Handouts & Gallery'));assert(!all.includes('Open city map'));assert(!all.includes('Open Gallery'));
 const outline=await pdf.getOutline();assert.equal(outline.filter(o=>o.title.startsWith('Day ')).length,16);assert(bytes.length<6*1024*1024,'Mobile-friendly PDF size');
 console.log(`PASS ${pdf.numPages} styled pages: contents cards, calendar alignment, all destinations/bookmarks, all schedule text, footer dates, page bounds and excluded learning content. ${(bytes.length/1024/1024).toFixed(1)} MB.`);
 await task.destroy();
