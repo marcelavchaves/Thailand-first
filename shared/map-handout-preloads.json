@@ -1,0 +1,38 @@
+[
+  {
+    "id": "map-handout-saigon",
+    "title": "Saigon Map Handout",
+    "file": "saigon.pdf",
+    "size": 2066591
+  },
+  {
+    "id": "map-handout-siemreap",
+    "title": "Siem Reap Map Handout",
+    "file": "siemreap.pdf",
+    "size": 2715934
+  },
+  {
+    "id": "map-handout-itinerary",
+    "title": "Tour Itinerary",
+    "file": "itinerary.pdf",
+    "size": 932887
+  },
+  {
+    "id": "map-handout-chiangmai",
+    "title": "Chiang Mai Map Handout",
+    "file": "chiangmai.pdf",
+    "size": 3345829
+  },
+  {
+    "id": "map-handout-danang",
+    "title": "Da Nang & Hoi An Map Handout",
+    "file": "danang.pdf",
+    "size": 1362857
+  },
+  {
+    "id": "map-handout-hoian",
+    "title": "Hoi An & Da Nang Map Handout",
+    "file": "danang.pdf",
+    "size": 1362857
+  }
+]

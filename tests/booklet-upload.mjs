@@ -53,6 +53,13 @@ try{
  await ok(await call({...link,mapUrl:'',revision:state.db.get('entry/city-map-hanoi').etag}));
  assert.equal((await ok(await call(null))).items['city-map-hanoi'].mapUrl,'');
  console.log('PASS dedicated map PDF upload, shared booklet viewer metadata, hidden release, TD preview, Google Maps link validation and reset.');
+ state.td=false;assert.equal((await call(null,'?booklet=map-handout-saigon')).status,404);state.td=true;
+ const preloaded=await ok(await call(null,'?booklet=map-handout-saigon'));assert.equal(preloaded.preview,true);assert.equal(preloaded.layout,'single');
+ const preloadedFile=await call(null,'?file=map-handout-saigon');assert.equal(preloadedFile.status,200);assert(Buffer.from(await preloadedFile.arrayBuffer()).subarray(0,5).toString()==='%PDF-');
+ await ok(await call({id:'map-handout-saigon',title:'Saigon Map Handout',group:'map-handouts',action:'reveal',revision:null}));
+ state.td=false;assert.equal((await call(null,'?booklet=map-handout-saigon')).status,200);state.td=true;
+ assert.equal((await ok(await call(null,'?booklet=map-handout-itinerary'))).size>0,true);
+ console.log('PASS preloaded map PDFs hidden by default, TD reads bundled PDF, reveal persists and itinerary available.');
  const dimensions=[{width:595,height:842},{width:1190,height:842},{width:1190,height:842}];const auto=bookletPages(dimensions);assert.deepEqual(auto.map(p=>[p.pdfPage,p.side]),[[1,'full'],[2,'left'],[2,'right'],[3,'left'],[3,'right']]);assert.equal(bookletPages(dimensions,'single').length,3);assert.equal(bookletPages(dimensions,'spread').length,6);assert.equal(bookletPages(dimensions,'spread-reversed')[0].side,'right');
  console.log('PASS 5 MB booklet uploads: exact boundary, oversized rejection, small requests, TD/CSRF, part retries, complete reconstruction, hidden publish, conflicts, cancellation/expiry, and single-page spread planning/layout controls.');
 }finally{await rm(dir,{recursive:true,force:true});}
