@@ -3,6 +3,8 @@ import {getStore} from '@netlify/blobs';
 import {hasTDSession,sameOrigin} from '../lib/td-auth';
 import {bookletUpload} from '../lib/booklet-upload';
 import {BOOKLET_CHUNK_BYTES,bookletLayouts} from '../../lib/booklet-pages';
+import booklets from '../../shared/booklets.json';
+import {cityMaps} from '../../app/city-maps';
 import {randomUUID} from 'node:crypto';
 import {importedReleaseEntries} from '../../shared/tour-import.mjs';
 const reply=(x:unknown,status=200)=>Response.json(x,{status,headers:{'Cache-Control':'no-store','Vary':'Cookie'}});
@@ -14,15 +16,25 @@ export default async function handler(req:Request){try{
   const {blobs}=await store.list({prefix:'entry/'});
   const stored=Object.fromEntries((await Promise.all(blobs.map(async b=>{const r=await store.getWithMetadata(b.key,{type:'json'});return r?[b.key.slice(6),{...(r.data as any),revision:r.etag}]:null;}))).filter(Boolean) as any);
   const entries=importedReleaseEntries(stored);
-  return reply({items:Object.fromEntries(Object.entries(entries).filter(([,e])=>td||!e.booklet||e.visible&&!e.deleted).map(([id,e])=>[id,{id,booklet:e.booklet===true,bookletLayout:e.bookletLayout||'auto',type:e.type||null,title:e.title,group:e.group,visible:e.visible===true,deleted:e.deleted===true,file:!!e.blob,...(td?{revision:e.revision||null}:{})}]))});
+  return reply({items:Object.fromEntries(Object.entries(entries).filter(([,e])=>td||!e.booklet||e.visible&&!e.deleted).map(([id,e])=>[id,{id,booklet:e.booklet===true,bookletLayout:e.bookletLayout||'auto',type:e.type||null,title:e.title,group:e.group,visible:e.visible===true,deleted:e.deleted===true,file:!!e.blob,mapHandoutId:e.mapHandoutId||null,...(td?{revision:e.revision||null}:{})}]))});
  }
  if(req.method!=='PUT')return reply({error:'Method not allowed'},405);
  if(!sameOrigin(req))return reply({error:'Open this action from the app.'},403);
  if(!td)return reply({error:'Sign in as the tour director.'},401);
  const raw=await req.text();if(raw.length>4300000)return reply({error:'Choose a file smaller than 3 MB.'},413);let b;try{b=JSON.parse(raw);}catch{return reply({error:'Invalid request'},400);}
  if(['booklet-start','booklet-part','booklet-finish','booklet-cancel'].includes(b?.action))return await bookletUpload(b);
- if(!/^[a-zA-Z0-9_-]{1,100}$/.test(b.id)||typeof b.title!=='string'||!b.title.trim()||b.title.length>120||typeof b.group!=='string'||b.group.length>100||!['reveal','hide','upload','delete','restore','rename','booklet','booklet-layout'].includes(b.action)||!(b.revision===null||typeof b.revision==='string'))return reply({error:'Invalid resource details.'},400);
+ if(!/^[a-zA-Z0-9_-]{1,100}$/.test(b.id)||typeof b.title!=='string'||!b.title.trim()||b.title.length>120||typeof b.group!=='string'||b.group.length>100||!['reveal','hide','upload','delete','restore','rename','booklet','booklet-layout','map-handout'].includes(b.action)||!(b.revision===null||typeof b.revision==='string'))return reply({error:'Invalid resource details.'},400);
  const old:any=await store.get('entry/'+b.id,{type:'json'});const initial=importedReleaseEntries(old?{[b.id]:old}:{})[b.id]||old;const entry={...initial,id:b.id,title:b.title.trim(),group:initial?.group||b.group,visible:initial?.visible===true,deleted:initial?.deleted===true,updatedAt:new Date().toISOString()};
+ if(b.action==='map-handout'){
+  if(!cityMaps.some(city=>b.id===`city-map-${city.id}`)||entry.group!=='maps')return reply({error:'Choose a city map tile.'},400);
+  if(b.mapHandoutId!==null){
+   if(typeof b.mapHandoutId!=='string'||!/^[a-zA-Z0-9_-]{1,100}$/.test(b.mapHandoutId))return reply({error:'Choose a handout.'},400);
+   const savedHandout:any=await store.get('entry/'+b.mapHandoutId,{type:'json'});
+   const handout:any=importedReleaseEntries(savedHandout?{[b.mapHandoutId]:savedHandout}:{})[b.mapHandoutId];
+   if(!handout||handout.group!=='handouts'||handout.deleted||(!handout.blob&&!booklets.some(booklet=>booklet.id===b.mapHandoutId)))return reply({error:'Choose an available handout.'},400);
+  }
+  Object.assign(entry,{mapHandoutId:b.mapHandoutId});
+ }
  let newBlob:string|undefined;
  if(b.action==='upload'){
  const u=b.upload;if(!u||!['application/pdf','image/jpeg','image/png','image/webp'].includes(u.type)||typeof u.data!=='string')return reply({error:'Upload a PDF, JPG, PNG or WebP.'},400);

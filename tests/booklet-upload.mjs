@@ -24,6 +24,20 @@ try{
  await ok(await call({action:'booklet-cancel',uploadId:replacement.uploadId}));
  const expiry=await ok(await call({...base,revision:state.db.get('entry/'+base.id).etag,size:12}));state.db.get('booklet-uploads/meta/'+expiry.uploadId).data.expires=Date.now()-1;assert.equal((await call({action:'booklet-finish',uploadId:expiry.uploadId})).status,410);
  let rev=state.db.get('entry/'+base.id).etag;assert.equal((await call({...base,action:'booklet-layout',layout:'invalid',revision:rev})).status,400);await ok(await call({...base,action:'booklet-layout',layout:'single',revision:rev}));assert.equal(state.db.get('entry/'+base.id).data.visible,false);assert.equal((await ok(await call(null,'?booklet='+base.id))).layout,'single');
+ const association={id:'city-map-hanoi',title:'Hanoi map',group:'maps',action:'map-handout',mapHandoutId:base.id,revision:null};
+ state.td=false;assert.equal((await call(association)).status,401);state.td=true;
+ assert.equal((await call({...association,id:'custom-not-a-city'})).status,400);
+ assert.equal((await call({...association,mapHandoutId:'missing-handout'})).status,400);
+ await ok(await call(association));
+ state.td=false;let resources=await ok(await call(null));assert.equal(resources.items['city-map-hanoi'].mapHandoutId,base.id);assert(!resources.items[base.id]);assert.equal((await call(null,'?booklet='+base.id)).status,404);
+ state.td=true;rev=state.db.get('entry/'+base.id).etag;await ok(await call({...base,action:'reveal',revision:rev}));
+ state.td=false;resources=await ok(await call(null));assert(resources.items[base.id].visible);assert.equal((await call(null,'?booklet='+base.id)).status,200);
+ state.td=true;assert.equal((await call({...association,mapHandoutId:null})).status,409);
+ await ok(await call({...association,mapHandoutId:null,revision:state.db.get('entry/city-map-hanoi').etag}));
+ assert.equal((await ok(await call(null))).items['city-map-hanoi'].mapHandoutId,null);
+ await ok(await call({...association,mapHandoutId:'booklet-bangkok',revision:state.db.get('entry/city-map-hanoi').etag}));
+ assert.equal((await ok(await call(null))).items['city-map-hanoi'].mapHandoutId,'booklet-bangkok');
+ console.log('PASS map-handout associations: TD only, city and handout validation, hidden booklet protection, released booklet access, revision conflicts and removal.');
  const dimensions=[{width:595,height:842},{width:1190,height:842},{width:1190,height:842}];const auto=bookletPages(dimensions);assert.deepEqual(auto.map(p=>[p.pdfPage,p.side]),[[1,'full'],[2,'left'],[2,'right'],[3,'left'],[3,'right']]);assert.equal(bookletPages(dimensions,'single').length,3);assert.equal(bookletPages(dimensions,'spread').length,6);assert.equal(bookletPages(dimensions,'spread-reversed')[0].side,'right');
  console.log('PASS 5 MB booklet uploads: exact boundary, oversized rejection, small requests, TD/CSRF, part retries, complete reconstruction, hidden publish, conflicts, cancellation/expiry, and single-page spread planning/layout controls.');
 }finally{await rm(dir,{recursive:true,force:true});}

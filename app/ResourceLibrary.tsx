@@ -8,7 +8,7 @@ import BrandIcon from './BrandIcon';
 import {uploadBooklet} from '../lib/booklet-upload';
 import {BOOKLET_MAX_BYTES,type BookletLayout} from '../lib/booklet-pages';
 import {validateBookletPdf} from '../lib/booklet-pdf';
-type Entry={id:string;title:string;group:string;visible:boolean;deleted?:boolean;file?:boolean;revision?:string|null;booklet?:boolean;bookletLayout?:BookletLayout;type?:string|null};
+type Entry={mapHandoutId?:string|null;id:string;title:string;group:string;visible:boolean;deleted?:boolean;file?:boolean;revision?:string|null;booklet?:boolean;bookletLayout?:BookletLayout;type?:string|null};
 type State={items:Record<string,Entry>;loaded:boolean;error:string;reload:()=>Promise<void>};
 const Context=createContext<State>({items:{},loaded:false,error:'',reload:async()=>{}});
 export function useResources(){return useContext(Context);}

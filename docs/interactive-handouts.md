@@ -19,3 +19,9 @@ PDF handouts use staged uploads with 2 MB binary-equivalent pieces, keeping base
 New resource metadata records original byte size. PDFs over 3 MB are also fetched in 2 MB response pieces for reader loading and original-file downloads, avoiding binary-response transport limits. Every part checks the normal visibility/TD permission and source version; hiding blocks subsequent parts. Reassembled bytes are verified against expected lengths.
 
 Validation: tests/booklet-upload.mjs covers exact 5 MB acceptance, >5 MB rejection, complete upload/download reconstruction, small request sizes, TD/CSRF, duplicate parts, incomplete uploads, stale revisions, cancellation/expiry, layout persistence and page planning. Browser checks use an actual exact-5-MB valid PDF containing two side-by-side sheets, verifying four individual pages with correct text and pixel colors, touch swipes, zoom, saved layout override and a byte-identical original PDF download.
+
+## Map tile handouts (prototype)
+
+In TD Suitcase → Maps, choose **Handout For [city]** to associate an existing illustrated booklet or uploaded handout with a city tile. Select **Open Map Directly** to remove the association. Assignments are saved with revision checks; they do not change the handout's visibility or replace city map uploads.
+
+Travelers open a released handout directly from its tile, with an **Open Map** link and a return to Maps. PDF booklets retain swiping and zoom, illustrated booklets retain their full-screen reader, and image handouts display inline. Hidden, deleted or unavailable handouts are never opened from tiles; those tiles keep their original map links.
