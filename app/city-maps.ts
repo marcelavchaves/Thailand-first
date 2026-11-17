@@ -2,9 +2,9 @@ export const cityMaps=[
  {id:'hanoi',name:'Hanoi',xavUrl:'https://maps.app.goo.gl/xYNpoB1qDGe6rfy76?g_st=i'},
  {id:'hue',name:'Hue'},
  {id:'danang',name:'Da Nang',xavUrl:'https://www.google.com/maps/placelists/list/tAV0ppFSrn-rVp1UBzGbYSMzkTUt0Q?token=YXLdY6_exYc&shh=CAE&g_st=i',primaryLink:true},
- {id:'hoian',name:'Hoi An'},
  {id:'saigon',name:'Ho Chi Minh City (Saigon)',xavUrl:'https://maps.app.goo.gl/GX8iH6YDuY3whSF17?g_st=i',primaryLink:true},
  {id:'siemreap',name:'Siem Reap',xavUrl:'https://maps.app.goo.gl/rDc8nzsBtgjNmVLPA?g_st=i',primaryLink:true},
+ {id:'angkorwat',name:'Angkor Wat'},
  {id:'chiangmai',name:'Chiang Mai',xavUrl:'https://maps.app.goo.gl/fRRXFUc3f6phM7J28?g_st=i',primaryLink:true},
  {id:'bangkok',name:'Bangkok',xavUrl:'https://maps.app.goo.gl/CAUsDLDWoHVoSDVi8?g_st=i',primaryLink:true},
 ] as const;

@@ -12,16 +12,10 @@
     "size": 2715934
   },
   {
-    "id": "map-handout-itinerary",
-    "title": "Tour Itinerary",
-    "file": "itinerary.pdf",
-    "size": 932887
-  },
-  {
-    "id": "map-handout-chiangmai",
-    "title": "Chiang Mai Map Handout",
-    "file": "chiangmai.pdf",
-    "size": 3345829
+    "id": "map-handout-angkorwat",
+    "title": "Angkor Wat & Siem Reap Map Handout",
+    "file": "siemreap.pdf",
+    "size": 2715934
   },
   {
     "id": "map-handout-danang",
@@ -30,9 +24,15 @@
     "size": 1362857
   },
   {
-    "id": "map-handout-hoian",
-    "title": "Hoi An & Da Nang Map Handout",
-    "file": "danang.pdf",
-    "size": 1362857
+    "id": "map-handout-chiangmai",
+    "title": "Chiang Mai Map Handout",
+    "file": "chiangmai.pdf",
+    "size": 3345828
+  },
+  {
+    "id": "map-handout-bangkok",
+    "title": "Bangkok Map Handout",
+    "file": "bangkok.pdf",
+    "size": 3662499
   }
 ]

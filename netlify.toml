@@ -41,6 +41,3 @@
 
 [functions."offline-snapshot"]
   included_files = ["netlify/data/itinerary-content.json", "scripts/fonts/**", "public/images/**", "public/documents/**"]
-
-[functions."tour-resources"]
-  included_files = ["netlify/data/map-handouts/*.pdf"]

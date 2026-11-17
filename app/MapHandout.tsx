@@ -2,7 +2,7 @@
 import {useEffect,useState} from 'react';
 import {useResources} from './ResourceLibrary';
 import {cityMaps,googleCityMap} from './city-maps';
-import BookletReader from './BookletReader';
+import MapPdfReader from './MapPdfReader';
 import {useTDSession} from './TDSession';
 export default function MapHandout(){
  const {authenticated}=useTDSession();
@@ -12,5 +12,5 @@ export default function MapHandout(){
  if(!loaded)return <main className="page"><a href="/?tab=map">← Back To Maps</a><p role="status">{error||'Opening handout…'}</p></main>;
  const url=googleCityMap(cityId,items);
  if(!city||!handout?.file||!handout.booklet||(!handout.visible&&!authenticated)||handout.deleted)return <main className="page"><a href="/?tab=map">← Back To Maps</a><p>This handout is not currently available.</p>{city&&<a className="button" href={url} target="_blank" rel="noopener noreferrer">Open Map ↗</a>}</main>;
- return <BookletReader resourceId={handout.id} mapUrl={url} backUrl="/?tab=map" backLabel="Maps"/>;
+ return <MapPdfReader id={handout.id} title={handout.title} cover={items[`city-map-${cityId}`]?.mapCover} mapUrl={url}/>;
 }

@@ -25,3 +25,9 @@ Validation: tests/booklet-upload.mjs covers exact 5 MB acceptance, >5 MB rejecti
 In TD Suitcase → Maps, each city has a dedicated **Map Handout** PDF slot (up to 5 MB), and an editable **Google Maps Link**. Upload, preview, rename, show/hide, replace, change page layout, delete or restore using the same controls as Handouts. New and replacement PDFs stay hidden until shown. These map handouts are separate from the general Handouts list.
 
 Released PDFs open directly from the city tile in the same BookletReader used by Handouts, with swiping, zoom and an **Open Map** link. The TD can preview hidden PDFs. Unavailable handouts leave the tile's original map behavior in place. Clear a Google Maps link to use the original city link again. Existing city map uploads and Other Maps controls remain available.
+
+### Prototype map reader and covers
+
+Map places match the large route image: Hanoi, Hue, Da Nang (including Hoi An), Saigon, Siem Reap, Angkor Wat, Chiang Mai and Bangkok. Each TD city section contains one handout, one optional JPEG cover upload and one Google Maps link. The large image always opens the city map or saved custom link; a released tile opens the full-screen Handouts reader. Covers offer Open Map, and reading uses the shared Pages, swipe and Zoom controls.
+
+The supplied Saigon, Siem Reap, Chiang Mai, Da Nang and Bangkok PDFs are bundled privately with the resource function. Duplicate printed halves are removed from the reader copies. Supplied map handouts are shown by default; a saved TD hide/show decision always wins. New TD uploads remain hidden until released. Preloaded PDF metadata uses the actual bundled byte size, including for previously saved release records. No filesystem-relative PDF path is required at runtime.
