@@ -1,41 +1,27 @@
-const CACHE = "vietnam-cambodia-thailand-20261116-v3",
-  ASSETS = [
-    "/",
-    "/manifest.webmanifest",
-    "/manifest-live-v028.webmanifest",
-    "/icons/kingdoms-dragons-live-180.png",
-    "/icons/kingdoms-dragons-live-192.png",
-    "/icons/kingdoms-dragons-live-512.png",
-    "/manifest-test-v011.webmanifest",
-    "/icons/kd102-test-v011-192.png",
-    "/icons/kd102-test-v011-180.png",
-    "/icons/kd102-test-v011-512.png",
-    "/brand/main-icon.png",
-    "/brand/icon-board.jpeg",
-    "/fonts/montserrat-400.ttf",
-    "/fonts/montserrat-500.ttf",
-    "/fonts/montserrat-600.ttf",
-    "/fonts/montserrat-700.ttf",
-    "/apple-touch-icon-v2.png",
-    "/icon-v2-192.png",
-    "/images/app-icon-v2-1024.png",
-    "/images/agency-emblem.png",
-    "/images/singapore.jpg",
-    "/images/java.jpg",
-    "/images/bali.jpg",
-    "/images/komodo.jpg",
-    "/images/journey-map.png",
-    "/images/approved-home-banner.png",
-    "/documents/xavier-java/IMG_8806.jpeg",
-    "/documents/xavier-java/IMG_8807.jpeg",
-    "/documents/xavier-java/IMG_8808.jpeg",
-    "/documents/xavier-java/IMG_8809.jpeg",
-  ];
+const CACHE = "vietnam-cambodia-thailand-20261117-offline-reader-v2";
+const READER_CACHE = "wondercase-offline-reader-v1";
+const ASSETS = ["/", "/offline-reader", "/manifest.webmanifest", "/icon-v2-192.png", "/apple-touch-icon-v2.png"];
+const readerPath = path => ["/offline-reader", "/offline-reader/", "/offline-reader.html"].includes(path);
+const allowedReaderAsset = url => url.origin === self.location.origin && (readerPath(url.pathname) || url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/fonts/") || url.pathname.startsWith("/booklet-assets/") || url.pathname === "/guest-scan/pdf.worker.min.mjs");
+async function savedReader(){const cache=await caches.open(READER_CACHE);return cache.match("/offline-reader");}
+self.addEventListener("message",event=>{
+ if(event.data?.type!=="SAVE_OFFLINE_READER")return;
+ event.waitUntil((async()=>{try{
+  const urls=[...new Set(event.data.urls||[])].map(value=>new URL(value,self.location.origin));
+  if(!urls.length||urls.length>250||urls.some(url=>!allowedReaderAsset(url)))throw Error("Unable to save the reader files.");
+  const cache=await caches.open(READER_CACHE);
+  // Store every dependency first; replace the pinned HTML only once its files are available.
+  await Promise.all(urls.filter(url=>!readerPath(url.pathname)).map(async url=>{const response=await fetch(url.href,{cache:"reload"});if(!response.ok)throw Error("A required reader file could not be downloaded. Please try again.");await cache.put(url.href,response);}));
+  const response=await fetch("/offline-reader",{cache:"reload"});if(!response.ok)throw Error("Unable to save the offline reader page.");
+  await cache.put("/offline-reader",response.clone());await cache.put("/offline-reader/",response.clone());await cache.put("/offline-reader.html",response);
+  event.ports[0]?.postMessage({ok:true});
+ }catch(error){event.ports[0]?.postMessage({ok:false,error:error.message||"Unable to save the offline reader."});}})());
+});
 self.addEventListener("install", (e) =>
   e.waitUntil(
     caches
       .open(CACHE)
-      .then((c) => c.addAll(ASSETS))
+      .then((c) => Promise.all(ASSETS.map(url=>c.add(url).catch(()=>{}))))
       .then(() => self.skipWaiting()),
   ),
 );
@@ -45,7 +31,7 @@ self.addEventListener("activate", (e) =>
       .keys()
       .then((keys) =>
         Promise.all(
-          keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)),
+          keys.filter((k) => k !== CACHE && k !== READER_CACHE).map((k) => caches.delete(k)),
         ),
       )
       .then(() => self.clients.claim()),
@@ -68,17 +54,15 @@ self.addEventListener("fetch", (e) => {
         }
         return r;
       })
-      .catch(() =>
-        caches
-          .match(e.request)
-          .then(
-            (r) =>
-              r ||
-              (e.request.mode === "navigate"
-                ? caches.match("/")
-                : Response.error()),
-          ),
-      ),
+      .catch(async () => {
+        const reader=await savedReader();
+        if(e.request.mode === "navigate" && reader){
+          if(readerPath(url.pathname))return reader;
+          if(url.pathname === "/")return Response.redirect(new URL("/offline-reader",self.location.origin).href,302);
+        }
+        const pinned=await(await caches.open(READER_CACHE)).match(e.request);
+        return pinned || await caches.match(e.request) || (e.request.mode === "navigate" ? await caches.match("/") : Response.error());
+      }),
   );
 });
 

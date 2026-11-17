@@ -41,6 +41,8 @@ import RecommendedReading from "./RecommendedReading";
 import flightList from './internal-flights.json';
 import LearnMore from './LearnMore';
 import JourneyMaps from "./JourneyMaps";
+import OfflineSnapshot from "./OfflineSnapshot";
+import {useOfflineSnapshotSettings} from "./OfflineSnapshotSettings";
 import hotelList from "./hotels.json";
 type Day = {
   date: number;
@@ -1602,6 +1604,7 @@ type Tab = "map" | "home" | "journey" | "hotels" | "info" | "more" | "gallery" |
 export const tripContent = { days, hotels, hotelResources, localGuides, storytelling, internalFlights, tripDate, shortTripDate, longTripDate, tauck, travelerAlbumUrl, xavierPhoneDisplay, xavierPhoneUrl, xavierEmail };
 
 function TravelerHome({ initialTab = "home", initialSelected = null }: { initialTab?: Tab; initialSelected?: number | null }) {
+ const {data:snapshotAvailability}=useOfflineSnapshotSettings();
   const [tab, setTab] = useState<Tab>(initialTab === "journey" ? "home" : initialTab),
     [selected, setSelected] = useState<number | null>(initialSelected);
   const [fullJourney,setFullJourney]=useState(false);
@@ -1942,7 +1945,9 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
           {key:'tauck',title:'More Tauck experiences',icon:'map',image:'/images/more-travel.svg'},
           {key:'help',title:'Help & Tutorials',icon:'book',image:'/images/more-help.svg'},
           {key:'rating',title:'Help Wondercase Grow',icon:'feedback',image:'/images/more-grow.svg'},
+          ...(snapshotAvailability?.visible?[{key:'offline',title:'Offline Snapshot',icon:'book',image:'/images/more-offline.svg'}]:[]),
         ].map(item=><button key={item.key} type="button" className="more-tile" disabled={item.key==='shop'} aria-expanded={moreSection===item.key} aria-controls={`more-${item.key}`} onClick={()=>{const next=moreSection===item.key?null:item.key;sectionScrollTarget.current=next?`more-${next}`:null;setMoreSection(next);}}><img src={item.image} alt=""/><strong>{item.title}</strong><small>{item.key==='learn'?'Trivia & language':item.key==='help'?'FAQs, how-tos & tutorials':item.key==='shop'?'Coming soon':item.key==='rating'?'Your ideas help us bloom':null}</small></button>)}</div>
+        {moreSection==='offline'&&snapshotAvailability?.visible&&<OfflineSnapshot/>}
         {moreSection==='help'&&<HelpAndTutorials/>}
         {moreSection==='learn'&&<LearnMore days={days}/>}
 
