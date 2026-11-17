@@ -1,3 +1,4 @@
+import {hasMasterAdmin} from '../lib/master-auth';
 import {withCurrentDietary} from '../lib/guest-dietary';
 import type {Config} from '@netlify/functions';
 import {getStore} from '@netlify/blobs';
@@ -125,7 +126,9 @@ export default async function handler(request:Request){
      }
      return new Response(new Uint8Array(exported.bytes),{headers:{'Content-Type':exported.type,'Content-Disposition':`attachment; filename="meal-choices-${meal}${layout==='guest-table'?'-landscape-guests':layout==='guest-summaries'?'-guest-summaries':layout==='dietary-portrait'?'-dietary-restrictions':''}.${format}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
     }
-    return reply({...metadata(settings),reportHeaders:settings.reportHeaders,reportHeadersRevision:settings.reportHeadersRevision,guests:data,director,summary:mealReport([...data,...(director.submission?[director]:[])],'all',settings.deadlines).totals});
+    const masterAdmin=await hasMasterAdmin();
+    const permitted=(g:MealReportGuest)=>masterAdmin?g:{...g,submission:travelerSubmission(g.submission) as MealSubmission|null};
+    return reply({masterAdmin,...metadata(settings),reportHeaders:settings.reportHeaders,reportHeadersRevision:settings.reportHeadersRevision,guests:data.map(permitted),director:permitted(director),summary:mealReport([...data,...(director.submission?[director]:[])],'all',settings.deadlines).totals});
    }
    if(action==='paper-review'){
     if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
@@ -202,6 +205,7 @@ export default async function handler(request:Request){
     return reply({ok:true,message:body.protected?'Your choices are now PIN-protected.':'Your choices are now public. Anyone can edit them by selecting your name.'});
    }
    if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
+   if(['clear-pin','generate-links','reveal-link','replace-link','update-deadlines','generate-missing','replace-pin','reveal-pin'].includes(body.action)&&!await hasMasterAdmin())return reply({error:'Master admin access required.'},403);
    if(body.action==='update-report-headers'){
     if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
     const headers=body.headers;if(!headers||typeof headers!=='object'||Array.isArray(headers)||Object.keys(headers).some(id=>!menus.some(m=>m.id===id))||menus.some(m=>typeof headers[m.id]!=='string'||!headers[m.id].trim()||headers[m.id].length>180||/[\r\n]/.test(headers[m.id])))return reply({error:'Enter a one-line header of 1–180 characters for each meal.'},400);
