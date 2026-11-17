@@ -22,6 +22,6 @@ Validation: tests/booklet-upload.mjs covers exact 5 MB acceptance, >5 MB rejecti
 
 ## Map tile handouts (prototype)
 
-In TD Suitcase → Maps, choose **Handout For [city]** to associate an existing illustrated booklet or uploaded handout with a city tile. Select **Open Map Directly** to remove the association. Assignments are saved with revision checks; they do not change the handout's visibility or replace city map uploads.
+In TD Suitcase → Maps, each city has a dedicated **Map Handout** PDF slot (up to 5 MB), and an editable **Google Maps Link**. Upload, preview, rename, show/hide, replace, change page layout, delete or restore using the same controls as Handouts. New and replacement PDFs stay hidden until shown. These map handouts are separate from the general Handouts list.
 
-Travelers open a released handout directly from its tile, with an **Open Map** link and a return to Maps. PDF booklets retain swiping and zoom, illustrated booklets retain their full-screen reader, and image handouts display inline. Hidden, deleted or unavailable handouts are never opened from tiles; those tiles keep their original map links.
+Released PDFs open directly from the city tile in the same BookletReader used by Handouts, with swiping, zoom and an **Open Map** link. The TD can preview hidden PDFs. Unavailable handouts leave the tile's original map behavior in place. Clear a Google Maps link to use the original city link again. Existing city map uploads and Other Maps controls remain available.

@@ -38,6 +38,21 @@ try{
  await ok(await call({...association,mapHandoutId:'booklet-bangkok',revision:state.db.get('entry/city-map-hanoi').etag}));
  assert.equal((await ok(await call(null))).items['city-map-hanoi'].mapHandoutId,'booklet-bangkok');
  console.log('PASS map-handout associations: TD only, city and handout validation, hidden booklet protection, released booklet access, revision conflicts and removal.');
+ const mapBase={id:'map-handout-hanoi',title:'Hanoi Map Handout',group:'map-handouts',revision:null,size:12,action:'booklet-start'};
+ const mapUpload=await ok(await call(mapBase));await ok(await call({action:'booklet-part',uploadId:mapUpload.uploadId,index:0,data:Buffer.from('%PDF-map1234').toString('base64')}));
+ await ok(await call({action:'booklet-finish',uploadId:mapUpload.uploadId}));
+ assert.equal(state.db.get('entry/'+mapBase.id).data.group,'map-handouts');
+ state.td=false;assert.equal((await call(null,'?booklet='+mapBase.id)).status,404);state.td=true;
+ assert.equal((await ok(await call(null,'?booklet='+mapBase.id))).preview,true);
+ await ok(await call({...mapBase,action:'reveal',revision:state.db.get('entry/'+mapBase.id).etag}));
+ state.td=false;assert.equal((await call(null,'?booklet='+mapBase.id)).status,200);state.td=true;
+ const link={id:'city-map-hanoi',title:'Hanoi map',group:'maps',action:'map-link',revision:state.db.get('entry/city-map-hanoi').etag,mapUrl:'https://maps.app.goo.gl/my-city-map'};
+ for(const mapUrl of ['javascript:alert(1)','https://evil.example/maps','https://google.com.evil.example/maps'])assert.equal((await call({...link,mapUrl})).status,400);
+ state.td=false;assert.equal((await call(link)).status,401);state.td=true;await ok(await call(link));
+ assert.equal((await ok(await call(null))).items['city-map-hanoi'].mapUrl,link.mapUrl);
+ await ok(await call({...link,mapUrl:'',revision:state.db.get('entry/city-map-hanoi').etag}));
+ assert.equal((await ok(await call(null))).items['city-map-hanoi'].mapUrl,'');
+ console.log('PASS dedicated map PDF upload, shared booklet viewer metadata, hidden release, TD preview, Google Maps link validation and reset.');
  const dimensions=[{width:595,height:842},{width:1190,height:842},{width:1190,height:842}];const auto=bookletPages(dimensions);assert.deepEqual(auto.map(p=>[p.pdfPage,p.side]),[[1,'full'],[2,'left'],[2,'right'],[3,'left'],[3,'right']]);assert.equal(bookletPages(dimensions,'single').length,3);assert.equal(bookletPages(dimensions,'spread').length,6);assert.equal(bookletPages(dimensions,'spread-reversed')[0].side,'right');
  console.log('PASS 5 MB booklet uploads: exact boundary, oversized rejection, small requests, TD/CSRF, part retries, complete reconstruction, hidden publish, conflicts, cancellation/expiry, and single-page spread planning/layout controls.');
 }finally{await rm(dir,{recursive:true,force:true});}

@@ -8,11 +8,18 @@ export const cityMaps=[
  {id:'chiangmai',name:'Chiang Mai',xavUrl:'https://maps.app.goo.gl/fRRXFUc3f6phM7J28?g_st=i',primaryLink:true},
  {id:'bangkok',name:'Bangkok',xavUrl:'https://maps.app.goo.gl/CAUsDLDWoHVoSDVi8?g_st=i',primaryLink:true},
 ] as const;
-type MapEntry={visible:boolean;deleted?:boolean;file?:boolean};
+type MapEntry={mapUrl?:string|null;visible:boolean;deleted?:boolean;file?:boolean};
 export function preferredCityMap(id:string,items:Record<string,MapEntry>){
  const city=cityMaps.find(city=>city.id===id);
+ const custom=items[`city-map-${id}`]?.mapUrl;if(custom)return custom;
  if(city&&'primaryLink' in city&&city.primaryLink&&'xavUrl' in city)return city.xavUrl;
  const entryId=`city-map-${id}`,entry=items[entryId];
  if(entry?.visible&&!entry.deleted&&entry.file)return `/api/tour-resources?file=${encodeURIComponent(entryId)}`;
  return city&&'xavUrl' in city?city.xavUrl:null;
+}
+
+export function googleCityMap(id:string,items:Record<string,MapEntry>){
+ const custom=items[`city-map-${id}`]?.mapUrl;if(custom)return custom;
+ const city=cityMaps.find(city=>city.id===id);
+ return city&&'xavUrl'in city?city.xavUrl:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(city?.name||id)}`;
 }
