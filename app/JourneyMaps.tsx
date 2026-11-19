@@ -10,9 +10,16 @@ export default function JourneyMaps(){
   <h1 className="tab-page-title">Maps</h1>
   <InteractiveRouteMap src="/images/southeast-asia-map-without-routes.png"/>
   <ul className="city-map-tiles" aria-label="City maps">{cityMaps.map(city=>{
-   const url=googleCityMap(city.id,items),cover=items[`city-map-${city.id}`]?.mapCover;
+   const url=googleCityMap(city.id,items),name=city.id==='saigon'?'Saigon':city.name;
    const handout=items[`map-handout-${city.id}`],hasHandout=handout?.file&&handout.visible&&!handout.deleted;
-   return <li key={city.id}><a className="city-map-tile" href={hasHandout?`/map-handout?city=${city.id}`:url} target={hasHandout?undefined:"_blank"} rel="noopener noreferrer">{cover?<img src={cover} alt="" style={{width:'100%',height:120,objectFit:'cover'}}/>:<BrandIcon name="map"/>}<strong>{city.id==='saigon'?'Saigon':city.name}</strong><small>{hasHandout?'View Handout':url.startsWith('/api/')?'Uploaded map':'xavUrl'in city?'Xavier’s map':'Google Map'} ↗</small></a></li>;
+   const listContent=<><span className="city-map-action-icon"><BrandIcon name="list"/></span><small>List</small></>;
+   return <li key={city.id}><div className="city-map-tile" role="group" aria-label={name}>
+    <strong>{name}</strong>
+    <div className="city-map-actions">
+     <a className="city-map-action" href={url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${name} map`}><span className="city-map-action-icon"><BrandIcon name="map"/></span><small>Map</small></a>
+     {hasHandout?<a className="city-map-action" href={`/map-handout?city=${city.id}`} aria-label={`Open ${name} list`}>{listContent}</a>:<button type="button" className="city-map-action" disabled title="This list has not been shared yet" aria-label={`${name} list not yet shared`}>{listContent}</button>}
+    </div>
+   </div></li>;
   })}</ul>
  </section>;
 }
