@@ -2,9 +2,11 @@
 import {useCallback,useEffect,useState} from 'react';
 import {useTDSession} from './TDSession';
 import {mealWording} from './meal-wording';
+import {recentlyChanged,type ScheduleHighlights} from '../lib/schedule-highlights';
+import './schedule-highlights.css';
 import LoadingIndicator from './LoadingIndicator';
 type Event=[string,string];
-type Schedule={events:Event[];note:string;updatedAt?:string};
+type Schedule={events:Event[];note:string;updatedAt?:string;changes?:ScheduleHighlights};
 export default function JourneyTimeline({day,dateLabel,events,note,previewUnavailable=false,heading}:{day:number;dateLabel:string;events:Event[];note:string;previewUnavailable?:boolean;heading?:string}){
  const {authenticated,refresh}=useTDSession();
  const [schedule,setSchedule]=useState<Schedule>({events,note}),[revision,setRevision]=useState<string|null>(null);
@@ -16,10 +18,13 @@ export default function JourneyTimeline({day,dateLabel,events,note,previewUnavai
  function update(index:number,column:0|1,value:string){setDraft(d=>({...d,events:d.events.map((e,i)=>i===index?(column===0?[value,e[1]]:[e[0],value]):e)}));}
  function move(index:number,delta:number){setDraft(d=>{const next=[...d.events];[next[index],next[index+delta]]=[next[index+delta],next[index]];return {...d,events:next};});}
  async function save(){setBusy(true);setMessage('');try{const r=await fetch('/api/journey-timeline',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({day,revision,events:draft.events,note:draft.note})});const d=await r.json();if(r.status===401){setEditing(false);await refresh();}if(!r.ok)throw Error(d.error||'Unable to save.');setSchedule(d.schedule);setRevision(d.revision);setEditing(false);setMessage(d.pdfReady?'Saved for this date. The interactive PDF is updated too.':'Schedule saved. The PDF will be regenerated when next opened.');}catch(e){setMessage(e instanceof Error?e.message:'Unable to save.');}finally{setBusy(false);}}
- return <section className="journey-timeline-panel" aria-label="Today’s journey timeline">
+ const changed=recentlyChanged(schedule.changes?schedule.changes.at:schedule.updatedAt);
+ return <section className={`journey-timeline-panel${changed?' schedule-recent-change':''}`} aria-label="Today’s journey timeline">
   {heading&&<div className="timeline-heading"><h2>{heading}</h2></div>}
+  {changed&&<div className="schedule-change-indicator" role="status"><span aria-hidden="true">●</span> Updated</div>}
   {!loaded&&<LoadingIndicator label="Checking the latest schedule…"/>}
-  <div className="timeline">{schedule.events.map(([time,text],index)=><article className="timeline-entry" key={index}><span className="timeline-time-label">{time}</span><p>{mealWording(text)}</p></article>)}</div>
+  <div className="timeline">{schedule.events.map(([time,text],index)=><article className={`timeline-entry${recentlyChanged(schedule.changes?.events[index])?' schedule-changed-entry':''}`} key={index}><span className="timeline-time-label">{time}</span><p>{mealWording(text)}</p></article>)}</div>
+  {schedule.note&&schedule.note!==note&&<p className={`schedule-daily-reminder${recentlyChanged(schedule.changes?.noteAt)?' schedule-changed-entry':''}`}>{schedule.note}</p>}
   <div data-pdf-exclude>
    {authenticated&&!editing&&<button className="timeline-edit-button" disabled={!loaded} onClick={()=>{setDraft({events:schedule.events.map(e=>[...e] as Event),note:schedule.note});setMessage('');setEditing(true);}}>Edit this day’s journey</button>}
    {editing&&authenticated&&<form className="timeline-editor" onSubmit={e=>{e.preventDefault();void save();}}>
