@@ -55,9 +55,12 @@ try{
  console.log('PASS dedicated map PDF upload, shared booklet viewer metadata, hidden release, TD preview, Google Maps link validation and reset.');
  state.td=false;assert.equal((await call(null,'?booklet=map-handout-saigon')).status,200);state.td=true;
  const preloaded=await ok(await call(null,'?booklet=map-handout-saigon'));assert.equal(preloaded.preview,false);assert.equal(preloaded.layout,'single');
+ assert(preloaded.preparedPages.length>0);assert(preloaded.mapUrl.startsWith('https://'));
+ const fastPage=await call(null,preloaded.preparedPages[0].slice('/api/tour-resources'.length));assert.equal(fastPage.status,200);assert.equal(fastPage.headers.get('Content-Type'),'image/jpeg');assert((await fastPage.arrayBuffer()).byteLength<preloaded.size);
+ assert.equal((await call(null,preloaded.preparedPages[0].slice('/api/tour-resources'.length).replace(/version=[^&]+/,'version=stale'))).status,409);
  const savedCwd=process.cwd();let preloadedFile;try{process.chdir('/tmp');preloadedFile=await call(null,'?file=map-handout-saigon');}finally{process.chdir(savedCwd);}assert.equal(preloadedFile.status,200);assert(Buffer.from(await preloadedFile.arrayBuffer()).subarray(0,5).toString()==='%PDF-');
  await ok(await call({id:'map-handout-saigon',title:'Saigon Map Handout',group:'map-handouts',action:'hide',revision:null}));
- state.td=false;assert.equal((await call(null,'?booklet=map-handout-saigon')).status,404);state.td=true;
+ state.td=false;assert.equal((await call(null,'?booklet=map-handout-saigon')).status,404);assert.equal((await call(null,preloaded.preparedPages[0].slice('/api/tour-resources'.length))).status,404);state.td=true;
  const legacy=state.db.get('entry/map-handout-saigon');legacy.data.size++;const normalized=await ok(await call(null,'?booklet=map-handout-saigon'));assert.equal(normalized.size,preloaded.size);assert.equal(normalized.preview,true);
  assert.equal((await ok(await call(null,'?booklet=map-handout-bangkok'))).size>3000000,true);
  const coverBase={id:'city-map-hanoi',title:'Hanoi map',group:'maps',action:'map-cover',revision:state.db.get('entry/city-map-hanoi').etag,mapCover:'data:image/jpeg;base64,'+Buffer.from([255,216,255,217]).toString('base64')};

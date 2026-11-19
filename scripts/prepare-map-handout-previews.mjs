@@ -1,0 +1,6 @@
+import {readFile,writeFile,mkdtemp,readdir,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';import {join} from 'node:path';import {spawnSync} from 'node:child_process';
+const seeds=JSON.parse(await readFile('shared/map-handout-preloads.json','utf8')),assets={},temp=await mkdtemp(join(tmpdir(),'map-preview-'));let original=0,prepared=0;
+try{for(const file of [...new Set(seeds.map(s=>s.file))]){const prefix=join(temp,file.replace('.pdf',''));const result=spawnSync('pdftoppm',['-cropbox','-scale-to-x','1400','-scale-to-y','-1','-jpeg','-jpegopt','quality=85','netlify/data/map-handouts/'+file,prefix]);if(result.status!==0)throw Error('Unable to prepare '+file);const images=(await readdir(temp)).filter(f=>f.startsWith(file.replace('.pdf','')+'-')&&f.endsWith('.jpg')).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));assets[file]=[];for(const image of images){const data=await readFile(join(temp,image));assets[file].push(data.toString('base64'));prepared+=data.length;}original+=seeds.find(s=>s.file===file).size;console.log(file,images.length,'prepared pages');}
+await writeFile('netlify/data/map-handout-previews.json',JSON.stringify(assets)+'\n');console.log('Original PDFs:',original,'bytes. Prepared reader pages:',prepared,'bytes.',Math.round((1-prepared/original)*100)+'% smaller.');
+}finally{await rm(temp,{recursive:true,force:true});}

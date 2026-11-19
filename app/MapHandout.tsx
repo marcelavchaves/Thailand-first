@@ -1,16 +1,14 @@
 'use client';
 import {useEffect,useState} from 'react';
-import {useResources} from './ResourceLibrary';
 import {cityMaps,googleCityMap} from './city-maps';
 import MapPdfReader from './MapPdfReader';
-import {useTDSession} from './TDSession';
+import LoadingIndicator from './LoadingIndicator';
+import './booklet-viewer.css';
 export default function MapHandout(){
- const {authenticated}=useTDSession();
- const {items,loaded,error}=useResources(),[cityId,setCityId]=useState('');
+ const [cityId,setCityId]=useState<string|null>(null);
  useEffect(()=>{setCityId(new URLSearchParams(window.location.search).get('city')||'');},[]);
- const city=cityMaps.find(x=>x.id===cityId),handout=items[`map-handout-${cityId}`];
- if(!loaded)return <main className="page"><a href="/?tab=map">← Back To Maps</a><p role="status">{error||'Opening handout…'}</p></main>;
- const url=googleCityMap(cityId,items);
- if(!city||!handout?.file||!handout.booklet||(!handout.visible&&!authenticated)||handout.deleted)return <main className="page"><a href="/?tab=map">← Back To Maps</a><p>This handout is not currently available.</p>{city&&<a className="button" href={url} target="_blank" rel="noopener noreferrer">Open Map ↗</a>}</main>;
- return <MapPdfReader id={handout.id} title={handout.title} cover={items[`city-map-${cityId}`]?.mapCover} mapUrl={url}/>;
+ const city=cityMaps.find(x=>x.id===cityId);
+ if(cityId===null)return <main className="map-reader-loading"><LoadingIndicator label="Opening Handout…"/></main>;
+ if(!city)return <main className="map-reader-loading"><a href="/?tab=map">← Back To Maps</a><p>Choose a city handout from Maps.</p></main>;
+ return <MapPdfReader id={`map-handout-${city.id}`} title={`${city.name} Map Handout`} mapUrl={googleCityMap(city.id,{})}/>;
 }

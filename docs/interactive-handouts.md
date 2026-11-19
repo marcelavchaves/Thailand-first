@@ -31,3 +31,9 @@ Released PDFs open directly from the city tile in the same BookletReader used by
 Map places match the large route image: Hanoi, Hue, Da Nang (including Hoi An), Saigon, Siem Reap, Angkor Wat, Chiang Mai and Bangkok. Each TD city section contains one handout, one optional JPEG cover upload and one Google Maps link. The large image always opens the city map or saved custom link; a released tile opens the full-screen Handouts reader. Covers offer Open Map, and reading uses the shared Pages, swipe and Zoom controls.
 
 The supplied Saigon, Siem Reap, Chiang Mai, Da Nang and Bangkok PDFs are bundled privately with the resource function. Duplicate printed halves are removed from the reader copies. Supplied map handouts are shown by default; a saved TD hide/show decision always wins. New TD uploads remain hidden until released. Preloaded PDF metadata uses the actual bundled byte size, including for previously saved release records. No filesystem-relative PDF path is required at runtime.
+
+### Prototype loading performance
+
+The supplied city PDFs have prepared 1400-pixel reader images generated with `node scripts/prepare-map-handout-previews.mjs`. The map reader requests only metadata and these protected images, without loading the entire resource list, opening a TD session check, downloading the original PDFs or starting PDF.js. The metadata and images retain current release checks and version validation. Regenerate the prepared assets when changing bundled city PDFs. Original PDF downloads remain available through the resource endpoint. TD replacement uploads use normal PDF rendering and never use the bundled previews.
+
+New PDF uploads display pages progressively. PDF parts and the PDF engine load concurrently. The compass appears immediately and stays visible while the requested page loads or renders, including in the shared Handouts reader. Hiding, deleting or replacing a handout still takes effect when availability is checked.

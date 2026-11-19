@@ -19,11 +19,10 @@ export async function uploadBooklet(file:File,details:{id:string;title:string;gr
 /** Keep large PDF downloads below hosted function response-size limits too. */
 export async function downloadBookletPdf(id:string,size=0,version='',signal?:AbortSignal):Promise<ArrayBuffer>{
  if(size>BOOKLET_MAX_BYTES)throw Error('This booklet is larger than 5 MB.');
- const count=size>3*1024*1024?Math.ceil(size/BOOKLET_CHUNK_BYTES):1;const pieces:Uint8Array[]=[];
- for(let index=0;index<count;index++){
+ const count=size>3*1024*1024?Math.ceil(size/BOOKLET_CHUNK_BYTES):1;const pieces=await Promise.all(Array.from({length:count},async(_,index)=>{
   const query=new URLSearchParams({file:id});if(count>1){query.set('part',String(index));if(version)query.set('version',version);}
   const r=await fetch('/api/tour-resources?'+query,{cache:'no-store',signal});if(!r.ok)throw Error(r.status===409?'This booklet changed. Reopen it to read the latest version.':'This booklet is not currently available.');
-  const bytes=new Uint8Array(await r.arrayBuffer());if(count>1&&bytes.length!==Math.min(BOOKLET_CHUNK_BYTES,size-index*BOOKLET_CHUNK_BYTES))throw Error('The PDF download was incomplete. Please try again.');pieces.push(bytes);
- }
+  const bytes=new Uint8Array(await r.arrayBuffer());if(count>1&&bytes.length!==Math.min(BOOKLET_CHUNK_BYTES,size-index*BOOKLET_CHUNK_BYTES))throw Error('The PDF download was incomplete. Please try again.');return bytes;
+ }));
  const result=new Uint8Array(pieces.reduce((n,b)=>n+b.length,0));let offset=0;for(const piece of pieces){result.set(piece,offset);offset+=piece.length;}return result.buffer;
 }
