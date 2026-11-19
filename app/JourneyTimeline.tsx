@@ -2,7 +2,7 @@
 import {useCallback,useEffect,useState} from 'react';
 import {useTDSession} from './TDSession';
 import {mealWording} from './meal-wording';
-import {recentlyChanged,type ScheduleHighlights} from '../lib/schedule-highlights';
+import {recentlyChanged,hasRecentScheduleChanges,type ScheduleHighlights} from '../lib/schedule-highlights';
 import './schedule-highlights.css';
 import LoadingIndicator from './LoadingIndicator';
 type Event=[string,string];
@@ -18,7 +18,7 @@ export default function JourneyTimeline({day,dateLabel,events,note,previewUnavai
  function update(index:number,column:0|1,value:string){setDraft(d=>({...d,events:d.events.map((e,i)=>i===index?(column===0?[value,e[1]]:[e[0],value]):e)}));}
  function move(index:number,delta:number){setDraft(d=>{const next=[...d.events];[next[index],next[index+delta]]=[next[index+delta],next[index]];return {...d,events:next};});}
  async function save(){setBusy(true);setMessage('');try{const r=await fetch('/api/journey-timeline',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({day,revision,events:draft.events,note:draft.note})});const d=await r.json();if(r.status===401){setEditing(false);await refresh();}if(!r.ok)throw Error(d.error||'Unable to save.');setSchedule(d.schedule);setRevision(d.revision);setEditing(false);setMessage(d.pdfReady?'Saved for this date. The interactive PDF is updated too.':'Schedule saved. The PDF will be regenerated when next opened.');}catch(e){setMessage(e instanceof Error?e.message:'Unable to save.');}finally{setBusy(false);}}
- const changed=recentlyChanged(schedule.changes?schedule.changes.at:schedule.updatedAt);
+ const changed=hasRecentScheduleChanges(schedule);
  return <section className={`journey-timeline-panel${changed?' schedule-recent-change':''}`} aria-label="Today’s journey timeline">
   {heading&&<div className="timeline-heading"><h2>{heading}</h2></div>}
   {changed&&<div className="schedule-change-indicator" role="status"><span aria-hidden="true">●</span> Updated</div>}
