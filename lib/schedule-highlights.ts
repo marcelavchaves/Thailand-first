@@ -9,5 +9,5 @@ export function scheduleHighlights(previous:Schedule|null|undefined,next:Pick<Sc
  old.events.forEach((event,index)=>{const key=JSON.stringify(event),values=matches.get(key)||[];values.push(old.changes?.events[index]||null);matches.set(key,values);});
  const events=next.events.map(event=>{const values=matches.get(JSON.stringify(event));return values?.length?values.shift()!:at;});
  const changed=JSON.stringify(old.events)!==JSON.stringify(next.events)||old.note!==next.note;
- return {at:changed?at:old.changes?.at||old.updatedAt||null,events,noteAt:old.note!==next.note?at:old.changes?.noteAt||null};
+ return {at:changed?at:old.changes?old.changes.at:old.updatedAt||null,events,noteAt:old.note!==next.note?at:old.changes?.noteAt||null};
 }
