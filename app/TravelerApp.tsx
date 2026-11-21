@@ -4,6 +4,7 @@ import booklets from '../shared/booklets.json';
 import hotelBooklets from '../shared/hotel-booklets.json';
 import {Handouts} from './ResourceLibrary';
 import {ResourceProvider, ResourceSlot, ResourceGroup, useResources} from "./ResourceLibrary";
+import ViewportNavigation from './ViewportNavigation';
 import BrandIcon from "./BrandIcon";
 import AnnouncementEditor,{AnnouncementText} from './AnnouncementEditor';
 import {announcementPlainText} from '../shared/announcement-links.mjs';
@@ -1964,7 +1965,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
        ...storytelling.map(r=>({id:`story-${r.id}`,title:r.title,group:r.hotelIndex>=0?`hotel-${r.hotelIndex}`:'stories',content:<a href={`/storytelling.html?story=${r.id}`} target="_blank" rel="noreferrer">Open {r.title} ↗</a>})),
        ...localGuides.map((r,i)=>({id:`local-${i}`,title:r.name,group:'local-guides',content:<img src={`/images/${r.image}`} alt={r.name}/>}))
       ]}/>}
-      <nav className="bottom-nav" aria-label="Main navigation">
+      <ViewportNavigation>
         {(
           [
             { key: "home", label: "Home", icon: "home" },
@@ -1984,7 +1985,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             <span>{x.label}</span>
           </button>
         ))}
-      </nav>
+      </ViewportNavigation>
     </main>
   );
 }
