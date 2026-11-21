@@ -4,6 +4,8 @@ import booklets from '../shared/booklets.json';
 import {Handouts} from './ResourceLibrary';
 import {ResourceProvider, ResourceSlot, ResourceGroup, useResources} from "./ResourceLibrary";
 import BrandIcon from "./BrandIcon";
+import AnnouncementEditor,{AnnouncementText} from './AnnouncementEditor';
+import {announcementPlainText} from '../shared/announcement-links.mjs';
 import TDSuitcase from "./TDSuitcase";
 import WondercaseMark from "./WondercaseMark";
 import PdfDownload from "./PdfDownload";
@@ -755,9 +757,9 @@ function XavierDailyNote({ date, home = false, currentDay = false,headerAction,e
       </div>
       {visibleNote ? (
         <>
-          <p className="xavier-note-copy">{visibleNote.text}</p>
+          <p className="xavier-note-copy"><AnnouncementText text={visibleNote.text}/></p>
           {authenticated && <div className="announcement-whatsapp" data-pdf-exclude>
-            <a className="button" href={`https://wa.me/?text=${encodeURIComponent(`*Wondercase · K&D 103*\n*Day ${tauck(date)} · ${longTripDate(date)}*\nFrom Xavier Brunelle\n\n${visibleNote.text}`)}`} target="_blank" rel="noopener noreferrer">Share announcement to WhatsApp ↗</a>
+            <a className="button" href={`https://wa.me/?text=${encodeURIComponent(`*Wondercase · K&D 103*\n*Day ${tauck(date)} · ${longTripDate(date)}*\nFrom Xavier Brunelle\n\n${announcementPlainText(visibleNote.text)}`)}`} target="_blank" rel="noopener noreferrer">Share announcement to WhatsApp ↗</a>
             <small>Choose the tour group in WhatsApp, then tap Send. Save any edits here before sharing.</small>
           </div>}
         </>
@@ -780,17 +782,7 @@ function XavierDailyNote({ date, home = false, currentDay = false,headerAction,e
         </button>
       ) : (
         <form className="xavier-note-form" onSubmit={save}>
-          <label>
-            TODAY’S NOTE
-            <textarea
-              required
-              rows={5}
-              maxLength={4000}
-              value={draft}
-              placeholder="Share an update, reminder, meeting point, or message for today…"
-              onChange={(event) => setDraft(event.target.value)}
-            />
-          </label>
+          <AnnouncementEditor value={draft} onChange={setDraft} disabled={saving}/>
           {legacyMode && <label>
             XAVIER’S PASSWORD
             <input

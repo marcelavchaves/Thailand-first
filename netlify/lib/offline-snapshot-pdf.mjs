@@ -1,3 +1,4 @@
+import {announcementPlainText} from '../../shared/announcement-links.mjs';
 import PDFDocument from 'pdfkit';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -38,7 +39,7 @@ export async function renderOfflineSnapshot({content,announcements={},maps=[],re
   doc.roundedRect(X,83,76,96,8).fill(tint(day));at(date.toLocaleDateString('en-US',{month:'short',timeZone:'UTC'}).toUpperCase(),X,94,76,10,'Bold',C.forest,{align:'center'});at(date.getUTCDate(),X,113,76,29,'Title',C.forest,{align:'center'});at('DAY '+dayNumber(day),X,156,76,8,'Bold',C.forest,{align:'center'});
   at(day.title,139,86,412,21,'Title',C.forest);const titleHeight=doc.heightOfString(day.title,{width:412,lineGap:2});at(content.data.longTripDate(day.date),139,95+titleHeight,412,9,'Body',C.gold);at(day.region,139,113+titleHeight,412,10,'Bold');
   const hero=await image(day.image);const heroY=Math.max(198,140+titleHeight);if(hero)banner(hero,X,heroY,W,86);y=heroY+(hero?103:0);if(day.intro)text(day.intro);
-  if(announcements[day.date]?.text){sub('From your TD');text(announcements[day.date].text);}
+  if(announcements[day.date]?.text){sub('From your TD');text(announcementPlainText(announcements[day.date].text));}
   sub('Your day at a glance');for(const [time,event]of day.events){const lines=wrap(event,398,9.5);let offset=0;while(offset<lines.length){if(BOTTOM-y<62){page();at('Day '+dayNumber(day)+' · '+day.region+' · continued',X,y,W,16,'Title',C.forest);y+=35;}const capacity=Math.max(1,Math.floor((BOTTOM-y-14)/13.2)),count=Math.min(capacity,lines.length-offset),h=count*13.2+14;doc.roundedRect(X,y,W,h,6).lineWidth(.45).fillAndStroke(C.card,C.line);at(String(time)+(offset?' · continued':''),X+10,y+8,82,8.5,'Bold',C.forest);for(let n=0;n<count;n++)at(lines[offset+n],X+100,y+7+n*13.2,397,9.5,'Body',C.ink,{lineBreak:false});y+=h+6;offset+=count;}}
   if(day.note)text(day.note,{size:9,color:C.muted});sub('Your stay & meals');text(day.hotel,{bold:true});text(day.meals,{size:10});
  }

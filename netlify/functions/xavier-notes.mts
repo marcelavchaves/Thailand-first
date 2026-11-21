@@ -1,3 +1,4 @@
+import {announcementPlainText} from '../../shared/announcement-links.mjs';
 import { announce } from "../lib/updates";
 import {dayFeatures,hideAnnouncement} from "../lib/day-features";
 import { canEditAnnouncements, hasTDSession, sameOrigin } from "../lib/td-auth";
@@ -52,7 +53,8 @@ const handler = async (request: Request, _context: Context) => {
       const note: XavierNote = { tripDate: day, text, updatedAt: new Date().toISOString() };
       const previous = await store.get(`day/${day}`, { type: "json" });
       await store.setJSON(`day/${day}`, note);
-      if((await dayFeatures(day)).announcement)await announce({ action: `${previous ? "Edited" : "Posted"} the Day ${day-4} announcement: ${text.slice(0, 110)}${text.length > 110 ? "…" : ""}`, section: "Home · Journey", day, url: `/?tab=journey&day=${day-4}` }, _context);
+      const summary=announcementPlainText(text);
+      if((await dayFeatures(day)).announcement)await announce({ action: `${previous ? "Edited" : "Posted"} the Day ${day-4} announcement: ${summary.slice(0, 110)}${summary.length > 110 ? "…" : ""}`, section: "Home · Journey", day, url: `/?tab=journey&day=${day-4}` }, _context);
       return response({ note });
     }
 
