@@ -2,7 +2,7 @@
 import {useRef,useState} from 'react';
 import {announcementParts,formatAnnouncementLink} from '../shared/announcement-links.mjs';
 import './announcement-links.css';
-export function AnnouncementText({text}:{text:string}){return <>{announcementParts(text).map(part=>part.url?<a key={part.start} href={part.url} target={/^https?:/.test(part.url)?'_blank':undefined} rel="noopener noreferrer">{part.text}</a>:part.text)}</>;}
+export function AnnouncementText({text}:{text:string}){return <>{announcementParts(text).map(part=>part.url?<a key={part.start} href={part.url} rel="noopener noreferrer">{part.text}</a>:part.text)}</>;}
 export default function AnnouncementEditor({value,onChange,disabled=false}:{value:string;onChange:(value:string)=>void;disabled?:boolean}){
  const textarea=useRef<HTMLTextAreaElement>(null),[range,setRange]=useState<{start:number;end:number}|null>(null),[label,setLabel]=useState(''),[url,setUrl]=useState(''),[error,setError]=useState('');
  const links=announcementParts(value).filter(part=>part.url);
