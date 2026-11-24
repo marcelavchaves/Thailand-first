@@ -8,7 +8,7 @@ export async function renderMealPdf(report,meal){
  const ready=new Promise((resolve,reject)=>{doc.on('data',(b)=>chunks.push(b));doc.on('end',()=>resolve(Buffer.concat(chunks)));doc.on('error',reject);});
  doc.registerFont('Body',bodyFont);doc.registerFont('Bold',boldFont);
  const line=(text,size=10,bold=false)=>{doc.font(bold?'Bold':'Body').fontSize(size).fillColor('#315c4f').text(text,{lineGap:3});doc.moveDown(.35);};
- line('WONDERCASE · Meal choices',20,true);line(meal==='all'?'All five menus':'Restaurant report',12);line('Each meal closes at its own deadline. Times below are Hanoi time.',9);line('Dish totals count submitted choices only. Drafts and missing submissions are labeled below.',9);
+ line('WONDERCASE · Meal choices',20,true);line(meal==='all'?'All menus':'Restaurant report',12);line('Each meal closes at its own deadline. Times below are Hanoi time.',9);line('Dish totals count submitted choices only. Drafts and missing submissions are labeled below.',9);
  for(const menu of [...new Set(report.rows.map(r=>r.meal))]){
   doc.addPage();line(menu,18,true);line(report.rows.find(r=>r.meal===menu)?.restaurant||'',11);line('Deadline: '+new Date(report.rows.find(r=>r.meal===menu).deadline).toLocaleString('en-US',{timeZone:'Asia/Ho_Chi_Minh'})+' · Hanoi time',9);
   line('Submitted dish totals',13,true);

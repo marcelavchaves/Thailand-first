@@ -1,7 +1,9 @@
 'use client';
+import {useMealCatalog} from './MealCatalog';
 import {useEffect,useState} from 'react';
-import {menus,type Selections} from '../lib/meal-choices';
+import {menus as defaultMenus,type Selections} from '../lib/meal-choices';
 export default function MealChoiceEditor({guests,onSaved,director=false}:{director?:boolean;guests:{id:string;name:string}[];onSaved:()=>Promise<void>}){
+ const {menus}=useMealCatalog();
  const [guestId,setGuestId]=useState(director?guests[0]?.id||'':''),[menuId,setMenuId]=useState(menus[0].id),[selections,setSelections]=useState<Selections>({}),[dietary,setDietary]=useState(''),[revision,setRevision]=useState<string|null>(null),[ready,setReady]=useState(false),[closed,setClosed]=useState(false),[saving,setSaving]=useState(false),[message,setMessage]=useState('');
  const [reload,setReload]=useState(0);
  const menu=menus.find(m=>m.id===menuId)!;

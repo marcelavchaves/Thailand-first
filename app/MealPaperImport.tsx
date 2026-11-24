@@ -1,6 +1,7 @@
 'use client';
+import {useMealCatalog} from './MealCatalog';
 import {useEffect,useRef,useState} from 'react';
-import {menus,mealState,type MealSubmission,type Selections} from '../lib/meal-choices';
+import {menus as defaultMenus,mealState,type MealSubmission,type Selections} from '../lib/meal-choices';
 import {paperSuggestions,sheetRegions,type SheetRegion} from '../lib/meal-paper';
 import {scanGuestList} from './scanGuestList';
 import {mealDeadlineLabel} from './MealChoices';
@@ -8,6 +9,7 @@ type Guest={id:string;name:string};
 type Photo={id:string;name:string;url:string};
 type Draft={id:string;url:string;text:string;guestId:string;selections:Selections;menuIds:string[];dietary:string;reviewed:boolean;saved:boolean;loaded:boolean;revision:string|null;previous:MealSubmission|null;error:string};
 export default function MealPaperImport({guests,onImported}:{guests:Guest[];onImported:()=>void}){
+ const {menus}=useMealCatalog();
  const [photos,setPhotos]=useState<Photo[]>([]),[photoId,setPhotoId]=useState(''),[layout,setLayout]=useState('whole'),[region,setRegion]=useState<SheetRegion|null>(null),[drafts,setDrafts]=useState<Draft[]>([]),[activeId,setActiveId]=useState(''),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[locks,setLocks]=useState<Record<string,boolean>>({}),[deadlines,setDeadlines]=useState<Record<string,string>>({});
  const requests=useRef<Record<string,number>>({});
  const image=useRef<HTMLImageElement>(null),start=useRef<{x:number;y:number}|null>(null),controller=useRef<AbortController|null>(null),urls=useRef<string[]>([]),mounted=useRef(true);
@@ -42,7 +44,7 @@ export default function MealPaperImport({guests,onImported}:{guests:Guest[];onIm
     let text='',scanError='';
     try{text=await scanGuestList(new File([blob],'meal-sheet.png',{type:'image/png'}),progress=>{if(mounted.current)setMessage(`Sheet ${i+1} of ${regions.length}: ${progress}`);},abort.signal);}catch(e){if(abort.signal.aborted)break;scanError=e instanceof Error?e.message:'Text recognition was unavailable.';}
     if(abort.signal.aborted||!mounted.current)break;
-    const suggestions=paperSuggestions(text,guests),id=crypto.randomUUID();
+    const suggestions=paperSuggestions(text,guests,menus),id=crypto.randomUUID();
     const item:Draft={id,url:keepUrl(blob),text,guestId:'',selections:suggestions.selections,menuIds:suggestions.menuIds,dietary:'',reviewed:false,saved:false,loaded:false,revision:null,previous:null,error:scanError};
     setDrafts(all=>[...all,item]);setActiveId(id);
     if(suggestions.guestId)await chooseGuest(item,suggestions.guestId);

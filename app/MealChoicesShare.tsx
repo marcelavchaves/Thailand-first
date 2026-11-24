@@ -1,8 +1,9 @@
 'use client';
+import {useMealCatalog} from './MealCatalog';
 import {useEffect,useState} from 'react';
-import {menus,mealState,type MealSubmission} from '../lib/meal-choices';
+import {menus as defaultMenus,mealState,type MealSubmission} from '../lib/meal-choices';
 
-export function mealShareText(name:string,submission:MealSubmission|null,meal='all',includeDietary=true){
+export function mealShareText(name:string,submission:MealSubmission|null,meal='all',includeDietary=true,menus=defaultMenus){
  const lines=['WONDERCASE','Vietnam, Cambodia & Thailand',`Meal choices · ${name}`];
  for(const menu of menus.filter(m=>meal==='all'||m.id===meal)){
   const state=mealState(submission,menu.id);
@@ -36,8 +37,9 @@ async function summaryImage(text:string):Promise<Blob>{
  return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Unable to create the image.')),'image/png'));
 }
 export default function MealChoicesShare({name,submission,dirty}:{name:string;submission:MealSubmission|null;dirty:boolean}){
+ const {menus}=useMealCatalog();
  const [meal,setMeal]=useState('all'),[includeDietary,setIncludeDietary]=useState(true),[message,setMessage]=useState(''),[image,setImage]=useState<{url:string;file:File}|null>(null),[busy,setBusy]=useState(false);
- const text=mealShareText(name,submission,meal,includeDietary);
+ const text=mealShareText(name,submission,meal,includeDietary,menus);
  useEffect(()=>{setImage(null);setMessage('');},[text]);
  useEffect(()=>()=>{if(image)URL.revokeObjectURL(image.url);},[image]);
  const filename='wondercase-meal-choices.png';
@@ -45,7 +47,7 @@ export default function MealChoicesShare({name,submission,dirty}:{name:string;su
  async function makeImage(){setBusy(true);setMessage('');try{const blob=await summaryImage(text);setImage({url:URL.createObjectURL(blob),file:new File([blob],filename,{type:'image/png'})});}catch(e){setMessage(e instanceof Error?e.message:'Unable to prepare the image.');}finally{setBusy(false);}}
  async function shareImage(){if(!image)return;try{await navigator.share({files:[image.file],title:`Meal choices · ${name}`});}catch(e){if(!(e instanceof Error&&e.name==='AbortError'))setMessage('Use Save image below, or touch and hold the preview to save or share it.');}}
  return <details className="meal-share"><summary>Share your meal choices</summary><p>Send a copy by WhatsApp or email, or save it as an image. Review the summary before sharing.</p>{dirty&&<p className="meal-help"><strong>You have unsaved changes.</strong> This summary uses your saved choices. Save or submit your edits first to include them.</p>}
- <label>Meals to share<select value={meal} onChange={e=>setMeal(e.target.value)}><option value="all">All five meals</option>{menus.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</select></label>
+ <label>Meals to share<select value={meal} onChange={e=>setMeal(e.target.value)}><option value="all">All meals</option>{menus.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</select></label>
  <label className="meal-share-dietary"><input type="checkbox" checked={includeDietary} onChange={e=>setIncludeDietary(e.target.checked)}/>Include dietary restrictions and allergies</label>
  <label>Summary<textarea readOnly rows={10} value={text}/></label>
  <div className="meal-share-actions"><button type="button" onClick={()=>void share()}>Share…</button><a href={'https://wa.me/?text='+encodeURIComponent(text)} target="_blank" rel="noopener noreferrer">WhatsApp</a><a href={'mailto:?subject='+encodeURIComponent(`Meal choices · ${name}`)+'&body='+encodeURIComponent(text)}>Email</a><button type="button" className="meal-secondary" disabled={busy} onClick={()=>void makeImage()}>{busy?'Preparing image…':'Create image'}</button></div>

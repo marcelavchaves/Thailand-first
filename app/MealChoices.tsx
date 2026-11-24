@@ -1,12 +1,14 @@
 'use client';
+import {useMealCatalog} from './MealCatalog';
 import {useCallback,useEffect,useRef,useState} from 'react';
-import {menus,MEAL_DEADLINE,defaultMealDeadlines,mealState,type MealDeadlines,type Selections,type MealSubmission} from '../lib/meal-choices';
+import {menus as defaultMenus,MEAL_DEADLINE,defaultMealDeadlines,mealState,type MealDeadlines,type Selections,type MealSubmission} from '../lib/meal-choices';
 import './meal-choices.css';
 import MealSummary from './MealSummary';
 import BrandIcon from './BrandIcon';
 type Data={guest:{id:string;name:string;protected:boolean}|null;guests:{id:string;name:string;protected:boolean}[];submission:MealSubmission|null;revision:string|null;deadlines:MealDeadlines;serverNow:string;lockedMeals:Record<string,boolean>;locked:boolean;td:boolean;visibility?:Record<string,boolean>};
 export const mealDeadlineLabel=(deadline=MEAL_DEADLINE)=>new Date(deadline).toLocaleString('en-US',{timeZone:'Asia/Ho_Chi_Minh',month:'long',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' · Hanoi time';
 export default function MealChoices(){
+ const {menus}=useMealCatalog();
  const [data,setData]=useState<Data|null>(null),[guestId,setGuestId]=useState(''),[selections,setSelections]=useState<Selections>({}),[dietary,setDietary]=useState(''),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[dirty,setDirty]=useState(false),[offset,setOffset]=useState(0),[now,setNow]=useState(0);
  const [pin,setPin]=useState(''),[showPin,setShowPin]=useState(false);
  const [directGuest,setDirectGuest]=useState<{id:string;name:string;protected:boolean}|null>(null);
@@ -78,9 +80,9 @@ export default function MealChoices(){
  <div id="selected-meal-menu">
  {visibleMenus.filter(menu=>menu.id===selectedMeal).map((menu)=>{
   const closed=isLocked(menu.id),savedState=mealState(data.submission,menu.id);
-  return <details className={`meal-menu${closed?' meal-closed':''}`} key={menu.id} open><summary><span>{menu.title}</span><small>{status(menu.id)}{closed?' · Read-only':''}</small></summary><p>{menu.restaurant}</p>{data.td&&data.visibility?.[menu.id]===false&&<p className="meal-help">TD preview · hidden from travelers</p>}<p className="meal-menu-deadline"><strong>Deadline:</strong> {mealDeadlineLabel(deadlines[menu.id])}</p><a className="meal-original" href={`/documents/${menu.document}`} target="_blank" rel="noopener noreferrer">View the original menu ↗</a>
+  return <details className={`meal-menu${closed?' meal-closed':''}`} key={menu.id} open><summary><span>{menu.title}</span><small>{status(menu.id)}{closed?' · Read-only':''}</small></summary><p>{menu.restaurant}</p>{data.td&&data.visibility?.[menu.id]===false&&<p className="meal-help">TD preview · hidden from travelers</p>}<p className="meal-menu-deadline"><strong>Deadline:</strong> {mealDeadlineLabel(deadlines[menu.id])}</p>{menu.document&&<a className="meal-original" href={`/documents/${menu.document}`} target="_blank" rel="noopener noreferrer">View the original menu ↗</a>}
    {closed?<div className="meal-readonly"><dl>{menu.courses.map(c=><div key={c.id}><dt>{c.title}</dt><dd>{c.options.find(o=>o.id===data.submission?.selections[menu.id]?.[c.id])?.name||'No choice saved'}</dd></div>)}</dl><strong>Dietary restrictions or allergies</strong><p className="meal-dietary-text">{savedState?.dietary||'None provided'}</p>{savedState?.status!=='submitted'&&<p>This meal was not submitted before its deadline. Please speak to Xavier.</p>}</div>:<>
-   {menu.courses.map(course=><fieldset key={course.id} disabled={busy}><legend>{course.title} · choose one</legend>{course.options.map(option=><label className="meal-option" key={option.id}><input type="radio" name={`${menu.id}-${course.id}`} value={option.id} checked={selections[menu.id]?.[course.id]===option.id} onChange={()=>{setSelections(s=>({...s,[menu.id]:{...s[menu.id],[course.id]:option.id}}));setDirty(true);setMessage('');}}/><span><strong>{option.name}</strong>{option.description&&<small>{option.description}</small>}</span></label>)}</fieldset>)}
+   {menu.courses.map(course=><fieldset key={course.id} disabled={busy}><legend>{menu.flat?"Choose Your Meal":course.title} · choose one</legend>{course.options.map(option=><label className="meal-option" key={option.id}><input type="radio" name={`${menu.id}-${course.id}`} value={option.id} checked={selections[menu.id]?.[course.id]===option.id} onChange={()=>{setSelections(s=>({...s,[menu.id]:{...s[menu.id],[course.id]:option.id}}));setDirty(true);setMessage('');}}/><span><strong>{option.name}</strong>{option.description&&<small>{option.description}</small>}</span></label>)}</fieldset>)}
    {savedState?.dietary&&<p className="meal-help">Saved dietary notes for this meal: {savedState.dietary}</p>}
    <div className="meal-actions"><button type="button" disabled={busy} onClick={()=>void submitMeal(menu.id)}>{savedState?.status==='submitted'?'Submit updated meal':'Submit this meal'}</button></div>
    </>}

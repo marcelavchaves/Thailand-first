@@ -1,3 +1,4 @@
+import {MealCatalogProvider} from './MealCatalog';
 import type { Metadata } from "next";
 import "./globals.css";
 import "./public-edition.css";
@@ -34,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased"><MealCatalogProvider>{children}</MealCatalogProvider></body>
     </html>
   );
 }

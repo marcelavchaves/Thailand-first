@@ -215,5 +215,21 @@ try{
  assert.equal((await call('POST',{action:'update-deadlines',deadlines:null,revision:masterReport.settingsRevision})).status,400,'Master admin passes role check and reaches validation');
  await ok(await call('POST',{action:'reveal-link',guestId:a.id}));
  console.log('PASS master-admin-only links/deadline actions and history disclosure, TD report access retained, denied actions preserve all records.');
+ // Dynamic catalog: TD auth, additive IDs, new menu submission and export, CAS and retained guest data.
+ const originalChoices=JSON.stringify([...state.stores.get('meal-choices-v1')].filter(([k])=>k.startsWith('choice/')));
+ const catalog=await ok(await call('GET',null,'?action=catalog'));const custom=structuredClone(catalog.menus);
+ custom[0].courses[0].options.push({id:'new-dish',name:'New Dish',description:'Test'});custom[0].title='Edited Meal';
+ custom.push({id:'new-menu',title:'New Lunch',restaurant:'Test Restaurant',document:'',flat:true,deadline:new Date(Date.now()+86400000).toISOString(),courses:[{id:'choice',title:'Meal Choice',options:[{id:'pasta',name:'Pasta',description:''}]}]});
+ state.td=false;assert.equal((await call('POST',{menus:custom,revision:catalog.revision},'?action=catalog')).status,401);state.td=true;
+ const savedCatalog=await ok(await call('POST',{menus:custom,revision:catalog.revision},'?action=catalog'));
+ assert.equal(savedCatalog.menus.length,menus.length+1);assert.equal(JSON.stringify([...state.stores.get('meal-choices-v1')].filter(([k])=>k.startsWith('choice/'))),originalChoices);
+ assert.equal((await call('POST',{menus:custom,revision:catalog.revision},'?action=catalog')).status,409);
+ const invalid=structuredClone(custom);invalid[0].courses[0].options.shift();assert.equal((await call('POST',{menus:invalid,revision:savedCatalog.revision},'?action=catalog')).status,400);
+ const tdCatalog=await ok(await call('GET',null,'?action=td'));assert(tdCatalog.menus.some(m=>m.id==='new-menu'));assert.equal(tdCatalog.lockedMeals['new-menu'],false);
+ const catalogReview=await ok(await call('GET',null,'?action=paper-review&guestId='+a.id));
+ await ok(await call('POST',{action:'td-edit',guestId:a.id,menuId:'new-menu',selections:{...catalogReview.submission.selections,'new-menu':{choice:'pasta'}},dietary:catalogReview.submission.dietary,revision:catalogReview.revision}));
+ const catalogExport=await call('GET',null,'?action=export&format=xlsx&meal=new-menu');assert.equal(catalogExport.status,200);assert.equal((await call('GET',null,'?action=export&format=pdf&layout=guest-table&meal=new-menu')).status,200);
+ assert((await ok(await call('GET',null,'?action=td'))).summary.some(r=>r.meal==='New Lunch'&&r.choice==='Pasta'&&r.count===1));
+ console.log('PASS dynamic menu catalog: TD authorization, new options/menus, no-course model, retained records, stale write protection, removed-ID rejection, new menu submission and export.');
  console.log('PASS real handler: prototype isolation, private-link scope/rotation, revoked name-only sessions, server-authored change history, master-admin deadline management and TD exports, per-meal submission and exact cutoff, closed selections/allergies preserved, legacy migration, stale-write protection, CSRF, CSV-to-Excel compatibility, XLSX/PDF, landscape photo reports and data retention, TD-only reviewed paper import with history/cutoff/CAS, TD meal visibility with hidden-choice preservation, and one-time TD setup.');
 }finally{globalThis.Date=RealDate;await rm(temp,{recursive:true,force:true});}

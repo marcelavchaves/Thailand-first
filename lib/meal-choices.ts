@@ -1,4 +1,6 @@
-import menus from '../app/meal-menus.json';
+import defaults from '../app/meal-menus.json';
+export type MealMenu={id:string;title:string;restaurant:string;document:string;day?:number;flat?:boolean;deadline?:string;courses:{id:string;title:string;options:{id:string;name:string;description:string}[]}[]};
+const menus:MealMenu[]=defaults;
 export {menus};
 export const PROTOTYPE_SITE_ID='c1f3ce92-834f-4a1e-a84b-1551409ddb7b';
 export const MEAL_SITE_IDS=['c1f3ce92-834f-4a1e-a84b-1551409ddb7b','2207afda-0a2b-4b67-a708-91c325bd214a'];
@@ -11,8 +13,8 @@ export type MealAuditEntry={id:string;at:string;actor:{type:'traveler-link'|'td'
 export type MealSubmission={submissionSources?:Record<string,string>;dietarySynced?:boolean;selections:Selections;dietary:string;status:'draft'|'submitted';updatedAt:string;submittedAt:string|null;mealStates?:Record<string,MealState>;audit?:MealAuditEntry[]};
 export type MealDeadlines=Record<string,string>;
 export type MealVisibility=Record<string,boolean>;
-export const defaultMealVisibility=():MealVisibility=>Object.fromEntries(menus.map(m=>[m.id,true]));
-export const defaultMealDeadlines=():MealDeadlines=>Object.fromEntries(menus.map(m=>[m.id,MEAL_DEADLINE]));
+export const defaultMealVisibility=(menus:MealMenu[]=defaults):MealVisibility=>Object.fromEntries(menus.map(m=>[m.id,true]));
+export const defaultMealDeadlines=(menus:MealMenu[]=defaults):MealDeadlines=>Object.fromEntries(menus.map(m=>[m.id,m.deadline||MEAL_DEADLINE]));
 export function mealState(submission:MealSubmission|null|undefined,id:string):MealState|null{
  if(!submission)return null;
  if(submission.mealStates)return submission.mealStates[id]||null;
@@ -26,8 +28,8 @@ export function mealDietary(submission:MealSubmission|null|undefined):string{
  const latest=Object.values(submission.mealStates||{}).filter(s=>s.dietary?.trim()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt))[0];
  return latest?.dietary||'';
 }
-export const mealLocks=(deadlines:MealDeadlines,now=Date.now())=>Object.fromEntries(menus.map(m=>[m.id,now>=Date.parse(deadlines[m.id])]));
-export function validateSubmission(value:unknown,complete:boolean,targets:string[]=menus.map(m=>m.id)):{selections:Selections;dietary:string}{
+export const mealLocks=(deadlines:MealDeadlines,now=Date.now(),menus:MealMenu[]=defaults)=>Object.fromEntries(menus.map(m=>[m.id,now>=Date.parse(deadlines[m.id])]));
+export function validateSubmission(value:unknown,complete:boolean,targets:string[]=defaults.map(m=>m.id),menus:MealMenu[]=defaults):{selections:Selections;dietary:string}{
  if(!value||typeof value!=='object')throw Error('Check your meal choices.');
  const v=value as {selections:unknown;dietary:unknown};
  if(!v.selections||typeof v.selections!=='object'||Array.isArray(v.selections)||typeof v.dietary!=='string'||v.dietary.length>2000)throw Error('Enter your choices and keep dietary notes under 2,000 characters.');
@@ -45,7 +47,7 @@ export function validateSubmission(value:unknown,complete:boolean,targets:string
  return {selections,dietary:v.dietary.trim()};
 }
 export type MealReportGuest={id:string;name:string;email?:string;pinReady:boolean;accessReady?:boolean;submission:MealSubmission|null};
-export function mealReport(guests:MealReportGuest[],menuId='all',deadlines:MealDeadlines=defaultMealDeadlines()){
+export function mealReport(guests:MealReportGuest[],menuId='all',deadlines:MealDeadlines=defaultMealDeadlines(),menus:MealMenu[]=defaults){
  if(menuId!=='all'&&!menus.some(m=>m.id===menuId))throw Error('Choose an available meal.');
  const selected=menus.filter(m=>menuId==='all'||m.id===menuId);
  const rows=selected.flatMap(menu=>guests.flatMap(guest=>menu.courses.map(course=>{
