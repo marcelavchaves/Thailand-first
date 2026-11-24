@@ -231,6 +231,16 @@
             "id": "main-3",
             "name": "Smoked salmon",
             "description": "Champagne beurre blanc, Ossetra caviar"
+          },
+          {
+            "id": "main-4",
+            "name": "Risotto",
+            "description": ""
+          },
+          {
+            "id": "main-5",
+            "name": "Truffle Pasta",
+            "description": ""
           }
         ]
       },
