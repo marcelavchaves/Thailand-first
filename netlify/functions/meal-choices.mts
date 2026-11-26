@@ -103,7 +103,7 @@ export default async function handler(request:Request){
     const manifest=await getStore({name:'hotel-manifests-v1',consistency:'strong'}).get('manifest',{type:'json'}) as {director?:string}|null;
     const staff={id:TD_MEAL_ID,name:(manifest?.director||'Tour Director')+' (TD)'};
     const director=(await report([staff]))[0];
-    const participants=action==='export'&&director.submission?[...guests,staff]:guests;
+    const participants=[...guests.filter(g=>g.id!==TD_MEAL_ID),staff];
     const data=await report(participants);
     const photoFor=async(id:string)=>id===TD_MEAL_ID?(await getStore({name:'director-profile',consistency:'strong'}).get('xavier',{type:'json'}) as {photo?:string}|null)?.photo:(await getStore({name:'guest-profiles',consistency:'strong'}).get(`guest/${id}`,{type:'json'}) as {photo?:string}|null)?.photo;
     if(action==='export'){
@@ -137,7 +137,7 @@ export default async function handler(request:Request){
     }
     const masterAdmin=await hasMasterAdmin();
     const permitted=(g:MealReportGuest)=>masterAdmin?g:{...g,submission:travelerSubmission(g.submission) as MealSubmission|null};
-    return reply({masterAdmin,...metadata(settings,menus),reportHeaders:settings.reportHeaders,reportHeadersRevision:settings.reportHeadersRevision,guests:data.map(permitted),director:permitted(director),summary:mealReport([...data,...(director.submission?[director]:[])],'all',settings.deadlines,menus).totals});
+    return reply({masterAdmin,...metadata(settings,menus),reportHeaders:settings.reportHeaders,reportHeadersRevision:settings.reportHeadersRevision,guests:data.map(permitted),director:permitted(director),summary:mealReport(data,'all',settings.deadlines,menus).totals});
    }
    if(action==='paper-review'){
     if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
@@ -278,7 +278,7 @@ export default async function handler(request:Request){
    }
    return reply({error:'Unknown action.'},400);
   }
-  const paperGuest=paperImport||tdEdit?(tdEdit&&body.guestId===TD_MEAL_ID?{id:TD_MEAL_ID,name:'Tour Director (TD)'}:guests.find(g=>g.id===body.guestId)):null;
+  const paperGuest=paperImport||tdEdit?(body.guestId===TD_MEAL_ID?{id:TD_MEAL_ID,name:'Tour Director (TD)'}:guests.find(g=>g.id===body.guestId)):null;
   const guest=paperImport||tdEdit?(paperGuest?{...paperGuest,actor:tdEdit?{type:'td' as const,label:body.guestId===TD_MEAL_ID?'TD own meal choices':'TD Suitcase correction'}:{type:'td-paper' as const,label:'TD paper-form entry'}}:null):await authenticatedGuest(request,guests);
   if(!guest)return reply({error:paperImport||tdEdit?'Choose a current traveler.':'Open your private meal link to continue.'},paperImport||tdEdit?400:401);
   if(body.guestId!==guest.id)return reply({error:'The selected traveler changed in another tab. Reload and choose your name before saving.'},409);
