@@ -15,11 +15,11 @@ export default async function handler(request:Request){
   if(!await hasTDSession(request))return reply({error:'Sign in to TD Suitcase.'},401);
   const raw=await request.text();if(raw.length>2000)return reply({error:'Visibility form is too large.'},413);
   let body;try{body=JSON.parse(raw);}catch{return reply({error:'Check the day settings.'},400);}
-  if(!body||!Number.isInteger(body.day)||body.day<5||body.day>20||!(body.revision===null||typeof body.revision==='string')||!body.features||typeof body.features!=='object'||Array.isArray(body.features)||Object.keys(body.features).length!==featureKeys.length||featureKeys.some(k=>typeof body.features[k]!=='boolean')||Object.keys(body.features).some(k=>!featureKeys.includes(k as typeof featureKeys[number])))return reply({error:'Choose a valid day and show/hide options.'},400);
+  if(!body||!Number.isInteger(body.day)||body.day<5||body.day>20||!(body.revision===null||typeof body.revision==='string')||!body.features||typeof body.features!=='object'||Array.isArray(body.features)||featureKeys.some(k=>typeof body.features[k]!=='boolean')||Object.keys(body.features).some(k=>k==="ratingPrompt"?typeof body.features[k]!=="boolean":!featureKeys.includes(k as typeof featureKeys[number])))return reply({error:'Choose a valid day and show/hide options.'},400);
   if(body.features.announcement){const note=await getStore({name:'xavier-daily-notes',consistency:'strong'}).get('day/'+body.day,{type:'json'}) as {text?:string}|null;if(!note?.text?.trim())return reply({error:'Save an announcement for this day before showing it to travelers.'},400);}
   const previous=await dayFeatureStore().getWithMetadata('day/'+body.day,{type:'json'});
   if((previous?.etag||null)!==body.revision)return reply({error:'Day options changed in another window. Refresh and try again.'},409);
-  const features=cleanDayFeatures(body.features),saved=await dayFeatureStore().setJSON('day/'+body.day,features,previous?{onlyIfMatch:previous.etag}:{onlyIfNew:true});
+  const features={...cleanDayFeatures(previous?.data),...cleanDayFeatures(body.features)},saved=await dayFeatureStore().setJSON('day/'+body.day,features,previous?{onlyIfMatch:previous.etag}:{onlyIfNew:true});
   if(!saved.modified)return reply({error:'Day options changed in another window. Refresh and try again.'},409);
   return reply({features,revision:saved.etag||null});
  }catch{return reply({error:'Unable to load or save day options. Please try again.'},503);}

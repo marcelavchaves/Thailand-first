@@ -31,5 +31,23 @@ try{
  state.td=false;assert.equal((await ok(await notes(req('GET',null,'?day=5'),{}))).note,null);
  state.td=true;data=await ok(await features(req()));await ok(await features(req('PUT',{day:5,features:{...hidden,announcement:true,trivia:true},revision:data.days[5].revision})));
  await ok(await notes(req('DELETE',{day:5}),{}));data=await ok(await features(req()));assert.equal(data.days[5].features.announcement,false);assert.equal(data.days[5].features.trivia,true);
+ const ratingOptions={...hidden,ratingPrompt:true};
+ state.td=false;
+ assert.equal((await features(req('PUT',{day:6,features:ratingOptions,revision:null}))).status,401);
+ state.td=true;
+ assert.equal((await features(req('PUT',{day:6,features:{...hidden,ratingPrompt:'yes'},revision:null}))).status,400);
+ saved=await ok(await features(req('PUT',{day:6,features:ratingOptions,revision:null})));
+ const otherDay=await ok(await features(req('PUT',{day:20,features:{...hidden,ratingPrompt:false},revision:null})));
+ saved=await ok(await features(req('PUT',{day:6,features:{...hidden,trivia:true},revision:saved.revision})));
+ assert.equal(saved.features.ratingPrompt,true);
+ data=await ok(await features(req()));
+ assert.equal(data.days[6].features.ratingPrompt,true);
+ assert.equal(data.days[7].features.ratingPrompt,undefined);
+ assert.equal(data.days[20].features.ratingPrompt,false);
+ assert.equal(data.days[20].revision,otherDay.revision);
+ await ok(await features(req('PUT',{day:6,features:{...ratingOptions,ratingPrompt:false},revision:saved.revision})));
+ data=await ok(await features(req()));
+ assert.equal(data.days[6].features.ratingPrompt,false);
+ console.log('PASS rating popup activation, deactivation, day isolation, and compatibility with older day settings clients.');
  console.log('PASS per-day optional content: hidden defaults, TD-only controls, CAS/CSRF/day isolation, drafts private and silent, release/hide, deleting announcement hides it without altering other options.');
 }finally{delete globalThis.visibilityTest;await rm(dir,{recursive:true,force:true});}

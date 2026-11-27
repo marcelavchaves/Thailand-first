@@ -6,6 +6,9 @@
   NODE_VERSION = "22"
   NEXT_PUBLIC_MEAL_CHOICES = "true"
 
+[context.prototype.environment]
+  NEXT_PUBLIC_APP_ENV = "pretour"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"

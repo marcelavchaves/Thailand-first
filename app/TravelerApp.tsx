@@ -25,6 +25,7 @@ import useXavierPhoto from "./useXavierPhoto";
 import GuestProfiles from "./GuestProfiles";
 import JourneyTimeline from "./JourneyTimeline";
 import {DayFeaturesProvider,useDayFeatures} from "./DayFeatures";
+import {ratingPromptEnabled} from "../lib/day-features";
 import "./meal-choices.css";
 import DayPhoto from "./DayPhoto";
 import LocalLanguageLesson from "./LocalLanguageLesson";
@@ -1598,6 +1599,53 @@ type Tab = "map" | "home" | "journey" | "hotels" | "info" | "more" | "gallery" |
 // records. Keep traveler content here rather than maintaining a PDF-only copy.
 export const tripContent = { days, hotels, hotelResources, localGuides, storytelling, internalFlights, tripDate, shortTripDate, longTripDate, tauck, travelerAlbumUrl, xavierPhoneDisplay, xavierPhoneUrl, xavierEmail };
 
+function TripRatingPrompt({ onRate }: { onRate: () => void }) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const shown = useRef(false);
+  const checkedOnOpen = useRef(false);
+  const { days: settings, loaded } = useDayFeatures();
+
+  useEffect(() => {
+    function resetOnHide() {
+      if (document.visibilityState === "hidden") checkedOnOpen.current = false;
+    }
+    document.addEventListener("visibilitychange", resetOnHide);
+    return () => document.removeEventListener("visibilitychange", resetOnHide);
+  }, []);
+
+  useEffect(() => {
+    const element = dialog.current;
+    if (!loaded || shown.current || checkedOnOpen.current || document.visibilityState !== "visible" || !element) return;
+    checkedOnOpen.current = true;
+    if (/(?:invite_token|recovery_token|confirmation_token|access_token)=/.test(window.location.hash)) return;
+    const journey = getJourneyStatus(new Date());
+    if (journey.dayNumber === null || !ratingPromptEnabled(journey.dayId, settings[journey.dayId]?.features)) return;
+    const finalDay = days[days.length - 1].date;
+    const promptKey = `wondercase-rating-prompt-${tripDate(finalDay).toISOString().slice(0, 10)}`;
+    try {
+      if (localStorage.getItem(promptKey)) return;
+    } catch {}
+    element.showModal();
+    shown.current = true;
+    try {
+      localStorage.setItem(promptKey, "shown");
+    } catch {}
+  }, [loaded, settings]);
+
+  return (
+    <dialog ref={dialog} className="trip-rating-prompt" aria-labelledby="trip-rating-title" aria-describedby="trip-rating-description" data-pdf-exclude>
+      <h2 id="trip-rating-title">Rate the app</h2>
+      <p id="trip-rating-description">How was your experience with Wondercase on this trip?</p>
+      <form method="dialog" className="trip-rating-actions" onSubmit={event => {
+        if ((event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "rate") onRate();
+      }}>
+        <button type="submit" value="dismiss">Close</button>
+        <button type="submit" value="rate">Rate Wondercase</button>
+      </form>
+    </dialog>
+  );
+}
+
 function TravelerHome({ initialTab = "home", initialSelected = null }: { initialTab?: Tab; initialSelected?: number | null }) {
  const {data:snapshotAvailability}=useOfflineSnapshotSettings();
   const [tab, setTab] = useState<Tab>(initialTab === "journey" ? "home" : initialTab),
@@ -1763,6 +1811,13 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             </CurrentTripDay></div>:null;
   return (
     <main className="app-shell">
+      {process.env.NEXT_PUBLIC_APP_ENV === "pretour" && (
+        <TripRatingPrompt onRate={() => {
+          nav("more");
+          sectionScrollTarget.current = "more-rating";
+          setMoreSection("rating");
+        }} />
+      )}
       {process.env.NEXT_PUBLIC_APP_ENV === "pretour" && (
         <div className="pretour-review-banner" role="note">PRE-TOUR REVIEW · Current content for your tab-by-tab review</div>
       )}
