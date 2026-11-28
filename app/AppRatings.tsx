@@ -31,15 +31,15 @@ export default function AppRatings({onSaved}:{onSaved?:()=>void}){
 
    {ready&&(!mine||editing)&&<form onSubmit={save} className="rating-form">
     <div>
-     <div className="survey-rating-heading"><h3>Overall rating (optional)</h3><p>Choose an overall rating from 0 to 5 stars. You can come back and update your thoughts throughout the journey.</p></div>
+     <div className="survey-rating-heading"><h3>Overall rating</h3><p>Choose an overall rating from 0 to 5 stars. You can come back and update your thoughts throughout the journey.</p></div>
      {scoreQuestions.map(([key,label])=><ScoreSlider key={key} name={key} label={label} value={scores[key]} disabled={busy} onChange={value=>setScores(current=>({...current,[key]:value}))}/>)}
     </div>
-    <label>Name (optional)<input value={author} onChange={e=>setAuthor(e.target.value)} maxLength={80} autoComplete="off" placeholder="Anonymous"/></label>
+    <label>Name<input value={author} onChange={e=>setAuthor(e.target.value)} maxLength={80} autoComplete="off" placeholder="Anonymous"/></label>
     <div className="survey-writing"><h3>Help us see the journey through your eyes</h3>
      <label>What made your journey easier?<textarea value={worked} onChange={e=>setWorked(e.target.value)} maxLength={1200} rows={3}/></label>
      <label>What felt confusing?<textarea value={improve} onChange={e=>setImprove(e.target.value)} maxLength={1200} rows={3}/></label>
      <label>What would you love us to add?<textarea value={wished} onChange={e=>setWished(e.target.value)} maxLength={1200} rows={3}/></label>
-     <details className="rating-extras"><summary>Anything else? (optional)</summary><label>Anything else you’d like us to know?<textarea value={other} onChange={e=>setOther(e.target.value)} maxLength={1200} rows={3}/></label></details>
+     <details className="rating-extras"><summary>Anything else?</summary><label>Anything else you’d like us to know?<textarea value={other} onChange={e=>setOther(e.target.value)} maxLength={1200} rows={3}/></label></details>
     </div>
     <p className="rating-ownership">Your feedback is shared with fellow travelers. You can edit or delete it using this same browser/device. Clearing browser data removes that access.</p>
     <button disabled={busy} type="submit">{busy?'Saving…':mine?'Update my thoughts':'Share my thoughts'}</button>{editing&&<button type="button" className="rating-secondary" disabled={busy} onClick={()=>setEditing(false)}>Cancel</button>}
