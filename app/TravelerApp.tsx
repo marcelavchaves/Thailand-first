@@ -24,6 +24,7 @@ import useXavierPhoto from "./useXavierPhoto";
 import GuestProfiles from "./GuestProfiles";
 import JourneyTimeline from "./JourneyTimeline";
 import {DayFeaturesProvider,useDayFeatures} from "./DayFeatures";
+import {ratingPromptEnabled} from "../lib/day-features";
 import DayPhoto from "./DayPhoto";
 import "./meal-choices.css";
 import WondercaseGallery from "./WondercaseGallery";
@@ -1596,6 +1597,69 @@ type Tab = "map" | "home" | "journey" | "hotels" | "info" | "more" | "gallery" |
 // records. Keep traveler content here rather than maintaining a PDF-only copy.
 export const tripContent = { days, hotels, hotelResources, localGuides, storytelling, internalFlights, tripDate, shortTripDate, longTripDate, tauck, travelerAlbumUrl, xavierPhoneDisplay, xavierPhoneUrl, xavierEmail };
 
+const ratingPromptKey = `wondercase-rating-prompt-${tripDate(days[days.length - 1].date).toISOString().slice(0, 10)}`;
+
+function suppressTripRatingPrompt() {
+  try {
+    localStorage.setItem(ratingPromptKey, "suppressed");
+  } catch {}
+}
+
+function TripRatingPrompt({ onRate }: { onRate: () => void }) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const checkedOnLoad = useRef(false);
+  const { days: settings, loaded } = useDayFeatures();
+
+  useEffect(() => {
+    const element = dialog.current;
+    if (!loaded || checkedOnLoad.current || document.visibilityState !== "visible" || !element) return;
+    checkedOnLoad.current = true;
+    if (/(?:invite_token|recovery_token|confirmation_token|access_token)=/.test(window.location.hash)) return;
+    const journey = getJourneyStatus(new Date());
+    if (journey.dayNumber === null || !ratingPromptEnabled(journey.dayId, settings[journey.dayId]?.features)) return;
+
+    async function openPrompt(element: HTMLDialogElement) {
+      try {
+        if (localStorage.getItem(ratingPromptKey) === "suppressed") return;
+        const token = localStorage.getItem("kd-traveler-journal-token");
+        if (token) {
+          const response = await fetch("/api/app-ratings?mine=1", { headers: { "x-journal-token": token }, cache: "no-store" });
+          if (response.ok) {
+            const { hasRating } = await response.json();
+            if (hasRating === true) {
+              suppressTripRatingPrompt();
+              return;
+            }
+          }
+        }
+        if (localStorage.getItem(ratingPromptKey) === "suppressed") return;
+      } catch {}
+      if (element.isConnected) element.showModal();
+    }
+
+    void openPrompt(element);
+  }, [loaded, settings]);
+
+  return (
+    <dialog ref={dialog} className="trip-rating-prompt" aria-labelledby="trip-rating-title" aria-describedby="trip-rating-description" data-pdf-exclude>
+      <div className="trip-rating-mark" aria-hidden="true">★</div>
+      <h2 id="trip-rating-title">Rate the app</h2>
+      <p id="trip-rating-description">How was your experience with Wondercase on this trip?</p>
+      <form method="dialog" className="trip-rating-actions" onSubmit={event => {
+        const action = (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value");
+        if (action === "never") suppressTripRatingPrompt();
+        if (action === "rate") onRate();
+      }}>
+        <button type="submit" value="rate">Rate Wondercase</button>
+        <div className="trip-rating-dismissals">
+          <button type="submit" value="dismiss">Close</button>
+          <button type="submit" value="never">Don’t show again</button>
+        </div>
+      </form>
+    </dialog>
+  );
+}
+
 function TravelerHome({ initialTab = "home", initialSelected = null }: { initialTab?: Tab; initialSelected?: number | null }) {
  const {data:snapshotAvailability}=useOfflineSnapshotSettings();
   const [tab, setTab] = useState<Tab>(initialTab === "journey" ? "home" : initialTab),
@@ -1760,6 +1824,11 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
             </CurrentTripDay></div>:null;
   return (
     <main className="app-shell">
+      <TripRatingPrompt onRate={() => {
+        nav("more");
+        sectionScrollTarget.current = "more-rating";
+        setMoreSection("rating");
+      }} />
       {process.env.NEXT_PUBLIC_APP_ENV === "pretour" && (
         <div className="pretour-review-banner" role="note">PRE-TOUR REVIEW · Current content for your tab-by-tab review</div>
       )}
@@ -1946,7 +2015,7 @@ function TravelerHome({ initialTab = "home", initialSelected = null }: { initial
 
         <RecommendedReading visible={moreSection==='reading'}/>
         <details id="more-tauck" key={`tauck-${moreSection}`} hidden={moreSection!=='tauck'} open className="day-disclosure asia-journeys"><summary>More Tauck experiences</summary><div className="asia-journeys-list"><article className="asia-journey-card"><span className="asia-journey-duration">14 days</span><h2>Kingdoms &amp; Dragons: Singapore to Bali</h2><p>Journey from Singapore through Java, Bali and Flores, exploring Borobudur and Prambanan, Ubud and Komodo National Park, before ending in Jimbaran Bay.</p><a href="https://www.tauck.com/tours/kingdoms-dragons-singapore-bali-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Kingdoms &amp; Dragons: Singapore to Bali on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">16 days</span><h2>The Mekong, Vietnam, Laos &amp; Cambodia</h2><p>Ho Chi Minh City, Hanoi, Phnom Penh, Siem Reap and Luang Prabang.</p><a href="https://www.tauck.com/tours/indochina-vietnam-cambodia-laos-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View The Mekong, Vietnam, Laos &amp; Cambodia on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>A Portrait of India</h2><p>New Delhi, Agra, Jaipur, Udaipur, Mumbai, Kochi, Kumarakom and Varanasi.</p><a href="https://www.tauck.com/tours/portrait-of-india-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View A Portrait of India on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">18 days</span><h2>Northern India &amp; Nepal</h2><p>New Delhi, Kathmandu, Dhulikhel, Mumbai, Bandhavgarh National Park and Chitwan National Park.</p><a href="https://www.tauck.com/tours/northern-india-and-nepal-escorted-tour" target="_blank" rel="noopener noreferrer" aria-label="View Northern India &amp; Nepal on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article><article className="asia-journey-card"><span className="asia-journey-duration">13 days</span><h2>India’s Golden Triangle, Udaipur &amp; Mumbai</h2><p>New Delhi, Agra, Jaipur, Udaipur, Varanasi and Mumbai.</p><a href="https://www.tauck.com/tours/spotlight-on-india-guided-tour" target="_blank" rel="noopener noreferrer" aria-label="View India’s Golden Triangle, Udaipur &amp; Mumbai on Tauck (opens in a new tab)">View tour on Tauck ↗</a></article></div></details>
-        <details id="more-rating" key={`rating-${moreSection}`} hidden={moreSection!=='rating'} open className="day-disclosure feedback-disclosure"><summary>Help Wondercase Grow</summary><AppRatings /></details>
+        <details id="more-rating" key={`rating-${moreSection}`} hidden={moreSection!=='rating'} open className="day-disclosure feedback-disclosure"><summary>Help Wondercase Grow</summary><AppRatings onSaved={suppressTripRatingPrompt} /></details>
       </section>}
       {tab === "gallery" && <WondercaseGallery/>}
       {tab === "td" && <TDSuitcase days={days} dateLabel={longTripDate} onBack={()=>nav("more")} announcement={day=><XavierDailyNote key={day} date={day} editor/>} groups={[{id:'handouts',title:'Handouts'},{id:'maps',title:'Maps'},{id:'guides',title:'Destination guides & documents'},...hotels.map((h,i)=>({id:`hotel-${i}`,title:h.name})),{id:'stories',title:'Destination stories'},{id:'local-guides',title:'Local guides'}]} resources={[

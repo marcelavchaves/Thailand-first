@@ -11,6 +11,10 @@ export default async function handler(request:Request){
  const visible=(r:Rating)=>{const legacy=typeof r.stars==='number'?r.stars:0;return {id:r.id,author:r.author,scores:{overall:r.scores?.overall??legacy},worked:r.worked??r.comment??'',improve:r.improve??'',wished:r.wished??'',other:r.other??'',createdAt:r.createdAt,updatedAt:r.updatedAt,isOwner:!!hash&&hash===r.ownerHash};};
  try{
   if(request.method==='GET'){
+   if(new URL(request.url).searchParams.get('mine')==='1'){
+    const entry=hash?await store.get(`rating/${hash}`,{type:'json'}):null;
+    return reply({hasRating:!!entry});
+   }
    const {blobs}=await store.list({prefix:'rating/'});
    const rows=await Promise.all(blobs.map(b=>store.get(b.key,{type:'json'}) as Promise<Rating|null>));
    return reply({entries:rows.filter((r):r is Rating=>!!r).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).map(visible)});
