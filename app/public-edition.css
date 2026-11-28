@@ -377,40 +377,94 @@
 @media(max-width:390px){.journey-today-card{padding-inline:14px}.journey-today-card .journey-day-heading{gap:5px}.home-day-switch button{width:20px}.home-day-switch .journey-day-number{font-size:11px;padding-inline:5px}.journey-today-card .journey-day-heading h2{font-size:clamp(9px,2.6vw,12px)}}
 
 .trip-rating-prompt {
-  width: min(26rem, calc(100% - 2rem));
+  box-sizing: border-box;
+  width: min(25rem, calc(100% - 1.5rem));
+  max-height: calc(100% - 1.5rem);
   margin: auto;
-  padding: 1.5rem;
-  border: 1px solid var(--brand-green);
-  border-radius: 1rem;
+  padding: clamp(1.125rem, 5vw, 2rem);
+  border: 1px solid #e2d6b9;
+  border-radius: 1.375rem;
   background: var(--brand-ivory);
-  color: var(--brand-green);
+  color: #294637;
+  box-shadow: 0 1.5rem 4rem rgb(16 33 25 / 32%);
+  text-align: center;
 }
 
 .trip-rating-prompt::backdrop {
-  background: rgb(0 0 0 / 55%);
+  background: rgb(18 34 28 / 57%);
+}
+
+.trip-rating-mark {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+  border: 1px solid #e2d6b9;
+  border-radius: 50%;
+  background: #f1e8d3;
+  color: #80642d;
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .trip-rating-prompt h2 {
-  margin: 0 0 .5rem;
-  font-size: 1.5rem;
+  margin: 0;
+  font: 700 clamp(1.625rem, 5vw, 2rem) / 1.15 var(--font-heading);
+}
+
+.trip-rating-prompt p {
+  max-width: 26ch;
+  margin: .625rem auto 0;
+  color: #526258;
+  font-size: .9375rem;
+  line-height: 1.5;
 }
 
 .trip-rating-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: .5rem;
-  margin-top: 1rem;
+  display: grid;
+  gap: .625rem;
+  margin: 1.5rem 0 0;
+}
+
+.trip-rating-dismissals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .625rem;
 }
 
 .trip-rating-actions button {
-  padding: .6rem .9rem;
-  border: 1px solid var(--brand-green);
-  border-radius: .5rem;
-  font-weight: 700;
+  min-height: 2.75rem;
+  padding: .5rem .375rem;
+  border: 1px solid #d9dfd4;
+  border-radius: .75rem;
+  background: #eef0e9;
+  color: #294637;
+  font-family: inherit;
+  font-size: .8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.trip-rating-actions button:hover {
+  background: #e3e8de;
 }
 
 .trip-rating-actions button[value="rate"] {
-  background: var(--brand-green);
-  color: var(--brand-ivory);
+  min-height: 3rem;
+  border-color: #345644;
+  background: #345644;
+  color: #fff;
+  font-size: .9375rem;
+  font-weight: 700;
+}
+
+.trip-rating-actions button[value="rate"]:hover {
+  background: #294637;
+}
+
+.trip-rating-actions button:focus-visible {
+  outline: 2px solid #80642d;
+  outline-offset: 2px;
 }

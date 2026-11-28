@@ -1644,6 +1644,7 @@ function TripRatingPrompt({ onRate }: { onRate: () => void }) {
 
   return (
     <dialog ref={dialog} className="trip-rating-prompt" aria-labelledby="trip-rating-title" aria-describedby="trip-rating-description" data-pdf-exclude>
+      <div className="trip-rating-mark" aria-hidden="true">★</div>
       <h2 id="trip-rating-title">Rate the app</h2>
       <p id="trip-rating-description">How was your experience with Wondercase on this trip?</p>
       <form method="dialog" className="trip-rating-actions" onSubmit={event => {
@@ -1651,9 +1652,11 @@ function TripRatingPrompt({ onRate }: { onRate: () => void }) {
         if (action === "never") suppressTripRatingPrompt();
         if (action === "rate") onRate();
       }}>
-        <button type="submit" value="dismiss">Close</button>
-        <button type="submit" value="never">Don’t show again</button>
         <button type="submit" value="rate">Rate Wondercase</button>
+        <div className="trip-rating-dismissals">
+          <button type="submit" value="dismiss">Close</button>
+          <button type="submit" value="never">Don’t show again</button>
+        </div>
       </form>
     </dialog>
   );
